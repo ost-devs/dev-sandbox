@@ -6,7 +6,7 @@ as a non-root user with no `sudo`. The container is destroyed on exit (`--rm`).
 ## What persists
 | Path | Persists? |
 |---|---|
-| Project directory: your cwd, at its host path, also mounted at `/workspace` (same files) | Yes, it is the host folder |
+| Project directory (your cwd: same path as on the host, or `/workspace`) | Yes, it is the host folder |
 | `$HOME` (`/tmp/dev-home`), including `~/.claude`, `~/.gemini`, `~/.codex` | Yes |
 | `/usr/local/cargo/registry` | Yes (cargo cache) |
 | Everything else (`/usr`, `/etc`, `/opt`, `/tmp` outside `$HOME`) | No |

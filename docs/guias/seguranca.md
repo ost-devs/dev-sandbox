@@ -47,12 +47,17 @@ Uma única linha num hook é suficiente para ler a sua `~/.ssh`. Por isso:
 
 - **v0.2:** o `dev-docker` monta `.git/hooks` e `.git/config` como **somente
   leitura**. O agente continua commitando, mas não planta hook nem config.
-  Isso vale também para repositórios **dentro** da pasta montada, até dois
-  níveis abaixo (`pasta/repo/.git`, `pasta/grupo/repo/.git`); o início da
-  sessão mostra quantos foram protegidos. Mais fundo que isso, ou um
-  `.git` criado durante a sessão, fica gravável: confira antes de usar.
   Se precisar mudar (um `git remote add`, por exemplo), faça do host ou
   rode a sessão com `DEV_GIT_RW=1`.
+- **Repositórios dentro da pasta montada.** Se você monta uma pasta com
+  vários clones lado a lado (o seu projeto e repositórios de referência), cada
+  um tem o seu `.git/hooks`, e todos rodam no host quando você usa `git`
+  neles. O `dev-docker` protege também esses, até dois níveis abaixo da pasta
+  montada, e mostra quantos protegeu ao iniciar. Ficam de fora, e graváveis:
+  repositórios mais fundos, os hooks de submódulos (que moram em
+  `.git/modules/`) e um repositório clonado durante a sessão. É um bom exemplo
+  de como esta lista nunca está completa: a primeira versão da proteção
+  supunha "uma pasta = um repositório", e a brecha só apareceu num caso real.
 - Hooks **versionados** (`.husky/` etc.) e os outros arquivos da tabela estão
   no código do projeto, então a proteção acima não vale para eles. O
   [`sandbox/AGENTS.md`](../../sandbox/AGENTS.md) manda o agente listar

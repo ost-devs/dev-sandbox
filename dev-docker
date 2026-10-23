@@ -52,41 +52,29 @@ if [ "$REPO_PATH" = "/" ] || [ "$REPO_PATH" = "$HOME" ] || [[ "$HOME" == "$REPO_
   MOUNT_PATH="/workspace"
 fi
 
-# A mesma pasta também aparece em /workspace: projetos cuja documentação usa
-# caminhos absolutos (/workspace/projeto/...) funcionam sem tradução, e cada
-# container tem o seu /workspace. Abra o agente pelo caminho do host (o
-# --workdir abaixo) para a memória do Claude ficar separada por projeto.
-DESTS=("$MOUNT_PATH")
-[ "$MOUNT_PATH" != "/workspace" ] && DESTS+=("/workspace")
-
 # ── Proteção do .git ─────────────────────────────────────────────
 # Hooks e config do git rodam no HOST quando você faz commit/push fora do
 # container. Somente leitura aqui dentro, o agente ainda faz commit, mas
 # não planta um hook nem um core.fsmonitor/alias que execute código no seu
 # usuário real. Ver docs/guias/seguranca.md.
-# Vale para o repositório montado e para os que estão dentro dele, até dois
-# níveis abaixo (uma pasta "workspace" com vários clones lado a lado).
+# Vale também para repositórios dentro da pasta montada, até dois níveis
+# abaixo (uma pasta com vários clones lado a lado). Não cobre: repositórios
+# mais fundos, submódulos (os hooks deles ficam em .git/modules/) e um .git
+# criado durante a sessão.
 GIT_MOUNTS=()
 GIT_PROTECTED=0
 if [ "${DEV_GIT_RW:-0}" != "1" ]; then
   while IFS= read -r -d '' gitdir; do
-    rel="${gitdir#"$REPO_PATH"}"
+    rel="${gitdir#"${REPO_PATH%/}"}"
     mkdir -p "$gitdir/hooks"
-    for dst in "${DESTS[@]}"; do
-      GIT_MOUNTS+=(--mount "type=bind,src=$gitdir/hooks,dst=$dst$rel/hooks,readonly")
-      if [ -f "$gitdir/config" ]; then
-        GIT_MOUNTS+=(--mount "type=bind,src=$gitdir/config,dst=$dst$rel/config,readonly")
-      fi
-    done
+    GIT_MOUNTS+=(--mount "type=bind,src=$gitdir/hooks,dst=$MOUNT_PATH$rel/hooks,readonly")
+    if [ -f "$gitdir/config" ]; then
+      GIT_MOUNTS+=(--mount "type=bind,src=$gitdir/config,dst=$MOUNT_PATH$rel/config,readonly")
+    fi
     GIT_PROTECTED=$((GIT_PROTECTED + 1))
   done < <(find "$REPO_PATH" -maxdepth 3 \( -name node_modules -o -name target \) -prune \
-             -o -name .git -type d -print0 2>/dev/null)
+             -o -name .git -type d -print0 -prune 2>/dev/null)
 fi
-
-PROJECT_MOUNTS=()
-for dst in "${DESTS[@]}"; do
-  PROJECT_MOUNTS+=(--mount "type=bind,src=$REPO_PATH,dst=$dst")
-done
 
 # ── Portas (opcional) ────────────────────────────────────────────
 # Sem portas fixas, dá para abrir quantos containers quiser ao mesmo tempo.
@@ -102,7 +90,7 @@ done
 SLUG="$(basename "$REPO_PATH" | tr -c 'a-zA-Z0-9_.-' '-' | sed 's/^[-.]*//; s/-*$//' | cut -c1-40)"
 NAME="dev-${SLUG:-raiz}-$$"
 
-echo "▶ $NAME  |  $REPO_PATH → ${DESTS[*]}  |  portas: ${DEV_PORTS:-nenhuma}  |  .git protegidos: $GIT_PROTECTED"
+echo "▶ $NAME  |  $REPO_PATH → $MOUNT_PATH  |  portas: ${DEV_PORTS:-nenhuma}  |  .git protegidos: $GIT_PROTECTED"
 echo "  Outro terminal neste container: sudo docker exec -it $NAME bash"
 
 sudo docker run -it --rm \
@@ -117,7 +105,7 @@ sudo docker run -it --rm \
   --env "DEV_SANDBOX_NAME=$NAME" \
   --env "DEV_SANDBOX_PORTS=${DEV_PORTS:-}" \
   --env "CLAUDE_CODE_TMPDIR=/tmp/dev-home/.cache/claude-tmp" \
-  "${PROJECT_MOUNTS[@]}" \
+  --mount "type=bind,src=$REPO_PATH,dst=$MOUNT_PATH" \
   "${GIT_MOUNTS[@]}" \
   --mount "type=bind,src=$DEV_HOME_PATH,dst=/tmp/dev-home" \
   --mount "type=bind,src=$GEMINI_PATH,dst=/tmp/dev-home/.gemini" \

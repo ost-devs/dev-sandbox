@@ -43,4 +43,4 @@ Link para o commit/arquivo, ou "nada: só documentação".
 | 2026-10 | [Auto-update do Claude baixava versões que nunca eram usadas](./2026-10-claude-autoupdate-orfao.md) |
 | 2026-10 | [Portas fixas: conflito com o Syncthing e um container por vez](./2026-10-portas-fixas.md) |
 | 2026-10 | [O agente contorna ferramenta que falta e não avisa](./2026-10-agente-contorna-ferramenta-faltando.md) |
-| 2026-10 | [Pasta com vários repositórios: caminhos absolutos e hooks sem proteção](./2026-10-pasta-com-varios-repositorios.md) |
+| 2026-10 | [Pasta com vários repositórios: hooks do git sem proteção](./2026-10-pasta-com-varios-repositorios.md) |

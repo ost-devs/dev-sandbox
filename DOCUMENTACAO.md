@@ -150,19 +150,6 @@ para `/workspace`: pastas de sistema (`/usr`, `/tmp`...) e montagens amplas
 (`/` ou a home inteira), que ainda pedem confirmação antes, porque entregam
 ao agente justamente o que o sandbox deveria esconder.
 
-**A mesma pasta também aparece em `/workspace`.** Há projetos cuja
-documentação (ou instruções para a IA) aponta tudo a partir de uma raiz fixa,
-como `/workspace/projeto/...` e `/workspace/biblioteca-de-referencia/...`.
-Por isso o `dev-docker` monta a pasta **nos dois lugares**: no caminho do host
-e em `/workspace`. São os mesmos arquivos, e não há nada para configurar.
-Cada container tem o seu próprio `/workspace`, então dois containers não se
-misturam.
-
-A memória do Claude segue o lugar onde você **abre** o `claude`. O terminal
-já começa no caminho do host, então basta abrir dali (ou de uma subpasta,
-como `cd projeto && claude`). Se você abrir de dentro de `/workspace`, a
-memória vai para `-workspace...`, a mesma pasta de todo projeto aberto assim.
-
 ---
 
 <a id="por-que-root-precisa-de-permissoes-especiais"></a>
@@ -565,7 +552,7 @@ especificamente, limpe cada um à parte.
 |---|---|---|
 | Docker (namespaces de mount) | Isola o filesystem do container do restante do sistema | Sim, sempre — não depende de nenhuma configuração |
 | Bind mount do projeto | Expõe somente o repositório em uso | Sim |
-| `.git/hooks` e `.git/config` somente leitura | Impede que o agente plante código que roda no host no próximo `git`. Vale para o repositório montado e para os que estão até dois níveis abaixo dele | Sim, a menos que `DEV_GIT_RW=1` (v0.2) |
+| `.git/hooks` e `.git/config` somente leitura | Impede que o agente plante código que roda no host no próximo `git`, também nos repositórios até dois níveis dentro da pasta montada ([o que fica de fora](docs/guias/seguranca.md)) | Sim, a menos que `DEV_GIT_RW=1` (v0.2) |
 | `--cap-drop ALL` + `no-new-privileges` | Tira do container privilégios de kernel de que ninguém precisa e bloqueia binários setuid | Sim (v0.2) |
 | Portas só em `127.0.0.1` e só com `DEV_PORTS` | Nada do container fica visível na rede local | Sim (v0.2) |
 | `--user UID:GID` | Impede que arquivos do workspace nasçam como `root` | Sim, enquanto o script tiver essa flag |
