@@ -8,7 +8,7 @@ Os três objetivos do projeto são:
 
 O Docker ajuda muito com o primeiro, um pouco com o segundo e pouco com o
 terceiro. Isolamento não é invulnerabilidade: sempre sobra uma ponte entre o
-container e o mundo, e este guia lista todas.
+container e o mundo, e este guia lista algumas .
 
 ## O que o container resolve
 
