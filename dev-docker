@@ -1,9 +1,18 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+# Uso: dev-docker [caminho-do-repo]
+#
+# Variáveis opcionais (detalhes em docs/guias/portas-e-sessoes-paralelas.md):
+#   DEV_PORTS="5173 3000 8090:8080"  portas publicadas só em 127.0.0.1
+#                                     (padrão: nenhuma — várias sessões em paralelo)
+#   DEV_GIT_RW=1                      libera escrita em .git/hooks e .git/config
+#   DEV_IMAGE=dev-sandbox:latest      outra tag da imagem
 
 REPO_PATH="$(realpath "${1:-.}")"
 HOST_UID="$(id -u)"
 HOST_GID="$(id -g)"
+IMAGE="${DEV_IMAGE:-dev-sandbox:latest}"
 
 # Pasta genérica: qualquer coisa que uma ferramenta gravar em $HOME dentro
 # do container, sem overlay específico abaixo, persiste aqui automaticamente.
@@ -11,29 +20,87 @@ DEV_HOME_PATH="$HOME/.cache/dev-sandbox/home"
 
 # Credenciais/config REAIS do seu usuário — as mesmas pastas que uma
 # instalação nativa (fora do Docker) de cada agente já usa.
-GEMINI_PATH="$HOME/.gemini"            # agy
-CLAUDE_PATH="$HOME/.claude"          # Claude Code — descomente se ativou
-CODEX_PATH="$HOME/.codex"            # Codex CLI — descomente se ativou
+GEMINI_PATH="$HOME/.gemini"   # agy
+CLAUDE_PATH="$HOME/.claude"   # Claude Code
+CODEX_PATH="$HOME/.codex"     # Codex CLI
 
 # Cache de pacotes cargo — separado por design (ver DOCUMENTACAO.md).
 CARGO_CACHE_PATH="$HOME/.cache/dev-sandbox/cargo"
 
-mkdir -p "$DEV_HOME_PATH" "$GEMINI_PATH" "$CARGO_CACHE_PATH"
-mkdir -p "$CLAUDE_PATH"
-mkdir -p "$CODEX_PATH" 
+mkdir -p "$DEV_HOME_PATH/.cache/claude-tmp" "$GEMINI_PATH" "$CLAUDE_PATH" \
+  "$CODEX_PATH" "$CARGO_CACHE_PATH"
+
+# ── Onde o repositório aparece dentro do container ───────────────
+# No mesmo caminho do host: o Claude Code separa memória e histórico por
+# caminho (~/.claude/projects/<caminho>), então cada projeto fica com os
+# seus — em /workspace fixo, todos os projetos se misturavam.
+# Pastas de sistema (raras como repositório) caem em /workspace.
+case "$REPO_PATH" in
+  /|/bin*|/boot*|/dev*|/etc*|/lib*|/opt*|/proc*|/root*|/run*|/sbin*|/sys*|/tmp*|/usr*|/var*)
+    MOUNT_PATH="/workspace" ;;
+  *)
+    MOUNT_PATH="$REPO_PATH" ;;
+esac
+
+# Montar / ou a sua home inteira entrega ao agente tudo o que o sandbox
+# deveria esconder (chaves SSH, navegador, outros projetos).
+if [ "$REPO_PATH" = "/" ] || [ "$REPO_PATH" = "$HOME" ] || [[ "$HOME" == "$REPO_PATH"/* ]]; then
+  echo "⚠️  Você vai montar '$REPO_PATH' inteiro, com escrita, em /workspace."
+  echo "   O agente terá acesso a tudo aí dentro, inclusive a sua home."
+  read -r -p "   Digite 'sim' para continuar: " resposta
+  [ "$resposta" = "sim" ] || { echo "Cancelado."; exit 1; }
+  MOUNT_PATH="/workspace"
+fi
+
+# ── Proteção do .git ─────────────────────────────────────────────
+# Hooks e config do git rodam no HOST quando você faz commit/push fora do
+# container. Somente leitura aqui dentro, o agente ainda faz commit, mas
+# não planta um hook nem um core.fsmonitor/alias que execute código no seu
+# usuário real. Ver docs/guias/seguranca.md.
+GIT_MOUNTS=()
+if [ -d "$REPO_PATH/.git" ] && [ "${DEV_GIT_RW:-0}" != "1" ]; then
+  mkdir -p "$REPO_PATH/.git/hooks"
+  GIT_MOUNTS+=(--mount "type=bind,src=$REPO_PATH/.git/hooks,dst=$MOUNT_PATH/.git/hooks,readonly")
+  if [ -f "$REPO_PATH/.git/config" ]; then
+    GIT_MOUNTS+=(--mount "type=bind,src=$REPO_PATH/.git/config,dst=$MOUNT_PATH/.git/config,readonly")
+  fi
+fi
+
+# ── Portas (opcional) ────────────────────────────────────────────
+# Sem portas fixas, dá para abrir quantos containers quiser ao mesmo tempo.
+PORT_ARGS=()
+for p in ${DEV_PORTS:-}; do
+  case "$p" in
+    *:*) PORT_ARGS+=(-p "127.0.0.1:$p") ;;
+    *)   PORT_ARGS+=(-p "127.0.0.1:$p:$p") ;;
+  esac
+done
+
+# Nome único por sessão: identifica o container e permite várias em paralelo.
+SLUG="$(basename "$REPO_PATH" | tr -c 'a-zA-Z0-9_.-' '-' | sed 's/^[-.]*//; s/-*$//' | cut -c1-40)"
+NAME="dev-${SLUG:-raiz}-$$"
+
+echo "▶ $NAME  |  $REPO_PATH → $MOUNT_PATH  |  portas: ${DEV_PORTS:-nenhuma}"
+echo "  Outro terminal neste container: sudo docker exec -it $NAME bash"
 
 sudo docker run -it --rm \
-  -p 127.0.0.1:3000:3000 \
-  -p 127.0.0.1:5173:5173 \
-  -p 127.0.0.1:8000:8000 \
-  -p 127.0.0.1:8090:8080 \
+  --name "$NAME" \
+  --hostname dev-sandbox \
+  --cap-drop ALL \
+  --security-opt no-new-privileges \
+  "${PORT_ARGS[@]}" \
   --user "$HOST_UID:$HOST_GID" \
   --env "HOME=/tmp/dev-home" \
-  --mount "type=bind,src=$REPO_PATH,dst=/workspace" \
+  --env "DEV_SANDBOX=1" \
+  --env "DEV_SANDBOX_NAME=$NAME" \
+  --env "DEV_SANDBOX_PORTS=${DEV_PORTS:-}" \
+  --env "CLAUDE_CODE_TMPDIR=/tmp/dev-home/.cache/claude-tmp" \
+  --mount "type=bind,src=$REPO_PATH,dst=$MOUNT_PATH" \
+  "${GIT_MOUNTS[@]}" \
   --mount "type=bind,src=$DEV_HOME_PATH,dst=/tmp/dev-home" \
   --mount "type=bind,src=$GEMINI_PATH,dst=/tmp/dev-home/.gemini" \
   --mount "type=bind,src=$CLAUDE_PATH,dst=/tmp/dev-home/.claude" \
   --mount "type=bind,src=$CODEX_PATH,dst=/tmp/dev-home/.codex" \
   --mount "type=bind,src=$CARGO_CACHE_PATH,dst=/usr/local/cargo/registry" \
-  --workdir /workspace \
-  dev-sandbox:latest
+  --workdir "$MOUNT_PATH" \
+  "$IMAGE"
