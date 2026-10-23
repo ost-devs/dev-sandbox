@@ -150,6 +150,23 @@ para `/workspace`: pastas de sistema (`/usr`, `/tmp`...) e montagens amplas
 (`/` ou a home inteira), que ainda pedem confirmação antes, porque entregam
 ao agente justamente o que o sandbox deveria esconder.
 
+**Pasta com vários repositórios e caminhos absolutos na documentação.** Há
+projetos em que a documentação (ou instruções para a IA) aponta tudo a partir
+de uma raiz fixa, por exemplo `/workspace/projeto/...` e
+`/workspace/biblioteca-de-referencia/...`, com vários clones lado a lado numa
+pasta. Para esses, escolha o caminho de dentro:
+
+```bash
+cd ~/Dev/minha-pasta-de-trabalho
+DEV_MOUNT_AT=/workspace dev-docker
+```
+
+A memória do Claude continua separada por repositório git
+(`/workspace/projeto` vira `~/.claude/projects/-workspace-projeto/`), mas
+deixa de ser a mesma de quando você usa o Claude fora do container naquele
+projeto. Dois projetos diferentes com um repositório do mesmo nome dentro de
+`/workspace` dividiriam a memória: nesse caso, prefira o padrão.
+
 ---
 
 <a id="por-que-root-precisa-de-permissoes-especiais"></a>
@@ -552,7 +569,7 @@ especificamente, limpe cada um à parte.
 |---|---|---|
 | Docker (namespaces de mount) | Isola o filesystem do container do restante do sistema | Sim, sempre — não depende de nenhuma configuração |
 | Bind mount do projeto | Expõe somente o repositório em uso | Sim |
-| `.git/hooks` e `.git/config` somente leitura | Impede que o agente plante código que roda no host no próximo `git` | Sim, a menos que `DEV_GIT_RW=1` (v0.2) |
+| `.git/hooks` e `.git/config` somente leitura | Impede que o agente plante código que roda no host no próximo `git`. Vale para o repositório montado e para os que estão até dois níveis abaixo dele | Sim, a menos que `DEV_GIT_RW=1` (v0.2) |
 | `--cap-drop ALL` + `no-new-privileges` | Tira do container privilégios de kernel de que ninguém precisa e bloqueia binários setuid | Sim (v0.2) |
 | Portas só em `127.0.0.1` e só com `DEV_PORTS` | Nada do container fica visível na rede local | Sim (v0.2) |
 | `--user UID:GID` | Impede que arquivos do workspace nasçam como `root` | Sim, enquanto o script tiver essa flag |

@@ -47,6 +47,10 @@ Uma única linha num hook é suficiente para ler a sua `~/.ssh`. Por isso:
 
 - **v0.2:** o `dev-docker` monta `.git/hooks` e `.git/config` como **somente
   leitura**. O agente continua commitando, mas não planta hook nem config.
+  Isso vale também para repositórios **dentro** da pasta montada, até dois
+  níveis abaixo (`pasta/repo/.git`, `pasta/grupo/repo/.git`); o início da
+  sessão mostra quantos foram protegidos. Mais fundo que isso, ou um
+  `.git` criado durante a sessão, fica gravável: confira antes de usar.
   Se precisar mudar (um `git remote add`, por exemplo), faça do host ou
   rode a sessão com `DEV_GIT_RW=1`.
 - Hooks **versionados** (`.husky/` etc.) e os outros arquivos da tabela estão

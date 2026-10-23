@@ -7,6 +7,9 @@ set -euo pipefail
 #   DEV_PORTS="5173 3000 8090:8080"  portas publicadas só em 127.0.0.1
 #                                     (padrão: nenhuma — várias sessões em paralelo)
 #   DEV_GIT_RW=1                      libera escrita em .git/hooks e .git/config
+#   DEV_MOUNT_AT=/workspace           monta o projeto num caminho fixo, em vez do
+#                                     caminho do host (pastas com vários repositórios
+#                                     cujos documentos usam um caminho absoluto)
 #   DEV_IMAGE=dev-sandbox:latest      outra tag da imagem
 
 REPO_PATH="$(realpath "${1:-.}")"
@@ -42,6 +45,18 @@ case "$REPO_PATH" in
     MOUNT_PATH="$REPO_PATH" ;;
 esac
 
+# Caminho fixo pedido pelo usuário. A memória do Claude continua separada por
+# repositório git (/workspace/projeto-a ≠ /workspace/projeto-b), mas não é
+# mais a mesma de quando você usa o Claude fora do container.
+if [ -n "${DEV_MOUNT_AT:-}" ]; then
+  case "$DEV_MOUNT_AT" in
+    /|/bin*|/boot*|/dev*|/etc*|/lib*|/opt*|/proc*|/root*|/run*|/sbin*|/sys*|/tmp*|/usr*|/var*|/home|/home/)
+      echo "DEV_MOUNT_AT='$DEV_MOUNT_AT' é pasta do sistema; use algo como /workspace." >&2; exit 1 ;;
+    /*) MOUNT_PATH="${DEV_MOUNT_AT%/}" ;;
+    *)  echo "DEV_MOUNT_AT precisa ser um caminho absoluto (ex.: /workspace)." >&2; exit 1 ;;
+  esac
+fi
+
 # Montar / ou a sua home inteira entrega ao agente tudo o que o sandbox
 # deveria esconder (chaves SSH, navegador, outros projetos).
 if [ "$REPO_PATH" = "/" ] || [ "$REPO_PATH" = "$HOME" ] || [[ "$HOME" == "$REPO_PATH"/* ]]; then
@@ -57,13 +72,21 @@ fi
 # container. Somente leitura aqui dentro, o agente ainda faz commit, mas
 # não planta um hook nem um core.fsmonitor/alias que execute código no seu
 # usuário real. Ver docs/guias/seguranca.md.
+# Vale para o repositório montado e para os que estão dentro dele, até dois
+# níveis abaixo (uma pasta "workspace" com vários clones lado a lado).
 GIT_MOUNTS=()
-if [ -d "$REPO_PATH/.git" ] && [ "${DEV_GIT_RW:-0}" != "1" ]; then
-  mkdir -p "$REPO_PATH/.git/hooks"
-  GIT_MOUNTS+=(--mount "type=bind,src=$REPO_PATH/.git/hooks,dst=$MOUNT_PATH/.git/hooks,readonly")
-  if [ -f "$REPO_PATH/.git/config" ]; then
-    GIT_MOUNTS+=(--mount "type=bind,src=$REPO_PATH/.git/config,dst=$MOUNT_PATH/.git/config,readonly")
-  fi
+GIT_PROTECTED=0
+if [ "${DEV_GIT_RW:-0}" != "1" ]; then
+  while IFS= read -r -d '' gitdir; do
+    rel="${gitdir#"$REPO_PATH"}"
+    mkdir -p "$gitdir/hooks"
+    GIT_MOUNTS+=(--mount "type=bind,src=$gitdir/hooks,dst=$MOUNT_PATH$rel/hooks,readonly")
+    if [ -f "$gitdir/config" ]; then
+      GIT_MOUNTS+=(--mount "type=bind,src=$gitdir/config,dst=$MOUNT_PATH$rel/config,readonly")
+    fi
+    GIT_PROTECTED=$((GIT_PROTECTED + 1))
+  done < <(find "$REPO_PATH" -maxdepth 3 \( -name node_modules -o -name target \) -prune \
+             -o -name .git -type d -print0 2>/dev/null)
 fi
 
 # ── Portas (opcional) ────────────────────────────────────────────
@@ -80,7 +103,7 @@ done
 SLUG="$(basename "$REPO_PATH" | tr -c 'a-zA-Z0-9_.-' '-' | sed 's/^[-.]*//; s/-*$//' | cut -c1-40)"
 NAME="dev-${SLUG:-raiz}-$$"
 
-echo "▶ $NAME  |  $REPO_PATH → $MOUNT_PATH  |  portas: ${DEV_PORTS:-nenhuma}"
+echo "▶ $NAME  |  $REPO_PATH → $MOUNT_PATH  |  portas: ${DEV_PORTS:-nenhuma}  |  .git protegidos: $GIT_PROTECTED"
 echo "  Outro terminal neste container: sudo docker exec -it $NAME bash"
 
 sudo docker run -it --rm \

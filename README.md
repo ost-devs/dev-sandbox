@@ -73,6 +73,7 @@ claude                             # (ou codex, agy) dentro do container
 | Dois agentes no mesmo projeto | `claude --worktree <nome>` ([guia](docs/guias/portas-e-sessoes-paralelas.md#dois-agentes-no-mesmo-projeto)) |
 | Retomar a conversa depois do `exit` ou do limite de uso | `claude --continue` ([guia](docs/claude-code/sessoes-e-persistencia.md)) |
 | Atualizar os agentes | `sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .` |
+| Pasta com vários repositórios cuja documentação usa `/workspace/...` | `DEV_MOUNT_AT=/workspace dev-docker` ([trade-off](DOCUMENTACAO.md#por-que-o-projeto-e-montado-no-mesmo-caminho-do-host)) |
 | Mexer em `.git/config` de dentro (ex.: `git remote add`) | `DEV_GIT_RW=1 dev-docker` ([por que é bloqueado](docs/guias/seguranca.md#a-ponte-mais-perigosa-código-que-roda-fora-do-container)) |
 
 `exit` destrói o container. O projeto, os logins e os caches continuam no host.
