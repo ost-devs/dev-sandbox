@@ -1,0 +1,42 @@
+# Aprendizados
+
+Coisas que custaram horas para descobrir e que mudaram (ou explicam) o
+dev-sandbox. Cada aprendizado é um arquivo curto, com data no nome:
+`AAAA-MM-assunto-curto.md`.
+
+**Quer contribuir com o seu?** Abra um PR com um arquivo novo seguindo o
+modelo abaixo. Vale tudo que outra pessoa usando o dev-sandbox poderia
+encontrar: um bug, um conflito com outro programa, uma ferramenta que fazia
+falta, um jeito melhor de trabalhar com algum agente. Não precisa ter a
+solução: um problema bem descrito já ajuda.
+
+## Modelo
+
+```markdown
+# Título que descreve o sintoma
+
+- **Data:** AAAA-MM
+- **Ambiente:** distro, versão do Docker, agente e versão (o que for relevante)
+
+## Sintoma
+O que você viu. Mensagem de erro exata, se tiver.
+
+## Causa
+O que estava acontecendo de verdade. Se não descobriu, diga.
+
+## Solução
+O que resolveu. Comandos, se tiver.
+
+## O que mudou no dev-sandbox
+Link para o commit/arquivo, ou "nada: só documentação".
+```
+
+## Índice
+
+| Data | Aprendizado |
+|---|---|
+| 2026-10 | [Disco cheio: o Timeshift copiava o Docker a cada snapshot](./2026-10-disco-cheio-timeshift-docker.md) |
+| 2026-10 | [Memória e histórico do Claude misturados entre projetos](./2026-10-memoria-misturada-entre-projetos.md) |
+| 2026-10 | [Auto-update do Claude baixava versões que nunca eram usadas](./2026-10-claude-autoupdate-orfao.md) |
+| 2026-10 | [Portas fixas: conflito com o Syncthing e um container por vez](./2026-10-portas-fixas.md) |
+| 2026-10 | [O agente contorna ferramenta que falta e não avisa](./2026-10-agente-contorna-ferramenta-faltando.md) |
