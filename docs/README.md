@@ -1,0 +1,25 @@
+# Documentação do dev-sandbox
+
+Comece pelo [README](../README.md) para instalar. O *porquê* de cada linha do
+script e do `Dockerfile` está em [`DOCUMENTACAO.md`](../DOCUMENTACAO.md).
+
+## Guias
+
+| Guia | Para quando você quer... |
+|---|---|
+| [Segurança](./guias/seguranca.md) | Saber o que o container protege, o que não protege e onde estão as brechas |
+| [Backup e git](./guias/backup-e-git.md) | Desfazer besteira do agente e guardar as configs dos agentes sem vazar tokens |
+| [Portas e sessões paralelas](./guias/portas-e-sessoes-paralelas.md) | Ver o app no navegador, lidar com Tauri, rodar vários containers ou agentes |
+| [Filosofia da imagem](./guias/filosofia-da-imagem.md) | Entender o tamanho da imagem, adicionar linguagens, liberar disco |
+
+## Claude Code
+
+| Guia | Para quando você quer... |
+|---|---|
+| [Memória e instruções](./claude-code/memoria-e-instrucoes.md) | Entender memória automática, `CLAUDE.md`, `AGENTS.md` e rules |
+| [Sessões e persistência](./claude-code/sessoes-e-persistencia.md) | Saber o que sobrevive ao `exit` e retomar trabalho depois |
+
+## Aprendizados
+
+[`aprendizados/`](./aprendizados/README.md): problemas reais, causas e
+soluções. Contribuições são bem-vindas.

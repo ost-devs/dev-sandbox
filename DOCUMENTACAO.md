@@ -11,6 +11,7 @@ pular direto na dúvida específica.
 1. [Instalar o Docker](#instalar-o-docker)
 2. [Por que não usar o grupo docker](#por-que-nao-usar-o-grupo-docker)
 3. [O problema de fundo: bind mount e UID](#o-problema-de-fundo-bind-mount-e-uid)
+   - [Por que o projeto é montado no mesmo caminho do host](#por-que-o-projeto-e-montado-no-mesmo-caminho-do-host)
 4. [Por que /root precisa de permissões especiais](#por-que-root-precisa-de-permissoes-especiais)
 5. [Por que $HOME não pode continuar sendo /root](#por-que-home-nao-pode-continuar-sendo-root)
 6. [Por que a home inteira é montada, não pasta por pasta](#por-que-a-home-inteira-e-montada)
@@ -72,6 +73,7 @@ sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io doc
 
 ---
 
+<a id="por-que-nao-usar-o-grupo-docker"></a>
 ## Por que não usar o grupo docker
 Colocar seu usuário no grupo `docker` (`sudo usermod -aG docker $USER`)
 equivale, na prática, a dar acesso root ao sistema para qualquer processo
@@ -94,7 +96,7 @@ sozinho.
 
 ## O problema de fundo: bind mount e UID
 
-`/workspace` é um **bind mount**: o container não tem uma cópia da sua
+A pasta do projeto dentro do container é um **bind mount**: o container não tem uma cópia da sua
 pasta, ele enxerga *a mesma pasta real* do host através de outro caminho.
 Não existe tradução de identidade nesse tipo de mount — o UID que cria um
 arquivo dentro do container é literalmente o UID gravado no arquivo no
@@ -132,8 +134,25 @@ Essa é a única mudança realmente indispensável de todo o setup — o resto
 deste documento existe para explicar as consequências dela e como lidar
 com elas.
 
+<a id="por-que-o-projeto-e-montado-no-mesmo-caminho-do-host"></a>
+### Por que o projeto é montado no mesmo caminho do host
+
+Até a v0.1, todo repositório aparecia dentro do container como `/workspace`.
+Funciona para editar arquivos, mas o Claude Code separa memória, histórico
+de conversas e `--continue` **pelo caminho do projeto**. Com tudo em
+`/workspace`, todos os projetos viravam um só
+([detalhes](docs/claude-code/memoria-e-instrucoes.md#3-memória-dentro-do-dev-sandbox)).
+
+Desde a v0.2, `~/Dev/meu-projeto` aparece dentro do container como
+`/home/voce/Dev/meu-projeto`, igualzinho. Além da memória, isso faz caminhos em
+mensagens de erro e worktrees do git baterem dentro e fora. Duas exceções vão
+para `/workspace`: pastas de sistema (`/usr`, `/tmp`...) e montagens amplas
+(`/` ou a home inteira), que ainda pedem confirmação antes, porque entregam
+ao agente justamente o que o sandbox deveria esconder.
+
 ---
 
+<a id="por-que-root-precisa-de-permissoes-especiais"></a>
 ## Por que /root precisa de permissões especiais
 
 Consequência direta da mudança acima: os instaladores de `agy` (e, se
@@ -174,6 +193,7 @@ no bloco original (próxima seção).
 
 ---
 
+<a id="por-que-home-nao-pode-continuar-sendo-root"></a>
 ## Por que $HOME não pode continuar sendo /root
 
 Mesmo com `/root` legível, ferramentas que escrevem configuração ou cache
@@ -203,6 +223,7 @@ configuração da imagem.
 
 ---
 
+<a id="por-que-a-home-inteira-e-montada"></a>
 ## Por que a home inteira é montada
 
 Antes de chegar nesse ponto, uma versão anterior deste setup montava
@@ -266,6 +287,14 @@ host (login compartilhado com o uso nativo do agente, se você usa fora do
 Docker também), enquanto qualquer outra coisa nova em `$HOME` cai
 automaticamente no cache genérico, sem esforço extra.
 
+A mesma regra vale para a proteção do `.git` (v0.2): o repositório é montado
+primeiro, com escrita, e depois `.git/hooks` e `.git/config` são montados por
+cima **somente leitura**. Motivo em [segurança](docs/guias/seguranca.md#a-ponte-mais-perigosa-código-que-roda-fora-do-container).
+
+> Exceção conhecida: `~/.claude.json` (estado do Claude Code, fora da pasta
+> `.claude`) cai no cache genérico, separado do arquivo do host. Ver
+> [sessões e persistência](docs/claude-code/sessoes-e-persistencia.md#por-que-o-claudejson-fica-separado).
+
 ---
 
 ## Por que o cache do cargo fica separado
@@ -301,11 +330,12 @@ recomendação padrão deste guia.
 
 ---
 
+<a id="o-que-morre-a-cada-sessao-e-o-que-persiste"></a>
 ## O que morre a cada sessão e o que persiste
 
 A regra não é "instalação grande morre, coisa pequena sobrevive" — é
 estritamente sobre **onde** o arquivo é escrito no filesystem. Cai dentro
-de `/workspace`, `$HOME` (`/tmp/dev-home`) ou `/usr/local/cargo/registry`
+da pasta do projeto, `$HOME` (`/tmp/dev-home`) ou `/usr/local/cargo/registry`
 → sobrevive. Cai em qualquer outro lugar do sistema (`/usr`, `/lib`,
 `/var`, etc.) → morre com o `--rm`, não importa o tamanho ou a
 importância da ferramenta.
@@ -314,11 +344,17 @@ importância da ferramenta.
 |---|---|---|
 | `apt-get install <pacote>` | `/usr`, `/var/lib/dpkg` (sistema) | ❌ Não |
 | `npm install -g <pacote>` | `/usr/local/lib/node_modules` (padrão) | ❌ Não |
-| `npm install <pacote>` (dentro do projeto) | `/workspace/node_modules` | ✅ Sim |
+| `npm install <pacote>` (dentro do projeto) | `<projeto>/node_modules` | ✅ Sim |
 | `cargo install <binário>` | `$CARGO_HOME/bin` = `/usr/local/cargo/bin` | ❌ Não — só `.../registry` está montado |
 | `cargo build` (dependências) | `$CARGO_HOME/registry` | ✅ Sim |
 | `pip install --user <pacote>` | `$HOME/.local/...` | ✅ Sim (com `$HOME` inteiro montado) |
+| `uv venv` / `python -m venv .venv` (dentro do projeto) | `<projeto>/.venv` | ✅ Sim |
 | Config/cache de qualquer CLI novo | `$HOME/...` | ✅ Sim, automaticamente |
+| Temporários e scratchpad do Claude Code | `$CLAUDE_CODE_TMPDIR` = `$HOME/.cache/claude-tmp` | ✅ Sim (v0.2) |
+| Arquivo solto em `/tmp` | `/tmp` do container | ❌ Não |
+
+`apt-get install` e `npm install -g` nem chegam a gravar: sem `root`, dão
+`Permission denied`. Isso é proposital.
 
 O caso do `cargo install` é o mais contraintuitivo: o **cache de
 compilação** (`registry`) persiste, mas o **binário final** instalado via
@@ -336,11 +372,12 @@ dev-docker
 Dentro da sessão, sem passar pelo agente (pra isolar a variável):
 
 ```bash
-apt-get install -y cowsay
+touch /tmp/efemero.txt ~/persistente.txt
+exit
 ```
 
-Saia (`exit`), entre de novo, e rode `which cowsay` — vai voltar vazio.
-Repita trocando por `pip install --user cowsay` pra ver a diferença.
+Entre de novo (`dev-docker`) e rode `ls /tmp/efemero.txt ~/persistente.txt`:
+o primeiro sumiu, o segundo continua.
 
 ### Por que isso é uma boa prática, não uma limitação
 
@@ -353,38 +390,45 @@ silenciosamente numa sessão e esquecido.
 
 ---
 
+<a id="arquivo-de-instrucoes-por-agente"></a>
 ## Arquivo de instruções por agente
 
-Cada agente lê, por convenção, um arquivo de instruções na raiz do
-repositório:
+Existem dois tipos de instrução, e misturar os dois era o problema do
+antigo `GEMINI.md` deste repositório:
 
-| Agente | Arquivo lido |
+| Tipo | Fala sobre | Onde fica |
+|---|---|---|
+| **Do ambiente** | O container: o que persiste, sem `sudo`, portas, ferramentas que faltam | [`sandbox/AGENTS.md`](sandbox/AGENTS.md), dentro da imagem. Igual para todo projeto |
+| **Do projeto** | O código: stack, comandos de teste, convenções | `AGENTS.md`/`CLAUDE.md`/`GEMINI.md` na raiz de cada repositório |
+
+O antigo `GEMINI.md` misturava os dois, citava caminhos que não existem neste
+setup (`/root/.gemini`, `/root/.npm`) e mandava o agente rodar `apt-get
+install`, que falha sem `root`. Ele foi substituído pelo `sandbox/AGENTS.md`.
+
+### Instruções do ambiente
+
+- **Claude Code** carrega sozinho: a imagem copia o arquivo para
+  `/etc/claude-code/CLAUDE.md`, o local "managed" do Claude Code no Linux.
+- **Codex e agy** não têm um local equivalente garantido. Acrescente uma linha
+  condicional ao arquivo global de cada um no host (`~/.codex/AGENTS.md`,
+  `~/.gemini/GEMINI.md`), como no [README](README.md#instruções-do-ambiente-para-os-agentes).
+
+### Instruções do projeto
+
+| Agente | Arquivo lido na raiz do repositório |
 |---|---|
 | Antigravity CLI (agy) | `GEMINI.md` |
-| Claude Code | `CLAUDE.md` |
+| Claude Code | `CLAUDE.md`; ou `AGENTS.md`, se não houver `CLAUDE.md` |
 | Codex CLI | `AGENTS.md` |
 
-Se você usa só um agente, mantenha só o arquivo correspondente. Se ativar
-mais de um simultaneamente no mesmo repositório, duas opções:
-
-- **Conteúdo idêntico:** mantenha um arquivo canônico (ex: `AGENTS.md`,
-  que é o nome mais neutro) e crie os outros como link simbólico:
-  ```bash
-  ln -s AGENTS.md CLAUDE.md
-  ln -s AGENTS.md GEMINI.md
-  ```
-- **Conteúdo diferente por agente:** mantenha os três arquivos separados
-  — útil se um agente precisa de instruções mais específicas (ex:
-  restrições de sandbox que só fazem sentido pro `agy`).
-
-O exemplo de `GEMINI.md` usado neste projeto (documentando os limites de
-persistência do container para o agente evitar sugerir instalações que
-vão se perder) é um bom modelo para os outros dois arquivos também —
-adapte os caminhos citados (`$HOME/.gemini` → `$HOME/.claude` ou
-`$HOME/.codex`, conforme o agente).
+Usa mais de um agente? Mantenha um `AGENTS.md` canônico. O Claude Code já lê
+ele. Para o agy, um link: `ln -s AGENTS.md GEMINI.md`. Se precisar de algo só
+para o Claude, crie um `CLAUDE.md` com `@AGENTS.md` na primeira linha e o
+extra embaixo. Detalhes em [memória e instruções](docs/claude-code/memoria-e-instrucoes.md).
 
 ---
 
+<a id="configuracao-de-cada-agente"></a>
 ## Configuração de cada agente
 
 | Agente | Config principal | Credenciais |
@@ -501,12 +545,16 @@ especificamente, limpe cada um à parte.
 
 ---
 
+<a id="modelo-de-seguranca-resumo"></a>
 ## Modelo de segurança — resumo
 
 | Camada | Função | Sempre ativa? |
 |---|---|---|
 | Docker (namespaces de mount) | Isola o filesystem do container do restante do sistema | Sim, sempre — não depende de nenhuma configuração |
-| Bind mount `/workspace` | Expõe somente o repositório em uso | Sim |
+| Bind mount do projeto | Expõe somente o repositório em uso | Sim |
+| `.git/hooks` e `.git/config` somente leitura | Impede que o agente plante código que roda no host no próximo `git` | Sim, a menos que `DEV_GIT_RW=1` (v0.2) |
+| `--cap-drop ALL` + `no-new-privileges` | Tira do container privilégios de kernel de que ninguém precisa e bloqueia binários setuid | Sim (v0.2) |
+| Portas só em `127.0.0.1` e só com `DEV_PORTS` | Nada do container fica visível na rede local | Sim (v0.2) |
 | `--user UID:GID` | Impede que arquivos do workspace nasçam como `root` | Sim, enquanto o script tiver essa flag |
 | `--rm` | Destrói o container ao terminar, sem deixar resíduo de sistema | Sim, enquanto o script tiver essa flag |
 | Overlays específicos (`.gemini`/`.claude`/`.codex`) | Compartilham credenciais reais sem expor o resto do host | Sim |
@@ -516,6 +564,11 @@ especificamente, limpe cada um à parte.
 **A correção essencial de todo o setup:** `--user "$HOST_UID:$HOST_GID"`,
 com os valores obtidos antes de iniciar o container. Todo o resto deste
 documento existe para lidar com as consequências dessa única mudança.
+
+Esta tabela lista só o que **protege**. O que continua exposto (credenciais
+montadas, internet de saída, arquivos do projeto que rodam no host) está em
+[segurança](docs/guias/seguranca.md). Leia antes de usar o sandbox com
+código de terceiros.
 
 ---
 
@@ -529,3 +582,7 @@ documento existe para lidar com as consequências dessa única mudança.
 | `Permission denied` ao rodar um binário instalado via `curl \| bash` | Faltou o `chmod 755 /root` + `chmod -R a+rX /root/.local` no `Dockerfile` para esse instalador específico | Adicione o mesmo tratamento já usado pro `agy` |
 | Pacote instalado via `apt-get` some a cada sessão | Comportamento esperado — `/usr` não é persistente | Promova a instalação pro `Dockerfile` e reconstrua a imagem |
 | Obsidian não abre/edita uma nota criada pelo agente | Arquivo antigo, criado antes da correção com `--user` | Rode o `chown` da [seção 13](#corrigindo-arquivos-antigos) |
+| `failed to bind host port ... address already in use` | Outro programa do host (ou outro container) usa a porta pedida em `DEV_PORTS` | `ss -ltnp \| grep :<porta>` no host e escolha outra, ex.: `DEV_PORTS="8090:8080"` |
+| `could not lock config file .git/config` ou `Read-only file system` em `.git/hooks` | Proteção do `.git` (v0.2), proposital | Faça a mudança no host, ou abra a sessão com `DEV_GIT_RW=1` |
+| `claude --version` não muda depois de dias | Auto-update desligado na imagem (v0.2) | `sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .` |
+| `/resume` mostra conversas de outros projetos | Script v0.1, que montava tudo em `/workspace` | Atualize o script ([migração](README.md#vindo-da-v01)) |
