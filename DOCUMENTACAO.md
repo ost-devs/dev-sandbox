@@ -150,22 +150,18 @@ para `/workspace`: pastas de sistema (`/usr`, `/tmp`...) e montagens amplas
 (`/` ou a home inteira), que ainda pedem confirmação antes, porque entregam
 ao agente justamente o que o sandbox deveria esconder.
 
-**Pasta com vários repositórios e caminhos absolutos na documentação.** Há
-projetos em que a documentação (ou instruções para a IA) aponta tudo a partir
-de uma raiz fixa, por exemplo `/workspace/projeto/...` e
-`/workspace/biblioteca-de-referencia/...`, com vários clones lado a lado numa
-pasta. Para esses, escolha o caminho de dentro:
+**A mesma pasta também aparece em `/workspace`.** Há projetos cuja
+documentação (ou instruções para a IA) aponta tudo a partir de uma raiz fixa,
+como `/workspace/projeto/...` e `/workspace/biblioteca-de-referencia/...`.
+Por isso o `dev-docker` monta a pasta **nos dois lugares**: no caminho do host
+e em `/workspace`. São os mesmos arquivos, e não há nada para configurar.
+Cada container tem o seu próprio `/workspace`, então dois containers não se
+misturam.
 
-```bash
-cd ~/Dev/minha-pasta-de-trabalho
-DEV_MOUNT_AT=/workspace dev-docker
-```
-
-A memória do Claude continua separada por repositório git
-(`/workspace/projeto` vira `~/.claude/projects/-workspace-projeto/`), mas
-deixa de ser a mesma de quando você usa o Claude fora do container naquele
-projeto. Dois projetos diferentes com um repositório do mesmo nome dentro de
-`/workspace` dividiriam a memória: nesse caso, prefira o padrão.
+A memória do Claude segue o lugar onde você **abre** o `claude`. O terminal
+já começa no caminho do host, então basta abrir dali (ou de uma subpasta,
+como `cd projeto && claude`). Se você abrir de dentro de `/workspace`, a
+memória vai para `-workspace...`, a mesma pasta de todo projeto aberto assim.
 
 ---
 

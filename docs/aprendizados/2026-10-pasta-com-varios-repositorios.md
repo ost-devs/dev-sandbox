@@ -27,11 +27,15 @@ Dois problemas previstos ao trocar a v0.1 pela v0.2 numa pasta assim:
 A v0.2 supunha "uma pasta montada = um repositório".
 
 ## Solução
-- `DEV_MOUNT_AT=/workspace dev-docker` escolhe o caminho de dentro
-  ([trade-off com a memória do Claude](../../DOCUMENTACAO.md#por-que-o-projeto-e-montado-no-mesmo-caminho-do-host)).
+- O `dev-docker` monta a pasta no caminho do host **e** em `/workspace`. Os
+  caminhos absolutos da documentação funcionam sem tradução, e a memória do
+  Claude continua separada por projeto, desde que ele seja aberto pelo
+  caminho do host ([detalhes](../../DOCUMENTACAO.md#por-que-o-projeto-e-montado-no-mesmo-caminho-do-host)).
+  Uma primeira versão usava uma variável (`DEV_MOUNT_AT`) e foi descartada:
+  é mais uma coisa para lembrar ao abrir o container.
 - O `dev-docker` protege o `.git/hooks` e o `.git/config` de todo repositório
   até dois níveis abaixo da pasta montada, e mostra quantos protegeu.
 
 ## O que mudou no dev-sandbox
-`dev-docker` (`DEV_MOUNT_AT`, proteção de `.git` aninhados),
+`dev-docker` (`/workspace` como segundo ponto de montagem, proteção de `.git` aninhados),
 [segurança](../guias/seguranca.md), `DOCUMENTACAO.md`.
