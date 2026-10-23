@@ -150,6 +150,27 @@ para `/workspace`: pastas de sistema (`/usr`, `/tmp`...) e montagens amplas
 (`/` ou a home inteira), que ainda pedem confirmação antes, porque entregam
 ao agente justamente o que o sandbox deveria esconder.
 
+<a id="projeto-com-nome"></a>
+**Projeto com nome (opcional).** `dev-docker --nome ferrum` monta o projeto em
+`/ferrum` em vez do caminho do host. Para fixar isso de vez:
+
+```bash
+dev-docker --atalho ferrum ~/Dev/ferrum    # uma vez
+dev-docker-ferrum                          # depois, de qualquer pasta
+```
+
+| | Caminho do host (padrão) | `--nome` |
+|---|---|---|
+| Pasta da memória do Claude | `~/.claude/projects/-home-voce-Dev-ferrum/` | `~/.claude/projects/-ferrum/` |
+| Mesma memória em outro PC (via [backup](docs/guias/backup-e-git.md)) | só se o caminho for igual lá | sim, se o nome for o mesmo |
+| Mesma memória que o Claude fora do container | sim | não |
+| Caminhos nas mensagens de erro batem com o host (clicar no VS Code) | sim | não (`/ferrum/...`) |
+| Precisa de `cd` antes | sim | não, com o atalho |
+
+Dois projetos com o mesmo nome dividem a memória: escolha nomes únicos. Ao
+trocar um projeto de um modo para o outro, a memória fica na pasta antiga;
+mova uma vez ([como](docs/claude-code/memoria-e-instrucoes.md#migrando-memórias-antigas-de--workspace)).
+
 ---
 
 <a id="por-que-root-precisa-de-permissoes-especiais"></a>

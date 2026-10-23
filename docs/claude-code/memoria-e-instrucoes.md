@@ -153,6 +153,12 @@ que ele tem no host** (`/home/voce/Dev/meu-projeto` dentro e fora). Cada
 projeto ganha sua pasta. Exceções que continuam em `/workspace`: pastas de
 sistema e montagens amplas (`/` ou a home inteira, que pedem confirmação).
 
+Com `dev-docker --nome meu-projeto` o projeto aparece em `/meu-projeto`, e a
+memória fica em `~/.claude/projects/-meu-projeto/`: um nome curto, que não
+depende do caminho no computador e continua o mesmo em outro PC com o mesmo
+backup do `~/.claude`. Em troca, deixa de ser a memória do Claude usado fora
+do container ([comparação](../../DOCUMENTACAO.md#projeto-com-nome)).
+
 > Alternativa que existe, mas não foi adotada: manter `/workspace` e definir
 > `CLAUDE_CODE_PROJECT_DIR_NAME` por projeto (exige também
 > `CLAUDE_CONFIG_DIR`). Montar no caminho real resolve mais coisa de uma vez:

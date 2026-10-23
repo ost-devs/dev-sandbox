@@ -1,7 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
-# Uso: dev-docker [caminho-do-repo]
+# Uso: dev-docker [--nome NOME] [caminho-do-repo]
+#      dev-docker --atalho NOME [caminho-do-repo]   cria o comando dev-docker-NOME
+#
+#   --nome NOME   monta o projeto em /NOME em vez do caminho do host: caminho curto e
+#                 memória do Claude com nome estável (~/.claude/projects/-NOME/)
+#   --atalho NOME grava ~/.local/bin/dev-docker-NOME, que abre este projeto com
+#                 --nome NOME a partir de qualquer pasta
 #
 # Variáveis opcionais (detalhes em docs/guias/portas-e-sessoes-paralelas.md):
 #   DEV_PORTS="5173 3000 8090:8080"  portas publicadas só em 127.0.0.1
@@ -9,7 +15,45 @@ set -euo pipefail
 #   DEV_GIT_RW=1                      libera escrita em .git/hooks e .git/config
 #   DEV_IMAGE=dev-sandbox:latest      outra tag da imagem
 
-REPO_PATH="$(realpath "${1:-.}")"
+NOME=""
+ATALHO=""
+ARG_PATH=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --nome|--atalho)
+      [ $# -ge 2 ] || { echo "$1 precisa de um nome (ex.: $1 ferrum)." >&2; exit 1; }
+      if [ "$1" = "--nome" ]; then NOME="$2"; else ATALHO="$2"; fi
+      shift 2 ;;
+    -*)       echo "Opção desconhecida: $1" >&2; exit 1 ;;
+    *)        ARG_PATH="$1"; shift ;;
+  esac
+done
+REPO_PATH="$(realpath "${ARG_PATH:-.}")"
+
+# Nome de projeto: vira /NOME dentro do container. Letras minúsculas, números,
+# ponto, hífen e sublinhado; nunca o nome de uma pasta do sistema.
+valida_nome() {
+  case "$1" in
+    ""|*[!a-z0-9._-]*|[._-]*) echo "Nome inválido: '$1' (use a-z, 0-9, . _ -)." >&2; exit 1 ;;
+    bin|boot|dev|etc|home|lib|lib32|lib64|libx32|media|mnt|opt|proc|root|run|sbin|srv|sys|tmp|usr|var)
+      echo "'$1' é uma pasta do sistema; escolha outro nome." >&2; exit 1 ;;
+  esac
+}
+
+if [ -n "$ATALHO" ]; then
+  valida_nome "$ATALHO"
+  DEST="$HOME/.local/bin/dev-docker-$ATALHO"
+  if [ -e "$DEST" ] && ! grep -q "gerado por dev-docker --atalho" "$DEST"; then
+    echo "$DEST já existe e não foi criado pelo dev-docker; nada foi alterado." >&2; exit 1
+  fi
+  mkdir -p "$HOME/.local/bin"
+  printf '#!/bin/bash\n# gerado por dev-docker --atalho %s\nexec %q --nome %q %q "$@"\n' \
+    "$ATALHO" "$(realpath "$0")" "$ATALHO" "$REPO_PATH" > "$DEST"
+  chmod +x "$DEST"
+  echo "Criado: dev-docker-$ATALHO  →  $REPO_PATH em /$ATALHO"
+  exit 0
+fi
+[ -n "$NOME" ] && valida_nome "$NOME"
 HOST_UID="$(id -u)"
 HOST_GID="$(id -g)"
 IMAGE="${DEV_IMAGE:-dev-sandbox:latest}"
@@ -41,15 +85,16 @@ case "$REPO_PATH" in
   *)
     MOUNT_PATH="$REPO_PATH" ;;
 esac
+[ -n "$NOME" ] && MOUNT_PATH="/$NOME"
 
 # Montar / ou a sua home inteira entrega ao agente tudo o que o sandbox
 # deveria esconder (chaves SSH, navegador, outros projetos).
 if [ "$REPO_PATH" = "/" ] || [ "$REPO_PATH" = "$HOME" ] || [[ "$HOME" == "$REPO_PATH"/* ]]; then
-  echo "⚠️  Você vai montar '$REPO_PATH' inteiro, com escrita, em /workspace."
+  echo "⚠️  Você vai montar '$REPO_PATH' inteiro, com escrita, em /${NOME:-workspace}."
   echo "   O agente terá acesso a tudo aí dentro, inclusive a sua home."
   read -r -p "   Digite 'sim' para continuar: " resposta
   [ "$resposta" = "sim" ] || { echo "Cancelado."; exit 1; }
-  MOUNT_PATH="/workspace"
+  MOUNT_PATH="/${NOME:-workspace}"
 fi
 
 # ── Proteção do .git ─────────────────────────────────────────────
@@ -87,7 +132,7 @@ for p in ${DEV_PORTS:-}; do
 done
 
 # Nome único por sessão: identifica o container e permite várias em paralelo.
-SLUG="$(basename "$REPO_PATH" | tr -c 'a-zA-Z0-9_.-' '-' | sed 's/^[-.]*//; s/-*$//' | cut -c1-40)"
+SLUG="$(basename "${NOME:-$REPO_PATH}" | tr -c 'a-zA-Z0-9_.-' '-' | sed 's/^[-.]*//; s/-*$//' | cut -c1-40)"
 NAME="dev-${SLUG:-raiz}-$$"
 
 echo "▶ $NAME  |  $REPO_PATH → $MOUNT_PATH  |  portas: ${DEV_PORTS:-nenhuma}  |  .git protegidos: $GIT_PROTECTED"

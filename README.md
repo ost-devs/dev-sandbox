@@ -69,6 +69,7 @@ claude                             # (ou codex, agy) dentro do container
 | Quero... | Como |
 |---|---|
 | Abrir o site no navegador do host | `DEV_PORTS="5173" dev-docker` e o servidor em `0.0.0.0` ([guia](docs/guias/portas-e-sessoes-paralelas.md)) |
+| Abrir um projeto pelo nome, de qualquer pasta | `dev-docker --atalho meu-projeto ~/Dev/meu-projeto` uma vez, depois `dev-docker-meu-projeto` ([trade-offs](DOCUMENTACAO.md#projeto-com-nome)) |
 | Outro terminal no mesmo container | `sudo docker exec -it <nome-mostrado-ao-iniciar> bash` |
 | Dois agentes no mesmo projeto | `claude --worktree <nome>` ([guia](docs/guias/portas-e-sessoes-paralelas.md#dois-agentes-no-mesmo-projeto)) |
 | Retomar a conversa depois do `exit` ou do limite de uso | `claude --continue` ([guia](docs/claude-code/sessoes-e-persistencia.md)) |
