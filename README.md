@@ -35,7 +35,7 @@ o custo é digitar a senha do `sudo` ao abrir uma sessão.
 **2. Clone e construa a imagem:**
 
 ```bash
-git clone <url-deste-repositorio> ~/dev-sandbox
+git clone https://github.com/ost-devs/dev-sandbox ~/dev-sandbox
 cd ~/dev-sandbox
 sudo docker build -t dev-sandbox .
 ```
