@@ -59,16 +59,15 @@ coloque no novo. É só uma lista de links, uma linha por memória.
 
 ## 4. E as conversas antigas?
 
-- **Voltar a uma conversa exatamente como ela era:** abra o Claude no mesmo
-  caminho de antes. Para algo que rodava em `/workspace` (v0.1):
-  ```bash
-  dev-docker --nome workspace ~/a/mesma/pasta/de/antes
-  claude --resume          # dentro do container, em /workspace; escolha a conversa
-  ```
-- **Mover conversas** (`.jsonl`) para a pasta nova: a documentação do Claude
-  Code não descreve isso; não testado. Normalmente não vale a pena: as
-  transcrições são apagadas pela faxina em 30 dias (`cleanupPeriodDays`), e o
-  que importa de uma conversa deveria estar em commits, documentos ou memórias.
+- **Voltar a uma conversa antiga:** `claude --resume <id-da-sessão>` funciona
+  **de qualquer pasta**; o Claude procura o ID em todos os projetos da
+  máquina. O ID é o nome do arquivo `.jsonl`. No seletor (`claude --resume`
+  sem argumento), `Ctrl+A` mostra as conversas de todos os projetos.
+- **Levar uma conversa para o projeto novo:** retome-a e use `/cd <caminho>`
+  dentro dela; a documentação diz que isso a move para a pasta do novo
+  diretório.
+- **Não deixe a faxina levar as importantes:** as transcrições somem em 30
+  dias (`cleanupPeriodDays`). Como guardar: [preservar conversas](./preservar-conversas.md).
 
 ## 5. Conferir
 

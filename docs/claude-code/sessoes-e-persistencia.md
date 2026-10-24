@@ -32,7 +32,7 @@ arquivo trocando-o por um novo, e um bind mount de arquivo único quebra com iss
 
 É onde o Claude guarda arquivos de trabalho da sessão: scripts auxiliares,
 saídas longas, imagens coladas. Ele gerencia sozinho: cria por sessão e a
-faxina apaga junto com a transcrição (30 dias por padrão, `cleanupPeriodDays`).
+faxina apaga junto com a transcrição (30 dias por padrão, `cleanupPeriodDays`; para guardar conversas importantes, ver [preservar conversas](./preservar-conversas.md)).
 
 - **`/exit` no Claude:** não apaga nada. A pasta continua lá.
 - **`exit` do container (v0.1):** perdia tudo, porque `/tmp` era do container.

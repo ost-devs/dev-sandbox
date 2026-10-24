@@ -13,7 +13,9 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
   abre o projeto de qualquer lugar ([trade-offs](DOCUMENTACAO.md#projeto-com-nome)).
 - Guias novos: [trabalhar por projeto](docs/claude-code/projetos.md),
   [migrar memórias](docs/claude-code/migrar-memorias.md),
-  [modelo e esforço](docs/claude-code/modelo-e-esforco.md) (esboço com diário de campo).
+  [modelo e esforço](docs/claude-code/modelo-e-esforco.md) (esboço com diário de campo),
+  [preservar conversas](docs/claude-code/preservar-conversas.md), com o hook opcional
+  `extras/claude-hooks/arquivar-conversa.py`.
 - Modelo de issue e de discussão para relatos de modelo e esforço (`.github/`).
 - Aprendizados ganham o campo **Base** (evidência, documentação ou análise).
 - Testado só a seco (`bash -n` e `sudo` falso); falta o teste real no host.
