@@ -68,11 +68,11 @@ Depois, no navegador do host: `http://localhost:5173`.
 
 ### Projetos diferentes
 
-Abra um terminal por projeto e rode `dev-docker` em cada. Cada container ganha
-um nome próprio (`dev-<repo>-<número>`), mostrado ao iniciar. Se mais de um
+Abra um terminal por projeto e rode `dev-docker` (ou `dev-docker-<nome>`) em cada. Cada container ganha
+um nome próprio (`dev-<repo-ou-nome>-<número>`), mostrado ao iniciar. Se mais de um
 precisar de porta, use portas diferentes.
 
-Com o repositório montado no caminho real (v0.2), cada projeto tem memória e
+Montado no caminho real ou com um `--nome` próprio, cada projeto tem memória e
 histórico próprios no Claude Code ([por quê](../claude-code/memoria-e-instrucoes.md#3-memória-dentro-do-dev-sandbox)).
 
 ### Outro terminal no mesmo container

@@ -50,14 +50,17 @@ A conversa fica salva no disco a cada mensagem. Bateu o limite de uso? Pode sair
 ```bash
 exit            # sai do Claude e do container
 # ... horas depois ...
-dev-docker      # no mesmo repositório
+dev-docker      # no mesmo repositório (ou dev-docker-<nome>, se o projeto tem nome)
 claude --continue          # retoma a última conversa deste projeto
 claude --resume            # ou escolhe da lista
 ```
 
-Isso só funciona direito **por projeto** a partir da v0.2. Antes, com tudo em
-`/workspace`, o `--continue` pegava a última sessão de *qualquer* projeto
-(ver [memória](./memoria-e-instrucoes.md#o-problema-que-existia-tudo-virava--workspace)).
+Reabra o projeto **do mesmo jeito** de antes: o `--continue` procura a última
+conversa do caminho onde o Claude abriu. Com o caminho do host, é o mesmo
+repositório; com `--nome`, o mesmo nome. Uma conversa específica volta de
+qualquer pasta com `claude --resume <id>`. Saindo, o Claude **não** continua
+sozinho quando o limite volta: isso só acontece numa sessão que ficou aberta
+(próxima tabela).
 
 O que **não** volta: processos que estavam rodando (um build longo, um servidor,
 uma tarefa em background). Retome pedindo ao Claude para rodar de novo.
@@ -66,8 +69,10 @@ uma tarefa em background). Retome pedindo ao Claude para rodar de novo.
 
 | Opção | Precisa do seu PC ligado? | Observação |
 |---|---|---|
-| Sair e `claude --continue` depois | Só quando voltar | O mais simples. Resolve o caso "esperar o limite voltar" |
-| `tmux` dentro do container | Sim, e o container aberto | Sobrevive a fechar a *janela* do terminal, não ao `exit` do container. `tmux` já vem na imagem |
+| Sair e `claude --continue` depois | Só quando voltar | O mais simples. Você mesmo retoma depois que o limite volta |
+| `tmux` **no host**, com o `dev-docker` dentro dele | Sim | A sessão fica aberta sem o terminal: o Claude continua sozinho quando o limite volta. Passo a passo em [trabalhar por projeto](./projetos.md#6-sessões-longas-e-limites-de-uso) |
+| `tmux` dentro do container | Sim, e o container aberto | Já vem na imagem, mas o que acontece com o container ao fechar o terminal do `dev-docker` não foi testado. Prefira o `tmux` no host |
+| Sessões em background (`claude --bg`, `claude agents`) | Sim, e o container aberto | Rodam dentro do container e morrem no `exit`. E não esperam o limite voltar |
 | `claude --remote-control` | Sim, e o container aberto | Acompanhar e responder pelo celular/navegador |
 | Claude Code na web (claude.ai/code) ou GitHub Actions | Não | Roda na nuvem da Anthropic sobre o repositório no GitHub. Fora do dev-sandbox: outro ambiente, outras regras |
 

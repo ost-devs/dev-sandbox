@@ -3,7 +3,7 @@
 Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DOCUMENTACAO.md) e
 [`docs/aprendizados/`](docs/aprendizados/README.md).
 
-## v0.3 (branch `feat/workspace-multi-repo`, ainda não na `main`)
+## v0.3
 
 - `.git/hooks` e `.git/config` somente leitura também nos repositórios até dois níveis dentro
   da pasta montada; o início da sessão mostra quantos foram protegidos
@@ -21,8 +21,9 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
 - Testado só a seco (`bash -n` e `sudo` falso); falta o teste real no host.
 
 **Ao atualizar da v0.2:** `git pull`; o link `~/.local/bin/dev-docker` já aponta para o script
-novo. Nada muda se você não usar `--nome`. Se passar a usar, a memória do projeto fica numa
-pasta nova: [migrar](docs/claude-code/migrar-memorias.md).
+novo. Reconstrua a imagem (`sudo docker build -t dev-sandbox .`) para os agentes receberem o
+`sandbox/AGENTS.md` atualizado. Nada muda se você não usar `--nome`; se passar a usar, a memória
+do projeto fica numa pasta nova: [migrar](docs/claude-code/migrar-memorias.md).
 
 ## v0.2
 
@@ -36,7 +37,10 @@ pasta nova: [migrar](docs/claude-code/migrar-memorias.md).
   (`sandbox/AGENTS.md`), scratchpad do Claude persistente, sem auto-update órfão.
 - Documentação em `docs/`: segurança, backup, portas, imagem, Claude Code, aprendizados.
 
-**Ao atualizar da v0.1:** [README, "Vindo da v0.1?"](README.md#vindo-da-v01).
+**Ao atualizar da v0.1:** reconstrua a imagem, troque a cópia antiga do script pelo link do
+passo 3 da instalação, migre as memórias de `~/.claude/projects/-workspace/`
+([como](docs/claude-code/migrar-memorias.md)) e apague o auto-update órfão
+(`rm -rf ~/.cache/dev-sandbox/home/.local/share/claude ~/.cache/dev-sandbox/home/.local/bin/claude`).
 
 ## v0.1
 

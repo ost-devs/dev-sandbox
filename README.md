@@ -66,13 +66,29 @@ dev-docker                         # ou: dev-docker ~/Dev/meu-projeto
 claude                             # (ou codex, agy) dentro do container
 ```
 
+O projeto aparece dentro do container no mesmo caminho do host, e o Claude
+guarda memória e conversas separadas por projeto.
+
+**Macete para os projetos do dia a dia:** dê um nome ao projeto uma vez e
+abra-o de qualquer pasta, sem `cd`:
+
+```bash
+dev-docker --atalho meu-projeto ~/Dev/meu-projeto   # uma vez: cria o comando dev-docker-meu-projeto
+dev-docker-meu-projeto                             # sempre: abre o container com o projeto em /meu-projeto
+```
+
+Com nome, a memória do Claude fica em `~/.claude/projects/-meu-projeto/`,
+igual em qualquer computador. O que muda em relação ao padrão está em
+[projeto com nome](DOCUMENTACAO.md#projeto-com-nome); para trocar um projeto
+que já tem memória, [migrar memórias](docs/claude-code/migrar-memorias.md).
+
 | Quero... | Como |
 |---|---|
 | Abrir o site no navegador do host | `DEV_PORTS="5173" dev-docker` e o servidor em `0.0.0.0` ([guia](docs/guias/portas-e-sessoes-paralelas.md)) |
-| Abrir um projeto pelo nome, de qualquer pasta | `dev-docker --atalho meu-projeto ~/Dev/meu-projeto` uma vez, depois `dev-docker-meu-projeto` ([trade-offs](DOCUMENTACAO.md#projeto-com-nome)) |
 | Outro terminal no mesmo container | `sudo docker exec -it <nome-mostrado-ao-iniciar> bash` |
 | Dois agentes no mesmo projeto | `claude --worktree <nome>` ([guia](docs/guias/portas-e-sessoes-paralelas.md#dois-agentes-no-mesmo-projeto)) |
-| Retomar a conversa depois do `exit` ou do limite de uso | `claude --continue` ([guia](docs/claude-code/sessoes-e-persistencia.md)) |
+| Retomar a conversa depois do `exit` ou do limite de uso | Reabra o projeto do mesmo jeito (mesmo caminho ou mesmo nome) e `claude --continue` ([guia](docs/claude-code/sessoes-e-persistencia.md)) |
+| Não perder uma conversa importante (o Claude apaga as antigas em 30 dias) | `/rename`, `/export` e anote o ID ([guia](docs/claude-code/preservar-conversas.md)) |
 | Atualizar os agentes | `sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .` |
 | Mexer em `.git/config` de dentro (ex.: `git remote add`) | `DEV_GIT_RW=1 dev-docker` ([por que é bloqueado](docs/guias/seguranca.md#a-ponte-mais-perigosa-código-que-roda-fora-do-container)) |
 
@@ -94,21 +110,10 @@ ferramentas que faltam. Ele vai para dentro da imagem.
   If the environment variable DEV_SANDBOX is 1, read /etc/dev-sandbox/AGENTS.md before starting any task.
   ```
 
-## Vindo da v0.1?
-
-1. `git pull` e reconstrua a imagem (`sudo docker build -t dev-sandbox .`).
-2. Troque a cópia antiga do script pelo link:
-   `mv ~/.local/bin/dev-docker ~/.local/bin/dev-docker.v01.bak` e o passo 3 da instalação.
-   Se você tinha mudanças próprias (portas, mounts), veja `DEV_PORTS` acima antes de reaplicar.
-3. O projeto agora aparece no container no mesmo caminho do host, e não em
-   `/workspace`. Memórias antigas do Claude ficaram em `~/.claude/projects/-workspace/`:
-   [como migrar](docs/claude-code/memoria-e-instrucoes.md#migrando-memórias-antigas-de--workspace).
-4. Recupere o espaço do auto-update órfão do Claude:
-   `rm -rf ~/.cache/dev-sandbox/home/.local/share/claude ~/.cache/dev-sandbox/home/.local/bin/claude`.
-
 ## Documentação
 
 - [`CHANGELOG.md`](CHANGELOG.md): o que mudou em cada versão e como atualizar.
 - [`DOCUMENTACAO.md`](DOCUMENTACAO.md): o *porquê* de cada decisão do script e do `Dockerfile`.
 - [`docs/`](docs/README.md): guias (segurança, backup, portas, imagem), Claude Code
-  (memória, sessões) e [aprendizados](docs/aprendizados/README.md) da comunidade.
+  (projetos, memória, sessões, conversas, modelo e esforço) e
+  [aprendizados](docs/aprendizados/README.md) da comunidade.

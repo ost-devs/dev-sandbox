@@ -12,6 +12,7 @@ pular direto na dúvida específica.
 2. [Por que não usar o grupo docker](#por-que-nao-usar-o-grupo-docker)
 3. [O problema de fundo: bind mount e UID](#o-problema-de-fundo-bind-mount-e-uid)
    - [Por que o projeto é montado no mesmo caminho do host](#por-que-o-projeto-e-montado-no-mesmo-caminho-do-host)
+   - [Projeto com nome (`--nome`, `--atalho`)](#projeto-com-nome)
 4. [Por que /root precisa de permissões especiais](#por-que-root-precisa-de-permissoes-especiais)
 5. [Por que $HOME não pode continuar sendo /root](#por-que-home-nao-pode-continuar-sendo-root)
 6. [Por que a home inteira é montada, não pasta por pasta](#por-que-a-home-inteira-e-montada)
@@ -106,7 +107,7 @@ Um `Dockerfile` sem `USER` definido roda como `root` (UID 0) por padrão.
 Se o processo dentro do container criar:
 
 ```
-/workspace/nota.md
+~/Dev/meu-projeto/nota.md
 ```
 
 o arquivo aparece no host como:
@@ -127,7 +128,7 @@ UID/GID do seu usuário no host, usando a flag nativa do Docker:
 ```
 
 Com `HOST_UID="$(id -u)"` e `HOST_GID="$(id -g)"` obtidos *antes* de
-iniciar o container, qualquer arquivo criado em `/workspace` já nasce com
+iniciar o container, qualquer arquivo criado na pasta do projeto já nasce com
 o dono certo — sem precisar rodar `chown` depois de cada sessão.
 
 Essa é a única mudança realmente indispensável de todo o setup — o resto
@@ -137,18 +138,18 @@ com elas.
 <a id="por-que-o-projeto-e-montado-no-mesmo-caminho-do-host"></a>
 ### Por que o projeto é montado no mesmo caminho do host
 
-Até a v0.1, todo repositório aparecia dentro do container como `/workspace`.
-Funciona para editar arquivos, mas o Claude Code separa memória, histórico
-de conversas e `--continue` **pelo caminho do projeto**. Com tudo em
-`/workspace`, todos os projetos viravam um só
+O Claude Code separa memória, histórico de conversas e `--continue` **pelo
+caminho do projeto**. Se todo projeto aparecesse no mesmo caminho dentro do
+container (como na v0.1, com tudo em `/workspace`), todos virariam um só
 ([detalhes](docs/claude-code/memoria-e-instrucoes.md#3-memória-dentro-do-dev-sandbox)).
 
-Desde a v0.2, `~/Dev/meu-projeto` aparece dentro do container como
+Por isso `~/Dev/meu-projeto` aparece dentro do container como
 `/home/voce/Dev/meu-projeto`, igualzinho. Além da memória, isso faz caminhos em
 mensagens de erro e worktrees do git baterem dentro e fora. Duas exceções vão
-para `/workspace`: pastas de sistema (`/usr`, `/tmp`...) e montagens amplas
-(`/` ou a home inteira), que ainda pedem confirmação antes, porque entregam
-ao agente justamente o que o sandbox deveria esconder.
+para `/workspace` (ou para `/NOME`, com `--nome`): pastas de sistema (`/usr`,
+`/tmp`...) e montagens amplas (`/` ou a home inteira), que ainda pedem
+confirmação antes, porque entregam ao agente justamente o que o sandbox
+deveria esconder.
 
 <a id="projeto-com-nome"></a>
 **Projeto com nome (opcional).** `dev-docker --nome ferrum` monta o projeto em
@@ -482,7 +483,7 @@ de ambiente adicional — eles já respeitam `$HOME` por padrão.
   Linux, via `nsjail`) para os comandos de terminal do `agy` — uma camada
   extra além do isolamento do Docker.
 - **`allowNonWorkspaceAccess: false`** impede que as ferramentas do
-  agente acessem qualquer coisa fora de `/workspace` — inclusive suas
+  agente acessem qualquer coisa fora da pasta do projeto — inclusive suas
   próprias credenciais montadas em `.gemini`.
 
 > **⚠️ Cuidado:** `toolPermission: always-proceed` combinado com o
@@ -495,7 +496,7 @@ de ambiente adicional — eles já respeitam `$HOME` por padrão.
 `enableTerminalSandbox` e `allowNonWorkspaceAccess` não existem pra
 proteger seu computador — isso o isolamento do container já faz de
 graça, sempre, independente de configuração. Eles existem pra proteger as
-duas pontes reais e vivas durante a sessão: seu código em `/workspace` e
+duas pontes reais e vivas durante a sessão: a pasta do projeto e
 suas credenciais montadas. Isso vale igualmente para Claude Code e Codex,
 que têm seus próprios mecanismos de permissão equivalentes.
 
@@ -504,7 +505,7 @@ que têm seus próprios mecanismos de permissão equivalentes.
 ## Testando o sandbox interno do agy
 
 Dentro de uma sessão `dev-docker`, peça ao agente (ou rode manualmente)
-para criar um arquivo fora de `/workspace`, em:
+para criar um arquivo fora da pasta do projeto, em:
 
 ```
 /tmp/teste-sandbox.txt
@@ -573,7 +574,7 @@ especificamente, limpe cada um à parte.
 |---|---|---|
 | Docker (namespaces de mount) | Isola o filesystem do container do restante do sistema | Sim, sempre — não depende de nenhuma configuração |
 | Bind mount do projeto | Expõe somente o repositório em uso | Sim |
-| `.git/hooks` e `.git/config` somente leitura | Impede que o agente plante código que roda no host no próximo `git`, também nos repositórios até dois níveis dentro da pasta montada ([o que fica de fora](docs/guias/seguranca.md)) | Sim, a menos que `DEV_GIT_RW=1` (v0.2) |
+| `.git/hooks` e `.git/config` somente leitura | Impede que o agente plante código que roda no host no próximo `git`, também nos repositórios até dois níveis dentro da pasta montada ([o que fica de fora](docs/guias/seguranca.md)) | Sim, a menos que `DEV_GIT_RW=1` (v0.2; repositórios internos desde a v0.3) |
 | `--cap-drop ALL` + `no-new-privileges` | Tira do container privilégios de kernel de que ninguém precisa e bloqueia binários setuid | Sim (v0.2) |
 | Portas só em `127.0.0.1` e só com `DEV_PORTS` | Nada do container fica visível na rede local | Sim (v0.2) |
 | `--user UID:GID` | Impede que arquivos do workspace nasçam como `root` | Sim, enquanto o script tiver essa flag |
@@ -606,4 +607,6 @@ código de terceiros.
 | `failed to bind host port ... address already in use` | Outro programa do host (ou outro container) usa a porta pedida em `DEV_PORTS` | `ss -ltnp \| grep :<porta>` no host e escolha outra, ex.: `DEV_PORTS="8090:8080"` |
 | `could not lock config file .git/config` ou `Read-only file system` em `.git/hooks` | Proteção do `.git` (v0.2), proposital | Faça a mudança no host, ou abra a sessão com `DEV_GIT_RW=1` |
 | `claude --version` não muda depois de dias | Auto-update desligado na imagem (v0.2) | `sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .` |
-| `/resume` mostra conversas de outros projetos | Script v0.1, que montava tudo em `/workspace` | Atualize o script ([migração](README.md#vindo-da-v01)) |
+| `/resume` mostra conversas de outros projetos | O projeto foi aberto em `/workspace` (pasta de sistema, `/` ou a home inteira), ou dois projetos usam o mesmo `--nome` | Abra pelo caminho do host ou com um `--nome` só dele |
+| A memória ou as conversas de um projeto sumiram | O projeto foi aberto de outro jeito (outro caminho, ou com/sem `--nome`): o Claude procura em outra pasta | Reabra do jeito de antes, ou [migre as memórias](docs/claude-code/migrar-memorias.md); conversas: `claude --resume <id>` funciona de qualquer pasta |
+| `dev-docker-<nome>: command not found` | `~/.local/bin` fora do `PATH`, ou o atalho foi criado noutra máquina | Passo 3 da instalação no README; recrie com `dev-docker --atalho <nome> <pasta>` |

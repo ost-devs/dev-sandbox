@@ -132,7 +132,8 @@ O `dev-docker` monta o seu `~/.claude` real dentro do container. Então:
 
 - A memória **sobrevive** ao `--rm`: ela fica no host, não no container.
 - É a **mesma** memória de quando você usa o Claude fora do Docker, no mesmo
-  projeto, porque o caminho é o mesmo (ver abaixo).
+  projeto, porque o caminho é o mesmo (ver abaixo). Com `--nome`, não: o
+  caminho de dentro passa a ser `/nome`.
 
 ### O problema que existia: tudo virava `-workspace`
 
