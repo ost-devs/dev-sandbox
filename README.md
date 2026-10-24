@@ -70,7 +70,7 @@ claude          # (ou codex, agy) dentro do container
 
 <a id="atalho"></a>
 **Atalho para os projetos do dia a dia.** Crie uma vez um comando só do
-projeto (`meu-site` é um nome que você escolhe), indicando a pasta dele:
+projeto (ex.`meu-site` é um nome que você escolhe), indicando a pasta dele:
 
 ```bash
 dev-docker --atalho meu-site ~/Projetos/meu-site
@@ -84,7 +84,7 @@ dev-docker --atalho meu-site
 ```
 
 Ele mostra a pasta que vai guardar e pede confirmação: confira antes de
-digitar `s`. A partir daí, de qualquer terminal, sem `cd`:
+digitar `s`. A partir daí, de qualquer lugar no terminal, sem precisar usar `cd`:
 
 ```bash
 dev-docker-meu-site
