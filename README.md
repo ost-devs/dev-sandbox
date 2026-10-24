@@ -108,6 +108,7 @@ ferramentas que faltam. Ele vai para dentro da imagem.
 
 ## Documentação
 
+- [`CHANGELOG.md`](CHANGELOG.md): o que mudou em cada versão e como atualizar.
 - [`DOCUMENTACAO.md`](DOCUMENTACAO.md): o *porquê* de cada decisão do script e do `Dockerfile`.
 - [`docs/`](docs/README.md): guias (segurança, backup, portas, imagem), Claude Code
   (memória, sessões) e [aprendizados](docs/aprendizados/README.md) da comunidade.

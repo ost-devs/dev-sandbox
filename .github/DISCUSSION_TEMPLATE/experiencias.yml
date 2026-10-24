@@ -1,0 +1,73 @@
+title: "[experiência] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado! Cada relato ajuda a transformar a projeção de
+        `docs/claude-code/modelo-e-esforco.md` em algo baseado em evidência.
+        Não cole código, tokens, chaves ou dados de clientes.
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo de tarefa
+      options:
+        - Rename, ajuste pequeno, pergunta sobre o código
+        - Feature com escopo claro, docs, scripts
+        - Bug numa base existente, refactor com casos de borda
+        - Desenho com decisões ambíguas (arquitetura, convenções)
+        - Trabalho longo e autônomo, com subagentes
+        - Segurança, problema muito difícil
+        - Outro (descreva abaixo)
+    validations: { required: true }
+  - type: textarea
+    id: tarefa
+    attributes:
+      label: A tarefa
+      description: O que você pediu, tamanho do projeto, linguagem. Sem dados sensíveis.
+    validations: { required: true }
+  - type: input
+    id: plano
+    attributes:
+      label: Plano ou acesso
+      placeholder: "Pro, Max, Team, API, outro"
+    validations: { required: true }
+  - type: input
+    id: modelo
+    attributes:
+      label: Modelo e esforço
+      placeholder: "ex.: Opus 5.5 / high (veja no /model)"
+    validations: { required: true }
+  - type: dropdown
+    id: resultado
+    attributes:
+      label: Resultado
+      options:
+        - Resolveu bem
+        - Resolveu, com correções minhas
+        - Resolveu só depois de trocar modelo ou esforço
+        - Não resolveu
+    validations: { required: true }
+  - type: textarea
+    id: detalhes
+    attributes:
+      label: O que aconteceu
+      description: Onde errou ou acertou. Se trocou de modelo ou esforço, o que mudou. Pulou arquivos ou testes? Errou com confiança?
+    validations: { required: true }
+  - type: input
+    id: uso
+    attributes:
+      label: Uso (se souber)
+      placeholder: "ex.: 40% do limite de 5h, ~300k tokens, 25 min"
+  - type: dropdown
+    id: projecao
+    attributes:
+      label: Bate com a projeção do guia?
+      options:
+        - Sim
+        - Em parte
+        - Não
+        - Não li o guia
+  - type: textarea
+    id: aprendizado
+    attributes:
+      label: O que você faria diferente da próxima vez

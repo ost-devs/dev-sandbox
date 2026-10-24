@@ -18,6 +18,9 @@ script e do `Dockerfile` está em [`DOCUMENTACAO.md`](../DOCUMENTACAO.md).
 |---|---|
 | [Memória e instruções](./claude-code/memoria-e-instrucoes.md) | Entender memória automática, `CLAUDE.md`, `AGENTS.md` e rules |
 | [Sessões e persistência](./claude-code/sessoes-e-persistencia.md) | Saber o que sobrevive ao `exit` e retomar trabalho depois |
+| [Trabalhar por projeto](./claude-code/projetos.md) | Organizar projetos, instruções e memória ao longo do tempo |
+| [Migrar memórias](./claude-code/migrar-memorias.md) | Levar memórias de um caminho de projeto para outro |
+| [Modelo e esforço](./claude-code/modelo-e-esforco.md) | Escolher modelo e esforço sem usar bazuca para matar mosca |
 
 ## Aprendizados
 

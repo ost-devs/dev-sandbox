@@ -166,6 +166,8 @@ do container ([comparação](../../DOCUMENTACAO.md#projeto-com-nome)).
 
 ### Migrando memórias antigas de `-workspace`
 
+Passo a passo completo, incluindo o que fazer com cada memória: [migrar memórias](./migrar-memorias.md).
+
 No host, veja o que tem lá e mova cada memória para o projeto certo:
 
 ```bash

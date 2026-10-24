@@ -7,6 +7,9 @@ proveito dele. Valem também, em boa parte, fora do Docker.
 |---|---|
 | [Memória e instruções](./memoria-e-instrucoes.md) | O que é a memória automática, como difere de `CLAUDE.md`/`AGENTS.md`/rules, como fica separada por projeto no container |
 | [Sessões e persistência](./sessoes-e-persistencia.md) | O que sobrevive ao `exit`, a pasta `/tmp/claude-*`, como retomar trabalho depois do limite de uso, atualizações |
+| [Trabalhar por projeto](./projetos.md) | O que é um projeto para o Claude, o que é guardado por projeto, projetos com vários repositórios, onde pôr cada instrução, o ciclo da memória, sessões longas |
+| [Migrar memórias](./migrar-memorias.md) | Levar memórias de uma pasta de projeto para outra (saída da v0.1, uso de `--nome`, projeto movido) |
+| [Modelo e esforço](./modelo-e-esforco.md) | Qual modelo e qual nível de esforço usar, com um diário de campo para comparar com a prática (esboço) |
 
 Relacionados: [backup e git](../guias/backup-e-git.md) (como não perder
 `~/.claude`) e [sessões paralelas](../guias/portas-e-sessoes-paralelas.md)
