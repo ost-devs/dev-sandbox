@@ -12,7 +12,7 @@ pular direto na dúvida específica.
 2. [Por que não usar o grupo docker](#por-que-nao-usar-o-grupo-docker)
 3. [O problema de fundo: bind mount e UID](#o-problema-de-fundo-bind-mount-e-uid)
    - [Por que o projeto é montado no mesmo caminho do host](#por-que-o-projeto-e-montado-no-mesmo-caminho-do-host)
-   - [Projeto com nome (`--nome`, `--atalho`)](#projeto-com-nome)
+   - [Projeto com nome e atalhos](#projeto-com-nome)
 4. [Por que /root precisa de permissões especiais](#por-que-root-precisa-de-permissoes-especiais)
 5. [Por que $HOME não pode continuar sendo /root](#por-que-home-nao-pode-continuar-sendo-root)
 6. [Por que a home inteira é montada, não pasta por pasta](#por-que-a-home-inteira-e-montada)
@@ -152,26 +152,49 @@ confirmação antes, porque entregam ao agente justamente o que o sandbox
 deveria esconder.
 
 <a id="projeto-com-nome"></a>
-**Projeto com nome (opcional).** `dev-docker --nome ferrum` monta o projeto em
-`/ferrum` em vez do caminho do host. O jeito prático de usar isso é o
-**atalho**, explicado passo a passo no [README](README.md#atalho):
-`dev-docker --atalho ferrum`, rodado uma vez num terminal aberto na pasta do
-projeto, cria o comando `dev-docker-ferrum` (um script de três linhas em
-`~/.local/bin/`, que chama `dev-docker --nome ferrum <a pasta>`).
+### Projeto com nome e atalhos
 
-O atalho guarda a pasta para sempre, então o script se protege de um engano:
-mostra a pasta e pede confirmação, avisa quando ela não tem `.git` (talvez
-seja uma subpasta), recusa `/` e pastas que contêm a sua home, mostra o
-destino antigo quando você recria um atalho com o mesmo nome, e não
-sobrescreve um arquivo de `~/.local/bin/` que ele não criou.
-`dev-docker --atalhos` lista os atalhos e as pastas deles.
+`dev-docker --nome meu-site` monta o projeto em `/meu-site` em vez do caminho
+do host. O jeito prático de usar isso é o **atalho**:
+`dev-docker --atalho meu-site` cria o comando `dev-docker-meu-site`, um script
+de três linhas em `~/.local/bin/` que chama `dev-docker --nome meu-site <a pasta>`.
+
+**Criar.** Rode uma vez, num terminal aberto na pasta do projeto. Sem caminho,
+ele usa a pasta onde o terminal está; também dá para passar o caminho:
+`dev-docker --atalho meu-site ~/Projetos/meu-site`.
+
+```text
+$ dev-docker --atalho meu-site
+O comando dev-docker-meu-site vai abrir sempre esta pasta:
+    /home/ana/Projetos/meu-site
+Confirma? Digite 's' para criar: s
+Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-meu-site
+```
+
+**Cuidado com a pasta.** O atalho guarda a pasta para sempre. A certa é a raiz
+do projeto: a que tem o `.git`, ou onde ficam o `README`, o `package.json`, o
+`Cargo.toml`. Não uma subpasta (`src`) nem a pasta de cima. Por isso o script:
+
+- mostra a pasta e só cria com `s`;
+- avisa quando ela não tem `.git`;
+- recusa `/` e pastas que contêm a sua home;
+- ao recriar um atalho com o mesmo nome, mostra para onde ele aponta hoje
+  antes de trocar;
+- não sobrescreve um arquivo de `~/.local/bin/` que ele não criou.
+
+**Corrigir, listar, apagar.** Errou a pasta: rode de novo o mesmo
+`dev-docker --atalho meu-site` na pasta certa. Ver todos:
+`dev-docker --atalhos`. Apagar: `rm ~/.local/bin/dev-docker-meu-site`. Moveu ou
+renomeou a pasta do projeto (ou a do dev-sandbox): crie o atalho de novo.
+
+**Nome ou caminho do host?**
 
 | | Caminho do host (padrão) | `--nome` |
 |---|---|---|
-| Pasta da memória do Claude | `~/.claude/projects/-home-voce-Dev-ferrum/` | `~/.claude/projects/-ferrum/` |
+| Pasta da memória do Claude | `~/.claude/projects/-home-ana-Projetos-meu-site/` | `~/.claude/projects/-meu-site/` |
 | Mesma memória em outro PC (via [backup](docs/guias/backup-e-git.md)) | só se o caminho for igual lá | sim, se o nome for o mesmo |
 | Mesma memória que o Claude fora do container | sim | não |
-| Caminhos nas mensagens de erro batem com o host (clicar no VS Code) | sim | não (`/ferrum/...`) |
+| Caminhos nas mensagens de erro batem com o host (clicar no VS Code) | sim | não (`/meu-site/...`) |
 | Precisa de `cd` antes | sim | não, com o atalho |
 
 Dois projetos com o mesmo nome dividem a memória: escolha nomes únicos. Ao

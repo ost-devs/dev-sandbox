@@ -60,81 +60,30 @@ stat -c '%u:%g %n' teste.txt    # deve bater com: echo "$(id -u):$(id -g)"
 
 ## Uso
 
-### O jeito básico
+Abra um terminal na pasta do projeto (`cd ~/Dev/meu-projeto`, ou no gerenciador
+de arquivos: botão direito na pasta → **Abrir no terminal**) e rode:
 
-1. **Abra um terminal na pasta do projeto.** O jeito mais fácil: no
-   gerenciador de arquivos, clique com o botão direito na pasta do projeto e
-   escolha **"Abrir no terminal"** (o nome muda conforme o sistema: "Abrir em
-   um terminal", "Open in Terminal"). Quem prefere o teclado: abra o terminal
-   e digite `cd ~/Projetos/meu-site` (o `~` é a sua pasta pessoal,
-   `/home/seu-usuario`).
-2. Digite `dev-docker`. Ele abre o container com essa pasta dentro.
-3. Dentro do container, digite `claude` (ou `codex`, `agy`).
-
-O projeto aparece dentro do container no mesmo caminho que tem no seu
-computador, e o Claude guarda memória e conversas separadas por projeto.
+```bash
+dev-docker
+claude          # (ou codex, agy) dentro do container
+```
 
 <a id="atalho"></a>
-### O macete: um comando só seu para cada projeto
+**Atalho para os projetos do dia a dia.** Uma vez, no terminal aberto na pasta
+do projeto, crie um comando só dele (`meu-site` é um nome que você escolhe):
 
-Para o projeto que você abre todo dia, dá para criar **uma vez** um comando
-com o nome do projeto. Depois disso, basta abrir qualquer terminal
-(`Ctrl+Alt+T`) e digitar esse comando: sem procurar a pasta, sem `cd`.
+```bash
+dev-docker --atalho meu-site
+```
 
-**Criando (uma vez por projeto):**
-
-1. Abra o terminal **na pasta do projeto**, como no passo 1 acima.
-2. Escolha um nome curto para o projeto (letras minúsculas, números e hífen;
-   por exemplo `meu-site`) e digite:
-
-   ```bash
-   dev-docker --atalho meu-site
-   ```
-
-   Aqui `meu-site` é o nome que **você** escolhe. Sem mais nada depois do
-   nome, ele usa a pasta onde o terminal está.
-3. Ele mostra qual pasta vai guardar e pergunta. **Confira a pasta**, e só então
-   digite `s`:
-
-   ```text
-   $ dev-docker --atalho meu-site
-   O comando dev-docker-meu-site vai abrir sempre esta pasta:
-       /home/ana/Projetos/meu-site
-   Confirma? Digite 's' para criar: s
-   Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-meu-site
-   ```
-
-**Usando (todos os dias):** abra qualquer terminal e digite
+Ele mostra a pasta que vai guardar e pede confirmação: confira se é a raiz do
+projeto antes de digitar `s`. A partir daí, de qualquer terminal, sem `cd`:
 
 ```bash
 dev-docker-meu-site
 ```
 
-Ele abre o container com o projeto, que lá dentro fica em `/meu-site`. Depois
-é só `claude`, como sempre.
-
-**Cuidados:**
-
-- **A pasta certa é a raiz do projeto:** a que tem o `.git`, ou onde ficam o
-  `README`, o `package.json`, o `Cargo.toml`. Não uma subpasta (`src`), nem a
-  pasta de cima. Se a pasta não tem `.git`, ele avisa; a sua pasta pessoal
-  inteira e a raiz do sistema ele recusa.
-- **Errou a pasta?** Abra o terminal na pasta certa e rode o mesmo
-  `dev-docker --atalho meu-site`: ele mostra para onde o atalho aponta hoje e
-  troca depois que você confirmar.
-- **Ver todos os seus atalhos:** `dev-docker --atalhos`. **Apagar um:**
-  `rm ~/.local/bin/dev-docker-meu-site`.
-- **Moveu ou renomeou a pasta do projeto** (ou a do dev-sandbox)? O atalho
-  continua apontando para o lugar antigo: crie de novo.
-- **Também dá para passar o caminho** em vez de abrir o terminal na pasta:
-  `dev-docker --atalho meu-site ~/Projetos/meu-site`.
-- **Memória do Claude:** com atalho, ela fica guardada pelo nome do projeto
-  (`~/.claude/projects/-meu-site/`), e não pelo caminho. Se o projeto já tinha
-  memória do jeito básico, ela fica na pasta antiga:
-  [como migrar](docs/claude-code/migrar-memorias.md). Os prós e contras estão em
-  [projeto com nome](DOCUMENTACAO.md#projeto-com-nome).
-
-### Outras coisas do dia a dia
+Cuidados, como corrigir e o efeito na memória do Claude: [atalhos](DOCUMENTACAO.md#projeto-com-nome).
 
 | Quero... | Como |
 |---|---|
