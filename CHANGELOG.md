@@ -10,7 +10,11 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
   ([segurança](docs/guias/seguranca.md)).
 - `dev-docker --nome NOME`: monta o projeto em `/NOME`, com memória do Claude em
   `~/.claude/projects/-NOME/`. `dev-docker --atalho NOME [pasta]`: cria `dev-docker-NOME`, que
-  abre o projeto de qualquer lugar ([trade-offs](DOCUMENTACAO.md#projeto-com-nome)).
+  abre o projeto de qualquer lugar; sem caminho, usa a pasta onde o terminal está ("Abrir no
+  terminal" no gerenciador de arquivos). Mostra a pasta e pede confirmação, recusa `/` e a home,
+  avisa ao trocar o destino de um atalho; `dev-docker --atalhos` lista todos
+  ([passo a passo](README.md#atalho),
+  [trade-offs](DOCUMENTACAO.md#projeto-com-nome)).
 - Guias novos: [trabalhar por projeto](docs/claude-code/projetos.md),
   [migrar memórias](docs/claude-code/migrar-memorias.md),
   [modelo e esforço](docs/claude-code/modelo-e-esforco.md) (esboço com diário de campo),

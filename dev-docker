@@ -3,11 +3,13 @@ set -euo pipefail
 
 # Uso: dev-docker [--nome NOME] [caminho-do-repo]
 #      dev-docker --atalho NOME [caminho-do-repo]   cria o comando dev-docker-NOME
+#      dev-docker --atalhos                         lista os atalhos e as pastas deles
 #
 #   --nome NOME   monta o projeto em /NOME em vez do caminho do host: caminho curto e
 #                 memória do Claude com nome estável (~/.claude/projects/-NOME/)
 #   --atalho NOME grava ~/.local/bin/dev-docker-NOME, que abre este projeto com
-#                 --nome NOME a partir de qualquer pasta
+#                 --nome NOME a partir de qualquer pasta. Sem caminho, usa a pasta
+#                 onde o terminal está; mostra a pasta e pede confirmação
 #
 # Variáveis opcionais (detalhes em docs/guias/portas-e-sessoes-paralelas.md):
 #   DEV_PORTS="5173 3000 8090:8080"  portas publicadas só em 127.0.0.1
@@ -17,6 +19,7 @@ set -euo pipefail
 
 NOME=""
 ATALHO=""
+LISTAR=0
 ARG_PATH=""
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -24,6 +27,7 @@ while [ $# -gt 0 ]; do
       [ $# -ge 2 ] || { echo "$1 precisa de um nome (ex.: $1 ferrum)." >&2; exit 1; }
       if [ "$1" = "--nome" ]; then NOME="$2"; else ATALHO="$2"; fi
       shift 2 ;;
+    --atalhos) LISTAR=1; shift ;;
     -*)       echo "Opção desconhecida: $1" >&2; exit 1 ;;
     *)        ARG_PATH="$1"; shift ;;
   esac
@@ -40,17 +44,47 @@ valida_nome() {
   esac
 }
 
+# ── Atalhos: dev-docker-NOME ─────────────────────────────────────
+# O atalho guarda a pasta para sempre: confirmar qual é evita vincular a
+# pasta errada (a home inteira, uma subpasta, outro projeto).
+pasta_do_atalho() { sed -n 's/^# pasta: //p' "$1"; }
+
+if [ "$LISTAR" = "1" ]; then
+  achou=0
+  for f in "$HOME"/.local/bin/dev-docker-*; do
+    [ -f "$f" ] && grep -q "gerado por dev-docker --atalho" "$f" || continue
+    printf '  %-28s → %s\n' "$(basename "$f")" "$(pasta_do_atalho "$f")"; achou=1
+  done
+  [ "$achou" = "1" ] || echo "Nenhum atalho criado ainda (dev-docker --atalho NOME)."
+  exit 0
+fi
+
 if [ -n "$ATALHO" ]; then
   valida_nome "$ATALHO"
+  if [ "$REPO_PATH" = "/" ] || [ "$REPO_PATH" = "$HOME" ] || [[ "$HOME" == "$REPO_PATH"/* ]]; then
+    echo "Recusado: '$REPO_PATH' não é a pasta de um projeto (é a raiz ou contém a sua home)." >&2
+    echo "Abra o terminal dentro da pasta do projeto, ou passe o caminho dela." >&2
+    exit 1
+  fi
   DEST="$HOME/.local/bin/dev-docker-$ATALHO"
   if [ -e "$DEST" ] && ! grep -q "gerado por dev-docker --atalho" "$DEST"; then
     echo "$DEST já existe e não foi criado pelo dev-docker; nada foi alterado." >&2; exit 1
   fi
+  echo "O comando dev-docker-$ATALHO vai abrir sempre esta pasta:"
+  echo "    $REPO_PATH"
+  [ -d "$REPO_PATH/.git" ] || echo "    (aviso: não tem .git; confira se é mesmo a raiz do projeto)"
+  if [ -e "$DEST" ]; then
+    echo "Ele já existe e hoje abre: $(pasta_do_atalho "$DEST")"
+    echo "Confirmar troca o destino."
+  fi
+  read -r -p "Confirma? Digite 's' para criar: " resposta || resposta=""
+  [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || { echo "Cancelado. Nada foi alterado."; exit 1; }
   mkdir -p "$HOME/.local/bin"
-  printf '#!/bin/bash\n# gerado por dev-docker --atalho %s\nexec %q --nome %q %q "$@"\n' \
-    "$ATALHO" "$(realpath "$0")" "$ATALHO" "$REPO_PATH" > "$DEST"
+  printf '#!/bin/bash\n# gerado por dev-docker --atalho %s\n# pasta: %s\nexec %q --nome %q %q "$@"\n' \
+    "$ATALHO" "$REPO_PATH" "$(realpath "$0")" "$ATALHO" "$REPO_PATH" > "$DEST"
   chmod +x "$DEST"
-  echo "Criado: dev-docker-$ATALHO  →  $REPO_PATH em /$ATALHO"
+  echo "Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-$ATALHO"
+  echo "Dentro do container o projeto fica em /$ATALHO. Ver todos: dev-docker --atalhos"
   exit 0
 fi
 [ -n "$NOME" ] && valida_nome "$NOME"

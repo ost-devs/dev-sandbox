@@ -153,12 +153,18 @@ deveria esconder.
 
 <a id="projeto-com-nome"></a>
 **Projeto com nome (opcional).** `dev-docker --nome ferrum` monta o projeto em
-`/ferrum` em vez do caminho do host. Para fixar isso de vez:
+`/ferrum` em vez do caminho do host. O jeito prático de usar isso é o
+**atalho**, explicado passo a passo no [README](README.md#atalho):
+`dev-docker --atalho ferrum`, rodado uma vez num terminal aberto na pasta do
+projeto, cria o comando `dev-docker-ferrum` (um script de três linhas em
+`~/.local/bin/`, que chama `dev-docker --nome ferrum <a pasta>`).
 
-```bash
-dev-docker --atalho ferrum ~/Dev/ferrum    # uma vez
-dev-docker-ferrum                          # depois, de qualquer pasta
-```
+O atalho guarda a pasta para sempre, então o script se protege de um engano:
+mostra a pasta e pede confirmação, avisa quando ela não tem `.git` (talvez
+seja uma subpasta), recusa `/` e pastas que contêm a sua home, mostra o
+destino antigo quando você recria um atalho com o mesmo nome, e não
+sobrescreve um arquivo de `~/.local/bin/` que ele não criou.
+`dev-docker --atalhos` lista os atalhos e as pastas deles.
 
 | | Caminho do host (padrão) | `--nome` |
 |---|---|---|
@@ -170,7 +176,7 @@ dev-docker-ferrum                          # depois, de qualquer pasta
 
 Dois projetos com o mesmo nome dividem a memória: escolha nomes únicos. Ao
 trocar um projeto de um modo para o outro, a memória fica na pasta antiga;
-mova uma vez ([como](docs/claude-code/memoria-e-instrucoes.md#migrando-memórias-antigas-de--workspace)).
+mova uma vez ([como](docs/claude-code/migrar-memorias.md)).
 
 ---
 

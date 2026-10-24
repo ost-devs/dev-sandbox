@@ -33,7 +33,7 @@ conversas.
 |---|---|---|---|
 | `cd ~/Dev/app && dev-docker` | o mesmo do host | `-home-voce-Dev-app` | usar o Claude dentro e fora do container com a mesma memória |
 | `dev-docker --nome app ~/Dev/app` | `/app` | `-app` | caminho curto e memória que não depende do computador |
-| `dev-docker --atalho app ~/Dev/app` uma vez, depois `dev-docker-app` | `/app` | `-app` | projetos que você abre todo dia, de qualquer pasta |
+| `dev-docker --atalho app` uma vez, num terminal aberto na pasta do projeto; depois `dev-docker-app` de qualquer terminal ([passo a passo](../../README.md#atalho)) | `/app` | `-app` | projetos que você abre todo dia |
 
 Os prós e contras completos estão na [DOCUMENTACAO](../../DOCUMENTACAO.md#projeto-com-nome).
 Trocou de jeito? A memória fica na pasta antiga: [migrar](./migrar-memorias.md).
