@@ -171,12 +171,14 @@ Confirma? Digite 's' para criar: s
 Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-meu-site
 ```
 
-**Cuidado com a pasta.** O atalho guarda a pasta para sempre. A certa é a raiz
-do projeto: a que tem o `.git`, ou onde ficam o `README`, o `package.json`, o
-`Cargo.toml`. Não uma subpasta (`src`) nem a pasta de cima. Por isso o script:
+**Cuidado com a pasta.** O atalho guarda a pasta para sempre: confira se é a
+que você quer abrir. Qualquer pasta serve, com ou sem git. O engano comum é
+num projeto com git: rodar dentro de uma subpasta (`src`) em vez da raiz. Por
+isso o script:
 
 - mostra a pasta e só cria com `s`;
-- avisa quando ela não tem `.git`;
+- avisa quando a pasta fica dentro de um repositório git sem ser a raiz dele,
+  e mostra qual é a raiz;
 - recusa `/` e pastas que contêm a sua home;
 - ao recriar um atalho com o mesmo nome, mostra para onde ele aponta hoje
   antes de trocar;

@@ -72,7 +72,10 @@ if [ -n "$ATALHO" ]; then
   fi
   echo "O comando dev-docker-$ATALHO vai abrir sempre esta pasta:"
   echo "    $REPO_PATH"
-  [ -d "$REPO_PATH/.git" ] || echo "    (aviso: não tem .git; confira se é mesmo a raiz do projeto)"
+  if [ ! -d "$REPO_PATH/.git" ] && git -C "$REPO_PATH" rev-parse --show-toplevel >/dev/null 2>&1; then
+    echo "    (atenção: esta pasta fica dentro do repositório $(git -C "$REPO_PATH" rev-parse --show-toplevel);"
+    echo "     se a ideia era o projeto inteiro, use essa pasta)"
+  fi
   if [ -e "$DEST" ]; then
     echo "Ele já existe e hoje abre: $(pasta_do_atalho "$DEST")"
     echo "Confirmar troca o destino."

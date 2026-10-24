@@ -76,8 +76,8 @@ do projeto, crie um comando só dele (`meu-site` é um nome que você escolhe):
 dev-docker --atalho meu-site
 ```
 
-Ele mostra a pasta que vai guardar e pede confirmação: confira se é a raiz do
-projeto antes de digitar `s`. A partir daí, de qualquer terminal, sem `cd`:
+Ele mostra a pasta que vai guardar e pede confirmação: confira se é a pasta
+que você quer antes de digitar `s`. A partir daí, de qualquer terminal, sem `cd`:
 
 ```bash
 dev-docker-meu-site
