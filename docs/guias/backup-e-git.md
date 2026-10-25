@@ -50,6 +50,7 @@ Também moram ali coisas que **não podem** ir para um git, nem privado:
 - transcrições completas das conversas (`~/.claude/projects/*/*.jsonl`,
   `~/.codex/sessions/`): **tudo** que passou pela conversa fica nelas,
   inclusive um `.env` que o agente leu ou um token que você colou.
+   - 💡Tip: *Veja a forma correta de [salvar as conversas importantes](../claude-code/preservar-conversas.md)*
 
 ### Receita: git dentro da própria pasta, ignorando tudo por padrão
 
@@ -91,6 +92,10 @@ nano .gitignore
 !projects/*/
 !projects/*/memory/
 !projects/*/memory/**
+
+# Ignora as skills baixadas e gerenciadas automaticamente pelo Claude
+synced/
+synced/**
 ```
 
 Confira **antes** do primeiro commit:
