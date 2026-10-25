@@ -21,6 +21,7 @@ script e do `Dockerfile` está em [`DOCUMENTACAO.md`](../DOCUMENTACAO.md).
 | [Trabalhar por projeto](./claude-code/projetos.md) | Organizar projetos, instruções e memória ao longo do tempo |
 | [Preservar conversas](./claude-code/preservar-conversas.md) | Não perder sessões valiosas para a faxina de 30 dias |
 | [Migrar memórias](./claude-code/migrar-memorias.md) | Levar memórias de um caminho de projeto para outro |
+| [Por baixo dos panos](./claude-code/por-baixo-dos-panos/README.md) | Entender contexto, cache, compactação e subagentes, e por que conversas longas custam mais |
 | [Modelo e esforço](./claude-code/modelo-e-esforco.md) | Escolher modelo e esforço sem usar bazuca para matar mosca |
 
 ## Aprendizados
