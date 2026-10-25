@@ -9,11 +9,11 @@ as a non-root user with no `sudo`. The container is destroyed on exit (`--rm`).
 | Project directory: your cwd (the host path, `/<name>` when started with `--nome`, or `/workspace`) | Yes, it is the host folder |
 | `$HOME` (`/tmp/dev-home`) | Yes (a sandbox-only folder on the host, not the user's real home) |
 | `~/.claude`, `~/.gemini`, `~/.codex` | Yes (the same folders as the user's real ones on the host, mounted directly) |
-| Claude Code temp/scratchpad dir (`$CLAUDE_CODE_TMPDIR`, `~/.cache/claude-tmp`) | Yes (survives container restarts; shared by all sessions) |
+| Claude Code temp/scratchpad dir (`$CLAUDE_CODE_TMPDIR`, `~/.cache/claude-tmp`) | Same as host (not destroyed with the container; shared by all sessions) |
 | `/usr/local/cargo/registry` | Yes (cargo cache) |
 | Everything else (`/usr`, `/etc`, `/opt`, `/tmp` outside `$HOME`) | No |
 
-- The scratchpad persists on purpose and Claude Code manages its contents. Use it for temporary files as the system prompt says; do not delete it, move it, or copy its files into the project "to keep them from being lost". Only deliverables belong in the project directory.
+- The Claude Code temp dir (`$CLAUDE_CODE_TMPDIR`, `~/.cache/claude-tmp`) works exactly as on the host: the container does not destroy it on exit, and its contents only change if Claude itself changes them. Claude manages it on its own, as it normally does.
 
 ## Dependencies
 - Project dependencies: use the project's package manager (`npm`/`pnpm`, `cargo`, `uv`/`pip` in a venv). This works exactly as on the host.

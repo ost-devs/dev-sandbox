@@ -80,7 +80,7 @@ if [ -n "$ATALHO" ]; then
     echo "Ele já existe e hoje abre: $(pasta_do_atalho "$DEST")"
     echo "Confirmar troca o destino."
   fi
-  read -r -p "Confirma? Digite 's' para criar: " resposta || resposta=""
+  read -r -p "Confirma? Digite 's' para criar, 'n' para cancelar: " resposta || resposta=""
   [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || { echo "Cancelado. Nada foi alterado."; exit 1; }
   mkdir -p "$HOME/.local/bin"
   printf '#!/bin/bash\n# gerado por dev-docker --atalho %s\n# pasta: %s\nexec %q --nome %q %q "$@"\n' \
@@ -129,7 +129,7 @@ esac
 if [ "$REPO_PATH" = "/" ] || [ "$REPO_PATH" = "$HOME" ] || [[ "$HOME" == "$REPO_PATH"/* ]]; then
   echo "⚠️  Você vai montar '$REPO_PATH' inteiro, com escrita, em /${NOME:-workspace}."
   echo "   O agente terá acesso a tudo aí dentro, inclusive a sua home."
-  read -r -p "   Digite 'sim' para continuar: " resposta
+  read -r -p "   Digite 'sim' para continuar, 'n' para cancelar: " resposta
   [ "$resposta" = "sim" ] || { echo "Cancelado."; exit 1; }
   MOUNT_PATH="/${NOME:-workspace}"
 fi
