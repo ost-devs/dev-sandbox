@@ -461,7 +461,8 @@ install`, que falha sem `root`. Ele foi substituído pelo `sandbox/AGENTS.md`.
 ### Instruções do ambiente
 
 - **Claude Code** carrega sozinho: a imagem copia o arquivo para
-  `/etc/claude-code/CLAUDE.md`, o local "managed" do Claude Code no Linux.
+  `/etc/claude-code/CLAUDE.md`, o local "managed" do Claude Code no Linux
+  ([comprovado aqui](docs/aprendizados/2026-10-etc-claude-md-carrega-sozinho.md)).
 - **Codex e agy** não têm um local equivalente garantido. Acrescente uma linha
   condicional ao arquivo global de cada um no host (`~/.codex/AGENTS.md`,
   `~/.gemini/GEMINI.md`), como no [README](README.md#instruções-do-ambiente-para-os-agentes).

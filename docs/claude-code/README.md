@@ -21,6 +21,7 @@ Relacionados: [backup e git](../guias/backup-e-git.md) (como não perder
 A imagem copia [`sandbox/AGENTS.md`](../../sandbox/AGENTS.md) para
 `/etc/claude-code/CLAUDE.md`, o local de instruções "managed" do Claude Code
 no Linux. Ele carrega sozinho em todo projeto aberto **dentro do
-container**, e só lá: o seu `~/.claude/CLAUDE.md` do host não é tocado.
+container**, e só lá: o seu `~/.claude/CLAUDE.md` do host não é tocado
+([prova de que carrega sozinho](../aprendizados/2026-10-etc-claude-md-carrega-sozinho.md)).
 
 Ver se carregou: rode `/context` numa sessão e procure em *Memory files*.

@@ -27,7 +27,7 @@ conferido contra ela em outubro/2026 (Claude Code 2.1.30x).
 
 | Arquivo | Para que serve | Vai pro git? |
 |---|---|---|
-| `/etc/claude-code/CLAUDE.md` | Instruções da **máquina** ("managed"). Não dá para desligar por projeto | — |
+| `/etc/claude-code/CLAUDE.md` | Instruções da **máquina** ("managed"). Não dá para desligar por projeto. [Prova de que carrega sozinho](../aprendizados/2026-10-etc-claude-md-carrega-sozinho.md) | — |
 | `~/.claude/CLAUDE.md` | Suas preferências pessoais, em **todos** os projetos | Não (é da sua home) |
 | `~/.claude/rules/*.md` | Regras pessoais por tema, em todos os projetos | Não |
 | `./CLAUDE.md` ou `./.claude/CLAUDE.md` | Instruções do **projeto**, para o time | Sim |

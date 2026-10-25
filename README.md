@@ -111,7 +111,7 @@ O arquivo [`sandbox/AGENTS.md`](sandbox/AGENTS.md) explica ao agente onde ele
 está: o que persiste, que não há `sudo`, como lidar com portas e com
 ferramentas que faltam. Ele vai para dentro da imagem.
 
-- **Claude Code:** carrega sozinho (a imagem o instala em `/etc/claude-code/CLAUDE.md`).
+- **Claude Code:** carrega sozinho (a imagem o instala em `/etc/claude-code/CLAUDE.md`; [comprovado aqui](docs/aprendizados/2026-10-etc-claude-md-carrega-sozinho.md)).
 - **Codex e agy:** acrescente uma linha ao arquivo global de instruções do
   agente no host (`~/.codex/AGENTS.md` e `~/.gemini/GEMINI.md`). Fora do
   container a condição é falsa e nada muda:
