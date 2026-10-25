@@ -29,7 +29,7 @@ Para repetir o teste: abra uma sessão nova, sem mencionar o arquivo, e pergunte
 nada, o arquivo foi carregado.
 
 ## Limites
-- Carrega **no início da sessão**. Mudar o arquivo exige reconstruir a imagem e
+- Carrega **no início da sessão** ([quando cada coisa carrega](../claude-code/por-baixo-dos-panos/quando-cada-coisa-carrega.md)). Mudar o arquivo exige reconstruir a imagem e
   abrir um container novo; a sessão em andamento continua com o texto antigo.
 - Não dá para desligar por projeto ([detalhes](../claude-code/memoria-e-instrucoes.md)).
 
