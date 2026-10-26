@@ -99,7 +99,7 @@ Cuidados, como corrigir e o efeito na memória do Claude: [atalhos](DOCUMENTACAO
 | Dois agentes no mesmo projeto | `claude --worktree <nome>` ([guia](docs/guias/portas-e-sessoes-paralelas.md#dois-agentes-no-mesmo-projeto)) |
 | Retomar a conversa depois do `exit` ou do limite de uso | Reabra o projeto do mesmo jeito (mesmo caminho ou mesmo nome) e `claude --continue` ([guia](docs/claude-code/sessoes-e-persistencia.md)) |
 | Não perder uma conversa importante (o Claude apaga as antigas em 30 dias) | `/rename`, `/export` e anote o ID ([guia](docs/claude-code/preservar-conversas.md)) |
-| Atualizar os agentes | `sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .` |
+| Atualizar os agentes | `sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .` (agentes, imagem e host: [guia](docs/guias/atualizacao.md)) |
 | Mexer em `.git/config` de dentro (ex.: `git remote add`) | `DEV_GIT_RW=1 dev-docker` ([por que é bloqueado](docs/guias/seguranca.md#a-ponte-mais-perigosa-código-que-roda-fora-do-container)) |
 
 `exit` destrói o container. O projeto, os logins e os caches continuam no host.
@@ -124,6 +124,6 @@ ferramentas que faltam. Ele vai para dentro da imagem.
 
 - [`CHANGELOG.md`](CHANGELOG.md): o que mudou em cada versão e como atualizar.
 - [`DOCUMENTACAO.md`](DOCUMENTACAO.md): o *porquê* de cada decisão do script e do `Dockerfile`.
-- [`docs/`](docs/README.md): guias (segurança, backup, portas, imagem), Claude Code
+- [`docs/`](docs/README.md): guias (segurança, backup, portas, imagem, atualização), Claude Code
   (projetos, memória, sessões, conversas, modelo e esforço) e
   [aprendizados](docs/aprendizados/README.md) da comunidade.

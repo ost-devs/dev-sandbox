@@ -11,6 +11,7 @@ script e do `Dockerfile` está em [`DOCUMENTACAO.md`](../DOCUMENTACAO.md).
 | [Backup e git](./guias/backup-e-git.md) | Desfazer besteira do agente e guardar as configs dos agentes sem vazar tokens |
 | [Portas e sessões paralelas](./guias/portas-e-sessoes-paralelas.md) | Ver o app no navegador, lidar com Tauri, rodar vários containers ou agentes |
 | [Filosofia da imagem](./guias/filosofia-da-imagem.md) | Entender o tamanho da imagem, adicionar linguagens, liberar disco |
+| [Atualização](./guias/atualizacao.md) | Atualizar agentes, imagem e host, e voltar atrás se algo quebrar |
 
 ## Claude Code
 
