@@ -43,9 +43,10 @@ RUN apt-get update && apt-get install -y \
     libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf \
     && rm -rf /var/lib/apt/lists/*
 
+# O Playwright não lê variável de ambiente para o navegador: cada projeto
+# passa executablePath (ver docs/aprendizados/2026-10-playwright-ignora-chromium-da-imagem.md).
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
-    PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 # ── Linguagens extras (desligadas por padrão) ────────────────────
 # Ligue no build: sudo docker build --build-arg WITH_GO=1 --build-arg WITH_JAVA=1 -t dev-sandbox .

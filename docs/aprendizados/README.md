@@ -45,3 +45,4 @@ Link para o commit/arquivo, ou "nada: só documentação".
 | 2026-10 | [O agente contorna ferramenta que falta e não avisa](./2026-10-agente-contorna-ferramenta-faltando.md) |
 | 2026-10 | [Pasta com vários repositórios: hooks do git sem proteção](./2026-10-pasta-com-varios-repositorios.md) |
 | 2026-10 | [O `/etc/claude-code/CLAUDE.md` carrega sozinho: a prova](./2026-10-etc-claude-md-carrega-sozinho.md) |
+| 2026-10 | [O Playwright ignora o Chromium da imagem e pede para baixar navegadores](./2026-10-playwright-ignora-chromium-da-imagem.md) |
