@@ -21,4 +21,4 @@
 
 # Security boundaries
 * Never read, print, copy, or modify agent credentials (`~/.claude/.credentials.json`, `~/.codex/auth.json`, tokens under `~/.gemini`).
-* These files **run on the host**, outside the isolation, with the user's privileges: `.vscode/` (tasks, settings), `.envrc`, `.git/hooks` and `.git/config` (read-only protection misses submodules and repos created during the session), hook folders (`.husky/`, `.lefthook*`), `Makefile`, `package.json` scripts, `build.rs`, Tauri config. When you create or change any of them, list them explicitly in your final message so the user can review before running anything on the host.
+* These files **run on the host**, outside the isolation, with the user's privileges: `.vscode/` (tasks, settings), `.envrc`, `.git/hooks` and `.git/config` (read-only protection misses repos created during the session or nested deeper than two levels), hook folders (`.husky/`, `.lefthook*`), `Makefile`, `package.json` scripts, `build.rs`, Tauri config. When you create or change any of them, list them explicitly in your final message so the user can review before running anything on the host.

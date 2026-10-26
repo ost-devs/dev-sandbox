@@ -79,6 +79,9 @@ ENV DISABLE_AUTOUPDATER=1
 # local "managed" do Claude Code no Linux: carrega sozinho, só no container.
 COPY sandbox/AGENTS.md /etc/dev-sandbox/AGENTS.md
 COPY sandbox/AGENTS.md /etc/claude-code/CLAUDE.md
+# Bloqueia as ferramentas de leitura/edição do Claude nas credenciais dos
+# agentes. Não custa tokens; não cobre um `cat` pelo terminal.
+COPY sandbox/managed-settings.json /etc/claude-code/managed-settings.json
 
 # ── Permissões para rodar como usuário não-root ──────────────────
 # Necessário mesmo que você só use um agente — ver DOCUMENTACAO.md.

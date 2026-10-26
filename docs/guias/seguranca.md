@@ -23,7 +23,7 @@ acesso ao Docker (o socket não é montado, e o seu usuário não está no grupo
 | Ponte | O que um agente comprometido consegue | O que reduz o risco |
 |---|---|---|
 | **Pasta do projeto** (leitura e escrita) | Apagar, corromper, inserir código malicioso no seu projeto | Commits frequentes e `push` do host para um remoto. Ver [backup e git](./backup-e-git.md) |
-| **Credenciais dos agentes** (`~/.claude`, `~/.codex`, `~/.gemini`) | Ler o token e mandar para fora pela internet | Modos de permissão dos agentes (não use "aprovar tudo" em repositório desconhecido). Se desconfiar: faça logout/login para revogar |
+| **Credenciais dos agentes** (`~/.claude`, `~/.codex`, `~/.gemini`) | Ler o token e mandar para fora pela internet | Modos de permissão dos agentes (não use "aprovar tudo" em repositório desconhecido). No Claude Code, a imagem bloqueia as ferramentas de leitura e edição nesses arquivos ([`sandbox/managed-settings.json`](../../sandbox/managed-settings.json)), mas não um `cat` pelo terminal. Se desconfiar: faça logout/login para revogar |
 | **Internet de saída** | Enviar o seu código ou tokens para qualquer servidor; acessar outros aparelhos da rede local e serviços do host que escutam em `0.0.0.0` | Difícil de fechar: os agentes precisam da API. Ver "Sessão sem rede" abaixo |
 | **Home persistente** (`~/.cache/dev-sandbox/home`) | Deixar um `.bashrc`, um cache do npm ou um binário em `~/.local/bin` envenenado para as próximas sessões | Zerar a pasta quando desconfiar ([DOCUMENTACAO.md](../../DOCUMENTACAO.md#limpando-o-cache)) |
 | **Arquivos que rodam no host** | Ver a próxima seção. É a ponte mais perigosa e a menos óbvia | Revisar antes de rodar fora do container |
@@ -53,16 +53,19 @@ Uma única linha num hook é suficiente para ler a sua `~/.ssh`. Por isso:
   vários clones lado a lado (o seu projeto e repositórios de referência), cada
   um tem o seu `.git/hooks`, e todos rodam no host quando você usa `git`
   neles. O `dev-docker` protege também esses, até dois níveis abaixo da pasta
-  montada, e mostra quantos protegeu ao iniciar. Ficam de fora, e graváveis:
-  repositórios mais fundos, os hooks de submódulos (que moram em
-  `.git/modules/`) e um repositório clonado durante a sessão. É um bom exemplo
+  montada, incluindo os submódulos (que moram em `.git/modules/`), e mostra
+  quantos protegeu ao iniciar. Ficam de fora, e graváveis: repositórios mais
+  fundos e um repositório criado ou clonado durante a sessão. Esses aparecem no
+  relatório de saída (abaixo). É um bom exemplo
   de como esta lista nunca está completa: a primeira versão da proteção
   supunha "uma pasta = um repositório", e a brecha só apareceu num caso real.
 - Hooks **versionados** (`.husky/` etc.) e os outros arquivos da tabela estão
-  no código do projeto, então a proteção acima não vale para eles. O
-  [`sandbox/AGENTS.md`](../../sandbox/AGENTS.md) manda o agente listar
-  essas mudanças no fim da resposta, mas isso é um pedido, não uma trava.
-  **Antes de rodar algo no host, olhe o diff** desde o último commit que você revisou:
+  no código do projeto, então a proteção acima não vale para eles. Ao sair do
+  container, o `dev-docker` lista os arquivos da tabela que mudaram na sessão,
+  inclusive o `.git` de repositórios sem proteção. Ele compara o horário de
+  alteração que o sistema registra (ctime), que o agente não consegue disfarçar
+  com `touch`. É um aviso, não uma trava: **antes de rodar algo no host, olhe o
+  diff** desde o último commit que você revisou:
   ```bash
   git diff <commit-revisado> -- .vscode .husky .envrc package.json Makefile '*build.rs' '*tauri.conf.json'
   ```

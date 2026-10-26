@@ -154,6 +154,18 @@ if [ "${DEV_GIT_RW:-0}" != "1" ]; then
       GIT_MOUNTS+=(--mount "type=bind,src=$gitdir/config,dst=$MOUNT_PATH$rel/config,readonly")
     fi
     GIT_PROTECTED=$((GIT_PROTECTED + 1))
+    # Submódulos: o git de cada um mora em .git/modules/<nome>/, com hooks e
+    # config próprios. As podas evitam confundir um ref chamado "config".
+    while IFS= read -r -d '' modcfg; do
+      moddir="$(dirname "$modcfg")"
+      mrel="${moddir#"${REPO_PATH%/}"}"
+      mkdir -p "$moddir/hooks"
+      GIT_MOUNTS+=(--mount "type=bind,src=$moddir/hooks,dst=$MOUNT_PATH$mrel/hooks,readonly")
+      GIT_MOUNTS+=(--mount "type=bind,src=$modcfg,dst=$MOUNT_PATH$mrel/config,readonly")
+      GIT_PROTECTED=$((GIT_PROTECTED + 1))
+    done < <(find "$gitdir/modules" -mindepth 2 -type d \
+               \( -name objects -o -name refs -o -name logs -o -name hooks -o -name info \) -prune \
+               -o -type f -name config -print0 2>/dev/null)
   done < <(find "$REPO_PATH" -maxdepth 3 \( -name node_modules -o -name target \) -prune \
              -o -name .git -type d -print0 -prune 2>/dev/null)
 fi
@@ -175,6 +187,11 @@ NAME="dev-${SLUG:-raiz}-$$"
 echo "▶ $NAME  |  $REPO_PATH → $MOUNT_PATH  |  portas: ${DEV_PORTS:-nenhuma}  |  .git protegidos: $GIT_PROTECTED"
 echo "  Outro terminal neste container: sudo docker exec -it $NAME bash"
 
+# Marca o início da sessão para o relatório de saída (abaixo).
+MARCA="$(mktemp)"
+trap 'rm -f "$MARCA"' EXIT
+STATUS=0
+
 sudo docker run -it --rm \
   --name "$NAME" \
   --hostname dev-sandbox \
@@ -195,4 +212,28 @@ sudo docker run -it --rm \
   --mount "type=bind,src=$CODEX_PATH,dst=/tmp/dev-home/.codex" \
   --mount "type=bind,src=$CARGO_CACHE_PATH,dst=/usr/local/cargo/registry" \
   --workdir "$MOUNT_PATH" \
-  "$IMAGE"
+  "$IMAGE" || STATUS=$?
+
+# ── Relatório de saída ───────────────────────────────────────────
+# Arquivos que rodam no HOST e mudaram nesta sessão: hooks versionados,
+# .vscode, build.rs e o .git de repositórios que a proteção acima não cobre
+# (criados na sessão ou mais fundos). Usa ctime (-cnewer), que o agente não
+# consegue disfarçar com `touch`. Pula a raiz e a home: varrer tudo seria lento.
+if [ "$REPO_PATH" != "/" ] && [ "$REPO_PATH" != "$HOME" ] && [[ "$HOME" != "$REPO_PATH"/* ]]; then
+  MUDADOS="$(find "$REPO_PATH" \( -name node_modules -o -name target -o -path '*/.git/objects' \) -prune \
+    -o -type f -cnewer "$MARCA" ! -name '*.sample' \( \
+      -path '*/.git/hooks/*' -o -path '*/.git/config' \
+      -o -path '*/.git/modules/*/hooks/*' -o -path '*/.git/modules/*/config' \
+      -o -path '*/.vscode/*' -o -path '*/.husky/*' -o -name .envrc \
+      -o -name 'lefthook*.yml' -o -name '.lefthook*' -o -name .pre-commit-config.yaml \
+      -o -name package.json -o -name Makefile -o -name build.rs -o -name 'tauri.conf.json*' \
+    \) -print 2>/dev/null | sed "s|^${REPO_PATH%/}/||" | head -n 30 || true)"
+  if [ -n "$MUDADOS" ]; then
+    echo
+    echo "⚠️  Mudaram nesta sessão e rodam no host (revise antes de usar git, npm, make,"
+    echo "   cargo ou o VS Code fora do container; até 30 arquivos):"
+    while IFS= read -r f; do echo "     $f"; done <<< "$MUDADOS"
+    echo "   Ver o que mudou: git diff -- <arquivo>"
+  fi
+fi
+exit "$STATUS"

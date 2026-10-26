@@ -3,6 +3,22 @@
 Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DOCUMENTACAO.md) e
 [`docs/aprendizados/`](docs/aprendizados/README.md).
 
+## v0.4 (em desenvolvimento)
+
+- Submódulos: `.git/modules/*/hooks` e `config` também somente leitura.
+- Relatório de saída: ao sair, o `dev-docker` lista os arquivos que rodam no host e mudaram na
+  sessão ([segurança](docs/guias/seguranca.md#a-ponte-mais-perigosa-código-que-roda-fora-do-container)).
+- `sandbox/managed-settings.json`: o Claude Code não abre as credenciais dos agentes com as
+  ferramentas de leitura e edição.
+- `sandbox/AGENTS.md` mais curto; a versão integral fica em `sandbox/AGENTS-completo.md`, fora
+  da imagem.
+- Removida `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`, que o Playwright não lê
+  ([aprendizado](docs/aprendizados/2026-10-playwright-ignora-chromium-da-imagem.md)).
+- Guia novo: [atualização](docs/guias/atualizacao.md).
+- Testado só a seco (`bash -n` e `sudo` falso); falta o teste real no host.
+
+**Ao atualizar da v0.3:** `git pull` e reconstrua a imagem (`sudo docker build -t dev-sandbox .`).
+
 ## v0.3
 
 - `.git/hooks` e `.git/config` somente leitura também nos repositórios até dois níveis dentro
