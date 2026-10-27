@@ -74,6 +74,8 @@ Para conferir o que carregou numa sessão: `/context` mostra *Memory files*
 - **Apague mais do que acrescenta.** Mapa velho engana mais que mapa nenhum.
 - **Reveja a memória do agente** de vez em quando: `.claude/agent-memory/claude-code-pesquisador/MEMORY.md`. Os fatos têm data e versão.
 - **Mudou algo grande no projeto?** Atualize a skill `dev-sandbox` no mesmo commit.
+- **Testou se funciona?** Uma sessão nova e descartável, sem esta conversa, mostra o que ela realmente sabe:
+  `claude -p --no-session-persistence "pergunta real sobre o projeto; no fim, diga quais skills usou"`.
 
 ## No seu projeto
 
@@ -91,6 +93,20 @@ seu-projeto/
 
 Comece pequeno: escreva o mapa na primeira vez que uma conversa longa ficar
 "esperta", rodando `/consolidar` nela.
+
+## Funcionou?
+
+Resultado neste repositório (outubro/2026, Claude Code 2.1.310):
+
+| O que | Resultado | Base |
+|---|---|---|
+| Sessões novas, sem a conversa antiga | Responderam com o conhecimento do projeto nos testes feitos depois da implementação | Evidência |
+| `/consolidar` no fim da conversa que montou tudo | Achou poucas mudanças: a conversa já tinha posto o conhecimento nos arquivos certos | Evidência |
+| Custo de tokens numa sessão nova | **Ainda não medido.** Para conferir: `/context` no começo de uma sessão nova, com e sem a pasta `.claude/` | — |
+
+O `/consolidar` achar pouco é bom sinal: quer dizer que o conhecimento já
+estava fora da conversa. Mas isso sozinho não prova nada, porque foi a mesma
+conversa que montou os arquivos. A prova são as sessões novas.
 
 ## Limites
 

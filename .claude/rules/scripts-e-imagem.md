@@ -26,7 +26,10 @@ paths:
 Every line costs context in every session of every project. Keep a line only if
 it changes what the agent does and the agent could not deduce it from the
 environment. Mechanisms (mounts, `managed-settings.json`, the exit report)
-beat prose for anything that must hold.
+beat prose for anything that must hold. Phrase situational lines as conditions
+("only when the user needs X: ..."), not bare imperatives ("check `$VAR`"), and
+don't forbid things the agent wouldn't do anyway: both can trigger actions it
+would not take otherwise.
 
 ## Final message
 `dev-docker`, `Dockerfile`, `extras/` hooks and `.github/` run on the host or in CI: list the ones you changed.

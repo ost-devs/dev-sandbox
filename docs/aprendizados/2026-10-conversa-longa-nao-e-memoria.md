@@ -2,7 +2,9 @@
 
 - **Data:** 2026-10
 - **Ambiente:** Claude Code 2.1.310 (Sonnet 5.5 e Opus 5.5) neste repositório
-- **Base:** evidência (uma sessão de dois dias neste repositório) e documentação
+- **Base:** evidência (uma sessão de dois dias neste repositório; a solução
+  testada em sessões novas, [resultado](../claude-code/consultor-do-projeto.md#funcionou))
+  e documentação
   ([compactação](../claude-code/por-baixo-dos-panos/compactacao.md),
   [contexto a cada pedido](../claude-code/por-baixo-dos-panos/a-cada-mensagem-o-contexto-vai-junto.md))
 
