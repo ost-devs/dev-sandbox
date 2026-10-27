@@ -62,11 +62,12 @@ levels or created in-session get only the exit warning; nested sandboxes
 | Image size, disk, Timeshift | `docs/guias/filosofia-da-imagem.md` |
 | Backup of `~/.claude` without leaking secrets | `docs/guias/backup-e-git.md` |
 | Claude Code behavior (memory, sessions, context, cache, subagents, model) | `docs/claude-code/README.md` (index) |
+| Official Claude Code docs, local and read-only (not in git: the license isn't open) | `mirrors/claude-code-docs/` (`mirrors/mirrors.json`; refetch with `python3 utils/skills/mirrors/fetch_mirrors.py`) |
 | Real problems and their causes | `docs/aprendizados/README.md` (index) |
 | Shareable skills/agents not tied to dev-sandbox (`montar-consultor`, `mirrors`) | `utils/` (index: `utils/README.md`) |
 | Missing tools reported by agents | host `~/.cache/dev-sandbox/home/.dev-sandbox/feedback.md` |
 
 ## Claude Code questions
 1. Find the guide in `docs/claude-code/README.md` and read it. Those guides were verified against the official docs (stamp at the bottom of each).
-2. Not covered, or possibly outdated: delegate to the `claude-code-pesquisador` agent instead of fetching docs here (official pages exceed 100k characters).
+2. Not covered, or possibly outdated: delegate to the `claude-code-pesquisador` agent instead of reading docs here (official pages exceed 100k characters; it greps the local mirror).
 3. Sandbox-specific: the built-in Explore and Plan agents get no CLAUDE.md, so they don't know the container rules; `/etc/claude-code/CLAUDE.md` can't be excluded per project; instruction edits apply only to the next session (and to the image only after a rebuild).

@@ -12,7 +12,12 @@ conclusion, so the main conversation never loads the official pages.
 ## Method
 1. Check your memory first. A fact verified for the same Claude Code major.minor in the last 60 days can be reused; say so.
 2. Check `docs/claude-code/` (index: `docs/claude-code/README.md`). Each guide ends with the date and version it was verified.
-3. Otherwise read the official page, `https://code.claude.com/docs/en/<page>`. Pages are long: continue with `offset` until the section you need. Get the installed version with `claude --version`.
+3. Otherwise read the official page from the local mirror, `mirrors/claude-code-docs/en/<page>.md` (one line per page in `mirrors/claude-code-docs/llms.txt`):
+   - Update it once per task: `python3 utils/skills/mirrors/fetch_mirrors.py claude-code-docs` (~15 s; lists changed pages). If it lists changes, run `python3 utils/skills/mirrors/fetch_mirrors.py --stale claude-code-docs docs/claude-code` and report the guides it names.
+   - Grep for the term, then Read around the matching lines; quote exactly.
+   - Cite the site url, `https://code.claude.com/docs/en/<page>`, never the mirror path.
+   - Use WebFetch only if the page is missing or the update fails; say so.
+   Get the installed version with `claude --version`.
 4. Answer in the language of the request:
    - the fact, a short quote, the URL;
    - "Conferido em <mês>/<ano> (Claude Code <versão>)";

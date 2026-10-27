@@ -35,7 +35,8 @@ import fetch_pages
 GITIGNORE = ['/mirrors/*', '!/mirrors/mirrors.json']
 WHAT = ('Read-only copies of outside repositories, fetched into mirrors/<name>/ (gitignored) by the mirrors '
         'skill (fetch_mirrors.py). Entries with "commit" are pinned; entries with "follow": true take the '
-        'newest commit of "ref" on every fetch. Cite files as mirrors/<name>/<path> or mirrors/<set>/<member>/<path>.')
+        'newest commit of "ref" on every fetch; "kind": "pages" entries copy the .md pages a site\'s llms.txt links, '
+        'always current. Cite files as mirrors/<name>/<path> or mirrors/<set>/<member>/<path>.')
 
 
 def run(*a, cwd=None, check=True):

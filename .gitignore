@@ -9,3 +9,7 @@ CLAUDE.local.md
 
 # Python
 __pycache__/
+
+# mirrors skill: copies ignored, manifest versioned
+/mirrors/*
+!/mirrors/mirrors.json
