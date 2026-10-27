@@ -58,6 +58,7 @@ levels or created in-session get only the exit warning; nested sandboxes
 | Bridges still open, host-run files | `docs/guias/seguranca.md` |
 | Ports, Tauri, parallel sessions, worktrees | `docs/guias/portas-e-sessoes-paralelas.md` |
 | Updating agents, image, host | `docs/guias/atualizacao.md` |
+| Branch workflow (`claude` by default, when to split) | `docs/guias/branches.md` |
 | Image size, disk, Timeshift | `docs/guias/filosofia-da-imagem.md` |
 | Backup of `~/.claude` without leaking secrets | `docs/guias/backup-e-git.md` |
 | Claude Code behavior (memory, sessions, context, cache, subagents, model) | `docs/claude-code/README.md` (index) |

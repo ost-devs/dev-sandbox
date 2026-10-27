@@ -17,7 +17,7 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
 - Removida `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`, que o Playwright não lê
   ([aprendizado](docs/aprendizados/2026-10-playwright-ignora-chromium-da-imagem.md)).
 - Guias novos: [atualização](docs/guias/atualizacao.md) e
-  [instrução ou mecanismo](docs/claude-code/instrucao-ou-mecanismo.md).
+  [instrução ou mecanismo](docs/claude-code/instrucao-ou-mecanismo.md) e [branches](docs/guias/branches.md).
 - Corrigido: o `deny` de credenciais cobre `cat`/`head`/`sed` no terminal (documentação oficial);
   o que passa é um script que abra o arquivo sozinho.
 - Testado só a seco (`bash -n` e `sudo` falso); falta o teste real no host.

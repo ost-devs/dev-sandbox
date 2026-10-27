@@ -20,7 +20,7 @@ Goal: a fresh session must be as precise as this one without reading it.
 | How dev-sandbox works, a decision and its reason, where a topic lives | `.claude/skills/dev-sandbox/SKILL.md`, if it isn't already in a doc it can point to |
 | Non-obvious discovery others could hit | `docs/aprendizados/` + index |
 | Verified Claude Code fact | Memory of `claude-code-pesquisador`, or the guide in `docs/claude-code/` if it belongs there |
-| Unfinished work | Commit it on its branch (if the user allows commits) and keep one project memory: branch, next step, date. Delete it when done |
+| Unfinished work | Commit it on its branch and keep one project memory: branch, next step, date. Delete it when done |
 
 4. Show the user a table: item → where it went. Ask before committing if the user has not authorized commits.
 5. Tell the user it is safe to `/clear`.
