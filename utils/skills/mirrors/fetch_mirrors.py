@@ -10,15 +10,21 @@ the copies (mirrors/<name>/, gitignored) have no .git, are read-only and record 
   fetch_mirrors.py --list                    show the manifest, one line per target
   fetch_mirrors.py --add name url [--ref R] [--include PATH ...] [--license ID ...] [--follow]
                                              add a mirror (pinned to the ref's newest commit, or following it), fetch it
-  fetch_mirrors.py --pin target [ref|commit] write the ref's newest commit (or the commit) into the manifest, fetch
-  fetch_mirrors.py --follow target           always fetch the newest commit of the ref (docs that change often)
+  fetch_mirrors.py --pin target ... [ref|commit|@version|@package]
+                                             write the ref's newest commit (or the commit, or the commit of the
+                                             version's tag) into the manifest, fetch
+  fetch_mirrors.py --follow target ...       always fetch the newest commit of the ref (docs that change often)
   fetch_mirrors.py --remove target           delete the copy and the manifest entry
 
 A target is a mirror (`zed`; a set = all its members) or one member of a set (`cm6/view`). A url with
-`{member}` makes a set; pinning a member it does not list yet adds it. A ref is `main`, `v1.2`, a full
-`refs/...` name or HEAD. "include" fetches only those paths (sparse checkout, plus the repository's
-LICENSE* files); "license_check": "cargo" refuses included crates whose Cargo.toml license is not in
-"license". The manifest and the .gitignore lines are created when missing.
+`{member}` makes a set; --pin or --follow on a member it does not list yet adds it. A ref is `main`,
+`v1.2`, a full `refs/...` name or HEAD; with --pin, the last argument is the ref when it is not a target.
+`@1.2.3` pins the tag of a published version (`1.2.3` or `v1.2.3`); `@package` takes the version from
+package.json at the tip of the default branch. --check also notes pinned copies whose package.json
+version has a tag at another commit (pinned after the release). "include" fetches only those paths
+(sparse checkout, plus the repository's LICENSE* files); "license_check": "cargo" refuses included
+crates whose Cargo.toml license is not in "license". The manifest and the .gitignore lines are created
+when missing, with or without .git (without it, other .gitignore rules are not checked).
 """
 import argparse, json, os, pathlib, re, shutil, stat, subprocess, sys, tempfile
 
@@ -56,34 +62,74 @@ def save(data):
 
 
 def ensure_gitignore():
-    """Copies ignored, manifest tracked. Appends the two lines only when git does not already agree."""
-    if not (ROOT / '.git').exists():
-        return
+    """Copies ignored, manifest tracked. Appends the two lines unless git already agrees; without .git
+    (not a repository yet) the lines still go in, so the copies stay out of the first commit."""
+    git = (ROOT / '.git').exists()
     ignored = lambda p: run('git', 'check-ignore', '-q', p, cwd=ROOT, check=False).returncode == 0
-    if ignored('mirrors/x/y') and not ignored('mirrors/mirrors.json'):
+    if git and ignored('mirrors/x/y') and not ignored('mirrors/mirrors.json'):
         return
     gi = ROOT / '.gitignore'
     text = gi.read_text() if gi.exists() else ''
+    text = text if text.strip() else ''
     if not all(l in text.splitlines() for l in GITIGNORE):
-        gi.write_text(text + ('' if text.endswith('\n') or not text else '\n')
-                      + '\n# mirrors skill: copies ignored, manifest versioned\n' + '\n'.join(GITIGNORE) + '\n')
+        gi.write_text(text + ('' if not text else '\n' if text.endswith('\n') else '\n\n')
+                      + '# mirrors skill: copies ignored, manifest versioned\n' + '\n'.join(GITIGNORE) + '\n')
         print('updated  .gitignore (commit it)')
-    if not ignored('mirrors/x/y') or ignored('mirrors/mirrors.json'):
+    if git and (not ignored('mirrors/x/y') or ignored('mirrors/mirrors.json')):
         print(f'warning  .gitignore: another rule overrides {" and ".join(GITIGNORE)} (e.g. "mirrors/"); fix it by hand')
+
+
+def first_tip(url, names):
+    """(name, commit) of the first of names the remote has (annotated tags peeled), or None."""
+    out = run('git', 'ls-remote', url, *names, *[n + '^{}' for n in names], check=False)
+    if out.returncode:
+        sys.exit(f'{url}: {out.stderr.strip()}')
+    lines = dict(reversed(l.split('\t')) for l in out.stdout.splitlines())
+    for name in names:
+        sha = lines.get(name + '^{}') or lines.get(name)
+        if sha:
+            return name, sha
 
 
 def resolve(url, ref):
     """Commit at the tip of ref (tags peeled). Short names try tags, then branches."""
     names = [ref] if ref == 'HEAD' or ref.startswith('refs/') else [f'refs/tags/{ref}', f'refs/heads/{ref}']
-    for name in names:
-        out = run('git', 'ls-remote', url, name, name + '^{}', check=False)
-        if out.returncode:
-            sys.exit(f'{url}: {out.stderr.strip()}')
-        lines = dict(reversed(l.split('\t')) for l in out.stdout.splitlines())
-        sha = lines.get(name + '^{}') or lines.get(name)
-        if sha:
-            return name, sha
-    sys.exit(f'{url}: no ref {ref}')
+    return first_tip(url, names) or sys.exit(f'{url}: no ref {ref}')
+
+
+def version_tag(url, version):
+    """Tag of a published version, named 1.2.3 or v1.2.3."""
+    v = version.removeprefix('v')
+    return first_tip(url, [f'refs/tags/{v}', f'refs/tags/v{v}'])
+
+
+def package_version(url):
+    """"version" of package.json at the tip of the default branch (fetches that one file)."""
+    with tempfile.TemporaryDirectory() as tmp:
+        run('git', 'init', '-q', cwd=tmp)
+        run('git', 'remote', 'add', 'origin', url, cwd=tmp)
+        run('git', 'fetch', '-q', '--depth', '1', '--filter=blob:none', 'origin', default_ref(url), cwd=tmp)
+        out = run('git', 'show', 'FETCH_HEAD:package.json', cwd=tmp, check=False)
+    try:
+        return json.loads(out.stdout)['version'] if out.returncode == 0 else None
+    except (ValueError, KeyError):
+        return None
+
+
+def release_note(label, url, entry, dst):
+    """A copy pinned past its release: package.json says 1.2.3, but tag 1.2.3 is another commit."""
+    pkg = dst / 'package.json'
+    if entry['ref'].startswith('refs/tags/') or not pkg.exists():
+        return
+    try:
+        version = json.loads(pkg.read_text())['version']
+    except (ValueError, KeyError):
+        return
+    tag = version_tag(url, version)
+    if not tag:
+        print(f'  note: package.json says {version}, no tag {version} or v{version} (unreleased?)')
+    elif tag[1] != entry['commit']:
+        print(f'  note: not the release commit of {version} ({tag[1][:7]}); to pin it: --pin {label} @{version}')
 
 
 def default_ref(url):
@@ -110,6 +156,20 @@ def targets(data, names):
                 yield f'{mirror}/{mem}', e['members'][mem], e['url'].format(member=mem), MIRRORS / mirror / mem, e
         else:
             yield mirror, e, e['url'], MIRRORS / mirror, e
+
+
+def expand(data, names):
+    """A set name stands for all the members it lists."""
+    out = []
+    for name in names:
+        mirror, member, e = split(data, name)
+        if e['kind'] == 'set' and not member:
+            if not e['members']:
+                sys.exit(f'{mirror} has no members yet: name them, {mirror}/<member> ...')
+            out += [f'{mirror}/{m}' for m in e['members']]
+        else:
+            out.append(name)
+    return out
 
 
 def entry_of(data, name, create_ref=None):
@@ -215,6 +275,8 @@ def sync(data, names, check):
             continue
         if have == want:
             print(f'ok       {label} {have[:7]}')
+            if check and not following(entry, mirror):
+                release_note(label, url, entry, dst)
         elif check:
             state = 'missing' if have is None else 'outdated' if following(entry, mirror) else 'stale'
             print(f'{state:8} {label} (want {want[:7]})')
@@ -230,9 +292,9 @@ def main():
     act.add_argument('--check', action='store_true')
     act.add_argument('--list', action='store_true')
     act.add_argument('--add', nargs=2, metavar=('NAME', 'URL'))
-    act.add_argument('--pin', action='store_true', help='targets: TARGET [REF|COMMIT]')
+    act.add_argument('--pin', action='store_true', help='targets: TARGET ... [REF|COMMIT|@VERSION|@package]')
     act.add_argument('--remove', action='store_true')
-    p.add_argument('--follow', action='store_true', help='TARGET: follow its ref from now on; with --add: add it following')
+    p.add_argument('--follow', action='store_true', help='TARGET ...: follow its ref from now on (adds new set members); with --add: add it following')
     p.add_argument('--ref', help='with --add: branch, tag or refs/... (default: the remote HEAD branch)')
     p.add_argument('--include', nargs='+', default=[], metavar='PATH', help='with --add: fetch only these paths')
     p.add_argument('--license', nargs='+', default=[], metavar='ID', help='with --add: SPDX ids, e.g. MIT')
@@ -272,9 +334,12 @@ def main():
         sys.exit('--follow goes alone with a target, or with --add')
 
     if a.pin or a.follow or a.remove:
-        if not a.targets:
+        names, arg = list(a.targets), None
+        if a.pin and len(names) > 1 and names[-1].partition('/')[0] not in data['mirrors']:
+            arg = names.pop()
+        if not names:
             sys.exit('name a target')
-        name = a.targets[0]
+        name = names[0]
 
     if a.remove:
         mirror, member, e = split(data, name)
@@ -289,25 +354,42 @@ def main():
         return 0
 
     if a.follow:
-        entry, url = entry_of(data, name)
-        entry['follow'] = True
-        entry.pop('commit', None)
+        names = expand(data, names)
+        for name in names:
+            entry, url = entry_of(data, name, create_ref='HEAD')
+            if entry['ref'] == 'HEAD' or entry['ref'].startswith('refs/tags/'):
+                entry['ref'] = default_ref(url)   # a tag never moves: follow the branch
+            entry['follow'] = True
+            entry.pop('commit', None)
+            print(f'follow   {name} {entry["ref"]}')
         save(data)
-        print(f'follow   {name} {entry["ref"]} (commit mirrors/mirrors.json)')
-        return sync(data, [name], False)
+        print('  (commit mirrors/mirrors.json)')
+        return sync(data, names, False)
 
     if a.pin:
-        arg = a.targets[1] if len(a.targets) > 1 else None
+        names = expand(data, names)
         sha = bool(arg and re.fullmatch(r'[0-9a-f]{40}', arg))
-        entry, url = entry_of(data, name, create_ref='HEAD' if sha or not arg else arg)
-        if sha:
-            entry['commit'] = arg
-        else:
-            entry['ref'], entry['commit'] = resolve(url, arg or entry['ref'])
-        entry.pop('follow', None)
+        if sha and len(names) > 1:
+            sys.exit('a commit pins one target')
+        for name in names:
+            entry, url = entry_of(data, name, create_ref='HEAD')
+            if sha:
+                entry['commit'] = arg
+            elif arg and arg.startswith('@'):
+                version = package_version(url) if arg == '@package' else arg[1:]
+                if not version:
+                    sys.exit(f'{name}: no "version" in package.json at the tip of {url}')
+                tag = version_tag(url, version)
+                if not tag:
+                    sys.exit(f'{name}: version {version} has no tag {version} or v{version} in {url}')
+                entry['ref'], entry['commit'] = tag
+            else:
+                entry['ref'], entry['commit'] = resolve(url, arg or entry['ref'])
+            entry.pop('follow', None)
+            print(f'pinned   {name} {entry["ref"]} -> {entry["commit"][:7]}')
         save(data)
-        print(f'pinned   {name} {entry["ref"]} -> {entry["commit"][:7]} (commit mirrors/mirrors.json)')
-        return sync(data, [name], False)
+        print('  (commit mirrors/mirrors.json)')
+        return sync(data, names, False)
 
     return 1 if sync(data, a.targets, a.check) else 0
 

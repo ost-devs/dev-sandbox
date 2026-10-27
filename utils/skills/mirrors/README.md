@@ -17,7 +17,9 @@ Instalação: [`utils/README.md`](../../README.md#instalar).
 | `mirrors/<nome>/.mirror-commit` | O commit que está na cópia | Não |
 | `.gitignore` | Ganha duas linhas: `/mirrors/*` e `!/mirrors/mirrors.json` | Sim |
 
-A skill cria o `mirrors.json` e as linhas do `.gitignore` na primeira vez.
+A skill cria o `mirrors.json` e as linhas do `.gitignore` na primeira vez,
+mesmo numa pasta que ainda não é repositório git: assim, depois do `git init`,
+as cópias já ficam fora do commit.
 
 Por que somente leitura e sem `.git`: assim o Claude não edita a cópia por
 engano (a edição seria perdida na próxima atualização), e nenhum hook do git
@@ -42,6 +44,8 @@ Fale normalmente, ou use `/mirrors`:
 | Atualizar tudo (ou baixar depois de clonar o projeto) | `/mirrors` |
 | Ver o que está faltando ou velho | `/mirrors check` |
 | Fixar na versão atual | `/mirrors pin rust-book` |
+| Fixar na versão publicada (a tag `1.2.3` ou `v1.2.3`) | "fixe lezer/common na versão 1.5.2" |
+| Seguir vários de uma vez | "deixe todos os membros de lezer sempre atualizados" |
 | Tirar um espelho | `/mirrors remove rust-book` |
 
 Depois de adicionar, fixar ou remover, faça commit do `mirrors/mirrors.json`.
