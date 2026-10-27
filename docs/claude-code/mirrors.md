@@ -58,7 +58,7 @@ Conferir: abra uma sessão nova do Claude em qualquer projeto e digite
 |---|---|---|
 | **Fixo** (*pin*): guarda um commit | Código ou especificação que seus documentos citam. A versão só muda quando você pede | Uma biblioteca que você está portando |
 | **Versão publicada** (*pin* com `@versão`): o commit da tag da versão | Você quer exatamente o que foi publicado (no npm, por exemplo), não o que veio depois | `lezer/common` na versão que outro pacote exige |
-| **Sempre atualizado** (*follow*): o commit mais novo a cada atualização | Documentação que muda e que você quer sempre em dia | A documentação do Rust |
+| **Sempre atualizado** (*follow*): o commit mais novo a cada atualização | Documentação que muda e que você quer sempre em dia | A documentação do Rust, o `.claude/` do dev-sandbox |
 
 Na dúvida, fixe. Com cópia fixa, o `mirrors.json` diz exatamente o que o
 Claude leu quando escreveu cada documento.
@@ -83,6 +83,11 @@ os membros de uma vez.
 
 Na versão publicada, a skill procura a tag `1.5.2` ou `v1.5.2`. Se o
 repositório não tiver a tag, ela para e avisa, em vez de pegar outro commit.
+
+Workspace Rust com crates de licenças diferentes (o Zed, por exemplo): peça
+para conferir a licença de cada crate. A skill põe `"license_check": "cargo"`
+na entrada, e a cópia recusa toda pasta incluída cujo `Cargo.toml` tenha
+licença fora da lista.
 
 ## 4. Revisar e fazer o commit
 
@@ -129,6 +134,7 @@ python3 ~/.claude/skills/mirrors/fetch_mirrors.py --help
 | Baixar tudo do `mirrors.json` | `python3 ~/.claude/skills/mirrors/fetch_mirrors.py` |
 | Ver o que falta ou está velho | `... --check` |
 | Adicionar sempre atualizado | `... --add rust-book https://github.com/rust-lang/book --license MIT Apache-2.0 --follow` |
+| Adicionar o `.claude/` do dev-sandbox, sempre atualizado | `... --add dev-sandbox https://github.com/ost-devs/dev-sandbox --include .claude --follow` |
 | Adicionar só uma pasta | `... --add zed https://github.com/zed-industries/zed --include crates/editor --license GPL-3.0-or-later` |
 | Criar um conjunto | `... --add lezer 'https://github.com/lezer-parser/{member}' --license MIT` |
 | Pôr membros sempre atualizados | `... --follow lezer/common lezer/lr lezer/highlight` |
