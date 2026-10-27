@@ -6,3 +6,6 @@ rascunhos.md
 .claude/agent-memory-local/
 .claude/worktrees/
 CLAUDE.local.md
+
+# Python
+__pycache__/

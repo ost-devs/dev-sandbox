@@ -11,9 +11,9 @@ Goal: any fresh session in this project answers as precisely as a long session
 that already knows it, at the lowest fixed context cost. Knowledge leaves the
 conversation and goes to files Claude Code loads at the right moment.
 
-Bundled files (read only when the step says so):
-- `${CLAUDE_SKILL_DIR}/templates/` - one template per piece, with the rules for writing it.
-- `${CLAUDE_SKILL_DIR}/example/` - the full `.claude/` of the repo where this was built (dev-sandbox), as a worked example. Read it to see the result, never copy its content: it describes another project.
+Sources (read only when a step needs them):
+- `${CLAUDE_SKILL_DIR}/templates/` - one template per piece, with the rules for writing it. Enough on its own.
+- Worked example (optional): the `.claude/` of dev-sandbox, the repo where this was built. With the `mirrors` skill available and the user's OK, keep it current with the `mirrors` skill: `--add dev-sandbox https://github.com/ost-devs/dev-sandbox --include .claude --follow` (or a plain run if `mirrors/mirrors.json` already lists it), then read `mirrors/dev-sandbox/.claude/`. It shows the result, never content to copy: it describes another project. Without the `mirrors` skill, skip it.
 
 `$ARGUMENTS` = `auditar`, or the project already has a map skill or `/consolidar`: skip to **Audit**.
 

@@ -18,9 +18,9 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
   ([aprendizado](docs/aprendizados/2026-10-playwright-ignora-chromium-da-imagem.md)).
 - Guias novos: [atualização](docs/guias/atualizacao.md) e
   [instrução ou mecanismo](docs/claude-code/instrucao-ou-mecanismo.md) e [branches](docs/guias/branches.md).
-- Skill `/montar-consultor` ([`extras/skills/`](extras/skills/montar-consultor/SKILL.md)): monta o
-  consultor do projeto (instruções, rules, mapa, `/consolidar`, pesquisador) em qualquer repositório
-  ([guia](docs/claude-code/montar-consultor.md)).
+- Pasta [`utils/`](utils/README.md): skills para usar em qualquer projeto. `/montar-consultor` monta o
+  consultor do projeto ([guia](docs/claude-code/montar-consultor.md)); `/mirrors` guarda cópias
+  somente leitura de repositórios de fora.
 - Corrigido: o `deny` de credenciais cobre `cat`/`head`/`sed` no terminal (documentação oficial);
   o que passa é um script que abra o arquivo sozinho.
 - Testado só a seco (`bash -n` e `sudo` falso); falta o teste real no host.

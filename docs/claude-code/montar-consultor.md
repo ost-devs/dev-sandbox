@@ -5,7 +5,7 @@ repositório, passo a passo. O **porquê** de cada peça está na
 [introdução](./consultor-do-projeto.md).
 
 Quem faz o trabalho é a skill `/montar-consultor`, que vem no dev-sandbox
-([`extras/skills/montar-consultor/`](../../extras/skills/montar-consultor/SKILL.md)).
+([`utils/skills/montar-consultor/`](../../utils/skills/montar-consultor/SKILL.md)).
 Ela lê o projeto, pergunta o que não dá para descobrir sozinha, mostra um
 plano e só escreve depois que você aprova.
 
@@ -30,18 +30,20 @@ clonou o dev-sandbox:
 
 ```bash
 mkdir -p ~/.claude/skills
-cp -rL ~/dev-sandbox/extras/skills/montar-consultor ~/.claude/skills/
+cp -r ~/dev-sandbox/utils/skills/montar-consultor ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
 ```
 
-O `-L` importa: dentro da skill, a pasta `example` é um atalho para o
-`.claude/` do dev-sandbox (o exemplo completo). Com `-L`, ele vira uma cópia
-de verdade e funciona em qualquer projeto, dentro ou fora do container.
+A skill [`mirrors`](../../utils/skills/mirrors/README.md) é opcional, mas
+recomendada: com ela, o `/montar-consultor` baixa o `.claude/` do dev-sandbox
+para `mirrors/dev-sandbox/` no seu projeto e o usa como exemplo pronto (sempre
+na versão mais nova do GitHub). Ele pergunta antes. Sem ela, os modelos
+bastam.
 
 Para atualizar depois de um `git pull` no dev-sandbox, rode no host:
 
 ```bash
-rm -rf ~/.claude/skills/montar-consultor
-cp -rL ~/dev-sandbox/extras/skills/montar-consultor ~/.claude/skills/
+rm -rf ~/.claude/skills/montar-consultor ~/.claude/skills/mirrors
+cp -r ~/dev-sandbox/utils/skills/montar-consultor ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
 ```
 
 Conferir: abra uma sessão nova do Claude em qualquer projeto e digite
@@ -129,17 +131,17 @@ descrição, até ser usado).
 ## Montar à mão, sem a skill
 
 Dá para fazer tudo sem a skill. Os modelos estão em
-[`extras/skills/montar-consultor/templates/`](../../extras/skills/montar-consultor/templates/),
+[`utils/skills/montar-consultor/templates/`](../../utils/skills/montar-consultor/templates/),
 cada um com as regras de escrita e um esqueleto (em inglês, porque são
 arquivos para a IA). Siga esta ordem:
 
 | Ordem | Peça | Modelo |
 |---|---|---|
-| 1 | Rules das partes | [`rule.md`](../../extras/skills/montar-consultor/templates/rule.md) |
-| 2 | Mapa do projeto | [`map-skill.md`](../../extras/skills/montar-consultor/templates/map-skill.md) |
-| 3 | Pesquisador (opcional) | [`researcher-agent.md`](../../extras/skills/montar-consultor/templates/researcher-agent.md) |
-| 4 | `/consolidar` | [`consolidar.md`](../../extras/skills/montar-consultor/templates/consolidar.md) |
-| 5 | Instruções do projeto | [`instructions.md`](../../extras/skills/montar-consultor/templates/instructions.md) |
+| 1 | Rules das partes | [`rule.md`](../../utils/skills/montar-consultor/templates/rule.md) |
+| 2 | Mapa do projeto | [`map-skill.md`](../../utils/skills/montar-consultor/templates/map-skill.md) |
+| 3 | Pesquisador (opcional) | [`researcher-agent.md`](../../utils/skills/montar-consultor/templates/researcher-agent.md) |
+| 4 | `/consolidar` | [`consolidar.md`](../../utils/skills/montar-consultor/templates/consolidar.md) |
+| 5 | Instruções do projeto | [`instructions.md`](../../utils/skills/montar-consultor/templates/instructions.md) |
 
 As instruções vêm por último porque apontam para as outras peças. O exemplo
 pronto é o [`.claude/`](../../.claude/) deste repositório.
@@ -149,7 +151,7 @@ pronto é o [`.claude/`](../../.claude/) deste repositório.
 | Sintoma | Causa provável | O que fazer |
 |---|---|---|
 | `/montar-consultor` não aparece | Skill não instalada em `~/.claude/skills/`, ou sessão aberta antes da instalação | Confira com `ls ~/.claude/skills/montar-consultor/SKILL.md` e abra uma sessão nova |
-| A pasta `example` está vazia ou quebrada | Copiada sem `-L` | Reinstale com `cp -rL` |
+| Aparece uma pasta `mirrors/` no projeto | Você aceitou baixar o exemplo do dev-sandbox | É só leitura e fica fora do git (só o `mirrors/mirrors.json` vai). Para tirar: `/mirrors remove dev-sandbox` |
 | O Claude ignora o `AGENTS.md` | O projeto também tem `CLAUDE.md`, e aí o Claude Code lê só ele | Ponha `@AGENTS.md` na primeira linha do `CLAUDE.md` |
 | A rule não aparece no `/context` | Rules com `paths:` só carregam quando o Claude lê ou edita um arquivo que combina | Normal. Peça para ele abrir um arquivo da parte e confira de novo |
 | O mapa não carrega sozinho | A `description` não cita o assunto da pergunta | Chame `/<projeto>` e melhore a `description` |

@@ -29,6 +29,11 @@ script e do `Dockerfile` está em [`DOCUMENTACAO.md`](../DOCUMENTACAO.md).
 | [Um consultor do projeto](./claude-code/consultor-do-projeto.md) | Entender por que não depender de uma conversa longa para o Claude conhecer o projeto |
 | [Montar o consultor](./claude-code/montar-consultor.md) | Montar esse consultor no seu projeto com a skill `/montar-consultor` |
 
+## Ferramentas para qualquer projeto
+
+[`utils/`](../utils/README.md): skills do Claude Code que não dependem do
+dev-sandbox, como `/montar-consultor` e `/mirrors`.
+
 ## Aprendizados
 
 [`aprendizados/`](./aprendizados/README.md): problemas reais, causas e
