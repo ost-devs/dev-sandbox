@@ -5,6 +5,9 @@ linguagem, a biblioteca que você estuda, os exemplos de outro projeto) dentro
 do seu projeto, para o Claude ler sem buscar página por página na web. O
 **porquê** está em [Trabalhar por projeto](./projetos.md#3-um-projeto-que-consulta-outros-repositórios).
 
+Documentação de site, sem repositório git (como a do Claude Code): veja
+[Espelhar sites de documentação](./mirrors-de-sites.md).
+
 Quem faz o trabalho é a skill `/mirrors`, que vem no dev-sandbox
 ([`utils/skills/mirrors/`](../../utils/skills/mirrors/SKILL.md)). Ela baixa
 cada repositório para `mirrors/<nome>/` e anota de onde veio e em qual commit.

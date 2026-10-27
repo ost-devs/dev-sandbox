@@ -8,7 +8,8 @@ proveito dele. Valem também, em boa parte, fora do Docker.
 | [Um consultor do projeto](./consultor-do-projeto.md) | Por que uma conversa nova pode já começar sabendo o projeto, e quais peças fazem isso (introdução) |
 | [Montar o consultor](./montar-consultor.md) | Como montar o consultor em qualquer projeto, passo a passo, com a skill `/montar-consultor` |
 | [Espelhar repositórios de fora](./mirrors.md) | Como deixar outros repositórios em `mirrors/` para o Claude ler, fixos numa versão ou sempre atualizados, com a skill `/mirrors` |
-| [Base de conhecimento sob demanda](./base-de-conhecimento.md) | Como manter a documentação oficial local e saber quais artigos conferir quando ela muda (esboço) |
+| [Base de conhecimento sob demanda](./base-de-conhecimento.md) | Como manter a documentação oficial local e saber quais artigos conferir quando ela muda |
+| [Espelhar sites de documentação](./mirrors-de-sites.md) | Quando e como copiar a documentação de um site sem repositório git (`llms.txt`), quais sites servem e quando preferir o git |
 | [Instrução ou mecanismo](./instrucao-ou-mecanismo.md) | O que vai no `CLAUDE.md`/rules e o que vai em settings, hooks ou no Docker; o teste da linha, com o caso da v0.4 |
 | [Memória e instruções](./memoria-e-instrucoes.md) | O que é a memória automática, como difere de `CLAUDE.md`/`AGENTS.md`/rules, como fica separada por projeto no container |
 | [Sessões e persistência](./sessoes-e-persistencia.md) | O que sobrevive ao `exit`, a pasta `/tmp/claude-*`, como retomar trabalho depois do limite de uso, atualizações |

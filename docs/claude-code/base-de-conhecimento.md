@@ -1,7 +1,8 @@
-# Base de conhecimento sob demanda (esboço)
+# Base de conhecimento sob demanda
 
-> Esboço na branch `experimento/mirrors-paginas`. O código funciona e foi
-> testado; o fluxo dos artigos ainda não foi usado de verdade.
+> O código funciona e foi testado. O fluxo dos artigos ainda não foi usado
+> numa revisão de verdade. Como espelhar um site: [Espelhar sites de
+> documentação](./mirrors-de-sites.md).
 
 A ideia: a fonte oficial fica **inteira e local**, em inglês, só para leitura.
 Os artigos em português (como os de [`docs/claude-code/`](./README.md))
@@ -61,7 +62,7 @@ Descoberta no teste: `en/claude-tag.md` redireciona para uma página HTML em
 | Pergunta | Resposta |
 |---|---|
 | Onde guardar a documentação oficial? | Em `mirrors/claude-code-docs/`, **não** em `docs/claude-code/official/`. O dev-sandbox é público: pôr a documentação da Anthropic no git é redistribuí-la, e a licença não é aberta. E cada atualização somaria até 11 MB ao histórico |
-| O pesquisador muda? | Passa a procurar primeiro no espelho (`grep`) e só vai à web se a página não existir ou se o `--check` disser que está velha |
+| O pesquisador muda? | Já mudou: atualiza o espelho uma vez por tarefa, procura nele com `grep` e só vai à web se a página não existir |
 | E o "Conferido em outubro/2026"? | Continua, porque diz a versão do Claude Code. O `--stale` passa a dizer **quando** conferir de novo, em vez de depender de lembrar |
 | Quem roda a atualização? | O agente, no começo de uma pesquisa (13 s), ou você, com `/mirrors` |
 
@@ -75,10 +76,10 @@ O mesmo fluxo serve para qualquer série de artigos sobre uma fonte que muda:
 3. A cada atualização da fonte, rode `--stale` e revise só os artigos
    apontados.
 
-Muitos sites de documentação já publicam `llms.txt` (há um diretório em
-[llmstxt.org](https://llmstxt.org/)). O da Anthropic tem também versões
-traduzidas, inclusive `pt-br`, em `https://code.claude.com/docs/_llms/pt-br.txt`;
-o esboço ainda não as trata.
+Quais sites servem e quando preferir o repositório git: [Espelhar sites de
+documentação](./mirrors-de-sites.md#sites-testados). O site da Anthropic tem
+também versões traduzidas, inclusive `pt-br`
+(`https://code.claude.com/docs/_llms/pt-br.txt`), que o script ainda não trata.
 
 ## Em aberto
 
@@ -87,4 +88,3 @@ o esboço ainda não as trata.
   hashes resolveria, ao custo de 227 linhas no `mirrors.json`.
 - Para espelhos git, o `--stale` ainda não existe. Seria o mesmo princípio,
   usando o `git diff` entre dois commits.
-- O pesquisador e as rules ainda não foram alterados para usar o espelho.
