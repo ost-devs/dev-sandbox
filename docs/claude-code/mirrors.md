@@ -38,8 +38,9 @@ mkdir -p ~/.claude/skills
 cp -r ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
 ```
 
-A pasta tem só o que a IA usa: o `SKILL.md` e o script. Este guia fica no
-dev-sandbox, fora da skill instalada.
+A pasta leva o `SKILL.md` e o script, que a IA usa, e um `README.md` curto
+para você consultar sem abrir o dev-sandbox. O Claude não carrega o README:
+ele só entra no contexto se o Claude decidir abrir o arquivo.
 
 Para atualizar depois de um `git pull` no dev-sandbox, rode no host:
 

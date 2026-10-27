@@ -26,8 +26,5 @@ rm -rf ~/.claude/skills/<nome>
 cp -r ~/dev-sandbox/utils/skills/<nome> ~/.claude/skills/
 ```
 
-A pasta de cada skill tem só o que a IA usa; os guias para você ficam em
-[`docs/claude-code/`](../docs/claude-code/README.md).
-
 Conferir: numa sessão nova, digite `/` e o começo do nome. A skill deve
 aparecer na lista.
