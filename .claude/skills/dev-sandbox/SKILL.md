@@ -41,7 +41,9 @@ costs more (silent workarounds, tokens, errors) than disk
 | No ports by default, `127.0.0.1` only | Conflicts (Syncthing) and one container at a time | `docs/aprendizados/2026-10-portas-fixas.md` |
 | Separate cargo registry; `cargo install` binaries are lost | Toolchain mismatch with host cache; only `registry` is mounted | `DOCUMENTACAO.md#por-que-o-cache-do-cargo-fica-separado` |
 | Playwright needs `executablePath` | It reads no env var for the browser | `docs/aprendizados/2026-10-playwright-ignora-chromium-da-imagem.md` |
-| Security by mechanism, not prose | Instructions are not locks; mounts, deny rules and the exit report are | `docs/guias/seguranca.md` |
+| Security by mechanism, not prose | Instructions are not locks; mounts, deny rules and the exit report are | `docs/guias/seguranca.md`, `docs/claude-code/instrucao-ou-mecanismo.md` |
+| Container-only facts (e.g. host path translation) go in `sandbox/AGENTS.md`, not `~/.claude/rules` | Host `~/.claude` is mounted in, so its rules also load in host sessions, where they are wrong | `docs/claude-code/instrucao-ou-mecanismo.md` |
+| Scratchpad not mounted at its host path | Only fixes displayed temp paths; plans live in `~/.claude/plans`, so the path line is still needed | this table |
 
 ## Known open gaps
 Credentials readable by a script that opens files itself (deny covers `cat`/`head`/`sed`, not `python`); outbound internet; repos deeper than 2
