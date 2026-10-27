@@ -63,6 +63,7 @@ levels or created in-session get only the exit warning; nested sandboxes
 | Backup of `~/.claude` without leaking secrets | `docs/guias/backup-e-git.md` |
 | Claude Code behavior (memory, sessions, context, cache, subagents, model) | `docs/claude-code/README.md` (index) |
 | Real problems and their causes | `docs/aprendizados/README.md` (index) |
+| Personal skill that sets up this repo's `.claude/` pattern in other projects | `extras/skills/montar-consultor/` (its `example` links to `.claude/`) |
 | Missing tools reported by agents | host `~/.cache/dev-sandbox/home/.dev-sandbox/feedback.md` |
 
 ## Claude Code questions
