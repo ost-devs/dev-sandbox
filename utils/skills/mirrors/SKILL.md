@@ -27,12 +27,19 @@ can run from it), is read-only on disk, and records its commit in
 | Pin to the version in package.json on the default branch | `--pin <target>... @package` |
 | Switch to following | `--follow <target>...` |
 | Delete the copy and the entry | `--remove <target>` |
+| Add a docs site that publishes `llms.txt` (pages, always following) | `--add <name> <site>/llms.txt [--include en]` |
+| Files citing pages changed since their last commit | `--stale <name> [<folder>]` |
 
 A target is a mirror name, or `<set>/<member>` for a set: a url with
 `{member}` (one repository per package, e.g. `https://host/org/{member}`).
 `--pin` or `--follow` on a member the set does not list yet adds it; on the
 set name, they apply to all its members. With `--pin`, the last argument is
 the ref when it is not a target. A version with no tag fails.
+
+## Pages mirrors
+For documentation sites with no git repository (e.g. `https://code.claude.com/docs/llms.txt`). Every fetch downloads all pages and compares hashes; there is no pin. Pages that redirect off the site are skipped. Search the copy with grep and read only the matching lines; `llms.txt` in the copy lists each page with one line saying what it covers.
+
+When an article is written from these pages, cite the site url of each page used. After a fetch that reports changed pages, run `--stale` on the articles folder and recheck only the files it lists.
 
 ## Pinned or following
 - **Pinned** (`commit` in the manifest): code or specs that documents cite. Commit the manifest together with the documents that cite the new version, so the project's commit fixes the sources it cites.

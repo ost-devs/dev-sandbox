@@ -15,9 +15,12 @@ the copies (mirrors/<name>/, gitignored) have no .git, are read-only and record 
                                              version's tag) into the manifest, fetch
   fetch_mirrors.py --follow target ...       always fetch the newest commit of the ref (docs that change often)
   fetch_mirrors.py --remove target           delete the copy and the manifest entry
+  fetch_mirrors.py --stale name [folder]     markdown files citing pages of a "pages" mirror changed since
+                                             the file's last commit (default folder: the repository)
 
 A target is a mirror (`zed`; a set = all its members) or one member of a set (`cm6/view`). A url with
-`{member}` makes a set; --pin or --follow on a member it does not list yet adds it. A ref is `main`,
+`{member}` makes a set; a url ending in llms.txt makes a "pages" mirror: the .md pages that index links,
+always following (fetch_pages.py). --pin or --follow on a member it does not list yet adds it. A ref is `main`,
 `v1.2`, a full `refs/...` name or HEAD; with --pin, the last argument is the ref when it is not a target.
 `@1.2.3` pins the tag of a published version (`1.2.3` or `v1.2.3`); `@package` takes the version from
 package.json at the tip of the default branch. --check also notes pinned copies whose package.json
@@ -27,6 +30,7 @@ crates whose Cargo.toml license is not in "license". The manifest and the .gitig
 when missing, with or without .git (without it, other .gitignore rules are not checked).
 """
 import argparse, json, os, pathlib, re, shutil, stat, subprocess, sys, tempfile
+import fetch_pages
 
 GITIGNORE = ['/mirrors/*', '!/mirrors/mirrors.json']
 WHAT = ('Read-only copies of outside repositories, fetched into mirrors/<name>/ (gitignored) by the mirrors '
@@ -187,7 +191,7 @@ def entry_of(data, name, create_ref=None):
 
 
 def following(entry, mirror):
-    return entry.get('follow', False)
+    return entry.get('follow', False) or mirror['kind'] == 'pages'
 
 
 def license_problems(tree, entry, mirror):
@@ -264,6 +268,9 @@ def fetch(label, entry, url, dst, mirror, commit):
 def sync(data, names, check):
     problems = 0
     for label, entry, url, dst, mirror in targets(data, names):
+        if mirror['kind'] == 'pages':
+            problems += fetch_pages.sync(label, entry, dst, check, set_writable, delete)
+            continue
         stamp = dst / '.mirror-commit'
         have = stamp.read_text().strip() if stamp.exists() else None
         if following(entry, mirror):
@@ -294,6 +301,7 @@ def main():
     act.add_argument('--add', nargs=2, metavar=('NAME', 'URL'))
     act.add_argument('--pin', action='store_true', help='targets: TARGET ... [REF|COMMIT|@VERSION|@package]')
     act.add_argument('--remove', action='store_true')
+    act.add_argument('--stale', action='store_true', help='targets: NAME [FOLDER]')
     p.add_argument('--follow', action='store_true', help='TARGET ...: follow its ref from now on (adds new set members); with --add: add it following')
     p.add_argument('--ref', help='with --add: branch, tag or refs/... (default: the remote HEAD branch)')
     p.add_argument('--include', nargs='+', default=[], metavar='PATH', help='with --add: fetch only these paths')
@@ -304,7 +312,7 @@ def main():
 
     if a.list:
         for label, entry, url, dst, mirror in targets(data, a.targets):
-            how = f'follow {entry["ref"]}' if following(entry, mirror) else f'pin {(entry.get("commit") or "none")[:7]} ({entry["ref"]})'
+            how = 'pages (follow)' if mirror['kind'] == 'pages' else f'follow {entry["ref"]}' if following(entry, mirror) else f'pin {(entry.get("commit") or "none")[:7]} ({entry["ref"]})'
             print(f'{label:24} {how:32} {url}')
         return 0
 
@@ -317,6 +325,14 @@ def main():
             save(data)
             print(f'added    set {name}; add members with --pin {name}/<member> <ref>')
             return 0
+        if url.endswith('llms.txt'):
+            e = {'kind': 'pages', 'url': url, 'license': a.license}
+            if a.include:
+                e['include'] = a.include
+            data['mirrors'][name] = e
+            save(data)
+            print(f'added    {name} pages of {url} (following) (commit mirrors/mirrors.json)')
+            return sync(data, [name], False)
         ref, commit = resolve(url, a.ref or default_ref(url))
         e = {'kind': 'repo', 'url': url, 'ref': ref}
         e.update({'follow': True} if a.follow else {'commit': commit})
@@ -332,6 +348,14 @@ def main():
 
     if a.follow and (a.check or a.list or a.pin or a.remove):
         sys.exit('--follow goes alone with a target, or with --add')
+
+    if a.stale:
+        if not a.targets:
+            sys.exit('name a pages mirror')
+        mirror, _, e = split(data, a.targets[0])
+        if e['kind'] != 'pages':
+            sys.exit(f'{mirror} is not a pages mirror')
+        return fetch_pages.stale(ROOT, mirror, e, MIRRORS / mirror, a.targets[1] if len(a.targets) > 1 else ROOT)
 
     if a.pin or a.follow or a.remove:
         names, arg = list(a.targets), None
@@ -352,6 +376,9 @@ def main():
         save(data)
         print(f'removed  {name} (commit mirrors/mirrors.json)')
         return 0
+
+    if (a.pin or a.follow) and any(split(data, n)[2]['kind'] == 'pages' for n in names):
+        sys.exit('pages mirrors have no commits: they always follow the site')
 
     if a.follow:
         names = expand(data, names)
