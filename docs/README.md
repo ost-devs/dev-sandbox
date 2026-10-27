@@ -26,7 +26,8 @@ script e do `Dockerfile` está em [`DOCUMENTACAO.md`](../DOCUMENTACAO.md).
 | [Por baixo dos panos](./claude-code/por-baixo-dos-panos/README.md) | Entender contexto, cache, compactação e subagentes, e por que conversas longas custam mais |
 | [Instrução ou mecanismo](./claude-code/instrucao-ou-mecanismo.md) | Decidir se uma regra vira linha no `CLAUDE.md` ou trava na configuração |
 | [Modelo e esforço](./claude-code/modelo-e-esforco.md) | Escolher modelo e esforço sem usar bazuca para matar mosca |
-| [Um consultor do projeto](./claude-code/consultor-do-projeto.md) | Não depender de uma conversa longa para o Claude conhecer o projeto |
+| [Um consultor do projeto](./claude-code/consultor-do-projeto.md) | Entender por que não depender de uma conversa longa para o Claude conhecer o projeto |
+| [Montar o consultor](./claude-code/montar-consultor.md) | Montar esse consultor no seu projeto com a skill `/montar-consultor` |
 
 ## Aprendizados
 

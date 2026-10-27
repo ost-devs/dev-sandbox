@@ -5,7 +5,8 @@ proveito dele. Valem também, em boa parte, fora do Docker.
 
 | Guia | Responde |
 |---|---|
-| [Um consultor do projeto](./consultor-do-projeto.md) | Como uma conversa nova já começa sabendo o projeto: rules, skills, agente pesquisador, memória e `/consolidar` |
+| [Um consultor do projeto](./consultor-do-projeto.md) | Por que uma conversa nova pode já começar sabendo o projeto, e quais peças fazem isso (introdução) |
+| [Montar o consultor](./montar-consultor.md) | Como montar o consultor em qualquer projeto, passo a passo, com a skill `/montar-consultor` |
 | [Instrução ou mecanismo](./instrucao-ou-mecanismo.md) | O que vai no `CLAUDE.md`/rules e o que vai em settings, hooks ou no Docker; o teste da linha, com o caso da v0.4 |
 | [Memória e instruções](./memoria-e-instrucoes.md) | O que é a memória automática, como difere de `CLAUDE.md`/`AGENTS.md`/rules, como fica separada por projeto no container |
 | [Sessões e persistência](./sessoes-e-persistencia.md) | O que sobrevive ao `exit`, a pasta `/tmp/claude-*`, como retomar trabalho depois do limite de uso, atualizações |

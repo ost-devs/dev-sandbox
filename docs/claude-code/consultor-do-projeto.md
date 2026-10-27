@@ -1,15 +1,14 @@
 # Um consultor do projeto que não depende da conversa
 
 Toda conversa nova com o Claude começa sem saber nada. Depois de horas, ela
-parece "conhecer o projeto", e dá vontade de nunca sair dela. Este guia mostra
-como guardar esse conhecimento em arquivos que o Claude lê sozinho, para que
+parece "conhecer o projeto", e dá vontade de nunca sair dela. A ideia aqui é
+guardar esse conhecimento em arquivos que o Claude lê sozinho, para que
 **qualquer conversa nova** já comece precisa, sem carregar o peso da antiga.
 
-Foi montado neste repositório e serve de modelo para o seu projeto.
-Base: documentação oficial de [memória](https://code.claude.com/docs/en/memory),
-[skills](https://code.claude.com/docs/en/skills) e
-[subagentes](https://code.claude.com/docs/en/sub-agents). Conferido em
-outubro/2026 (Claude Code 2.1.310).
+Esta é a introdução: o problema, as peças e por que cada uma existe. Para
+montar no seu projeto, vá para o guia prático
+**[Montar o consultor em qualquer projeto](./montar-consultor.md)**, que usa
+a skill `/montar-consultor`.
 
 ## O problema
 
@@ -24,75 +23,58 @@ A conversa não é memória. O que vale guardar precisa sair dela.
 ## As peças
 
 Cada tipo de conhecimento vai para o lugar que carrega na hora certa e custa
-o mínimo:
+o mínimo. A última coluna mostra a peça montada neste repositório, como
+exemplo.
 
-| Peça | Neste repositório | Carrega | Custo fixo | Vai pro git? |
+| Peça | Guarda | Carrega | Custo fixo | No dev-sandbox |
 |---|---|---|---|---|
-| Instruções do projeto | [`AGENTS.md`](../../AGENTS.md) | Toda sessão | O arquivo inteiro | Sim |
-| Rules por pasta | `.claude/rules/scripts-e-imagem.md` (script, imagem, `sandbox/`) e `.claude/rules/documentacao.md` (docs) | Só quando o Claude mexe nesses arquivos | Zero até lá | Sim |
-| Skill com o mapa do projeto | `.claude/skills/dev-sandbox/` | Descrição sempre; texto quando o assunto aparece (ou com `/dev-sandbox`) | ~100 tokens | Sim |
-| Agente pesquisador | `.claude/agents/claude-code-pesquisador.md` | Roda num contexto separado; só a conclusão volta | Só a descrição | Sim |
-| Memória do agente | `.claude/agent-memory/claude-code-pesquisador/` | Quando o agente roda | Nenhum na conversa principal | Sim |
-| Skill de fechamento | `.claude/skills/consolidar/` | Só quando você digita `/consolidar` | Zero | Sim |
-| Memória automática | `~/.claude/projects/<projeto>/memory/` | Índice em toda sessão | O índice | Não: é sua |
+| Instruções do projeto (`AGENTS.md` ou `CLAUDE.md`) | O que vale em **toda** tarefa | Toda sessão | O arquivo inteiro | [`AGENTS.md`](../../AGENTS.md) |
+| Rules com `paths:` | O checklist de quem mexe numa parte | Só quando o Claude lê ou edita um arquivo daquela parte | Zero até lá | [`.claude/rules/`](../../.claude/rules/) |
+| Skill com o mapa do projeto | Como funciona, decisões que parecem erradas, onde está cada assunto | Descrição sempre; o texto quando o assunto aparece (ou com `/<projeto>`) | ~100 tokens | [`.claude/skills/dev-sandbox/`](../../.claude/skills/dev-sandbox/SKILL.md) |
+| Skill `/consolidar` | O hábito de guardar o que a conversa aprendeu | Só quando você digita `/consolidar` | Zero | [`.claude/skills/consolidar/`](../../.claude/skills/consolidar/SKILL.md) |
+| Agente pesquisador (opcional) | Fatos de uma fonte externa que muda rápido | Roda num contexto separado; só a conclusão volta | Só a descrição | [`.claude/agents/`](../../.claude/agents/claude-code-pesquisador.md) |
+| Memória do agente | O que o pesquisador já confirmou, com data e versão | Quando o agente roda | Nenhum na conversa principal | [`.claude/agent-memory/`](../../.claude/agent-memory/claude-code-pesquisador/MEMORY.md) |
+| Memória automática | Preferências **suas** | Índice em toda sessão | O índice | `~/.claude/projects/<projeto>/memory/` (fora do git) |
+
+Tudo, menos a memória automática, vai para o git e vale para quem mais
+trabalhar no projeto.
 
 ### Por que cada uma
 
-- **`AGENTS.md`:** só o que vale em **toda** tarefa (idioma, fluxo de commits). Cada linha custa contexto em toda sessão.
-- **Rules com `paths`:** o checklist "mudou o script? atualize também tal e tal doc" só importa quando alguém mexe no script. Fora disso, não ocupa nada.
-- **Skill `dev-sandbox`:** o mapa que custa horas para reconstruir: como as peças se encaixam, as decisões que parecem erradas mas têm motivo, onde cada assunto está escrito. Ela **aponta** para os documentos em vez de copiá-los, para não divergir deles. Tem menos de 5 mil tokens de propósito: depois de uma compactação, a skill usada volta inteira até esse limite.
-- **Agente pesquisador:** as páginas oficiais do Claude Code passam de 100 mil caracteres. Ler isso na conversa principal enche o contexto. O agente lê no contexto dele, devolve a conclusão com fonte e versão, e anota o fato na memória própria, que fica no git. Assim, o próximo que perguntar não paga a pesquisa de novo.
-- **`/consolidar`:** o hábito que fecha o ciclo (abaixo).
-- **Memória automática:** preferências **suas** (idioma, "só commite quando eu pedir"). Não vai pro git, então não vale para colaboradores.
+- **Instruções:** cada linha custa contexto em toda sessão. Só fica o que vale em toda tarefa (idioma, fluxo de commits, onde olhar).
+- **Rules com `paths:`:** o checklist "mudou o script? atualize também tal e tal doc" só importa quando alguém mexe no script. Fora disso, não ocupa nada.
+- **Mapa do projeto:** o conhecimento que custa horas para reconstruir. Ele **aponta** para os documentos em vez de copiá-los, para não divergir deles. Fica pequeno de propósito: depois de uma compactação, a skill usada volta inteira só até 5 mil tokens.
+- **`/consolidar`:** sem ele, o conhecimento novo volta a morar só na conversa. É o passo que fecha o ciclo.
+- **Agente pesquisador:** neste repositório, as páginas oficiais do Claude Code passam de 100 mil caracteres. Ler isso na conversa principal enche o contexto. O agente lê no contexto dele, devolve a conclusão com fonte e versão e anota o fato na memória própria, que fica no git. O próximo que perguntar não paga a pesquisa de novo.
+- **Memória automática:** preferências pessoais ("só commite quando eu pedir"). Não vai pro git, então não vale para colaboradores.
 
-### Separar Claude Code do dev-sandbox?
+### Separar a pesquisa do conhecimento
 
-Separamos **a pesquisa**, não o conhecimento. O que já foi verificado sobre o
-Claude Code está nos guias de [`docs/claude-code/`](./README.md), e a skill
-manda lê-los primeiro. O que muda rápido (versões, campos novos, flags) fica
-com o agente pesquisador, que confere na fonte e data cada fato. Um consultor
-único que soubesse tudo de cor ficaria desatualizado sem avisar.
+O pesquisador **não** é um consultor que sabe tudo de cor. O que já foi
+verificado vai para os documentos do projeto (aqui,
+[`docs/claude-code/`](./README.md)), e o mapa manda lê-los primeiro. O que
+muda rápido (versões, campos novos, flags) fica com o pesquisador, que confere
+na fonte e data cada fato. Um consultor único ficaria desatualizado sem avisar.
 
-## Como usar no dia a dia
+## O ciclo
 
-1. **Abra uma conversa nova para cada assunto.** Pergunte direto. Se a resposta
-   parecer genérica, peça `/dev-sandbox` para carregar o mapa.
-2. **Dúvida de Claude Code que não está nos guias:** *"pergunte ao
-   claude-code-pesquisador"*. Ou deixe o Claude delegar sozinho: a descrição
-   do agente pede isso.
-3. **Antes de encerrar uma conversa longa:** `/consolidar`. O Claude lista o
-   que a conversa descobriu, descarta o que dá para deduzir dos arquivos e põe
-   cada item no lugar certo. Ele mostra uma tabela e pergunta antes de commitar.
+```text
+conversa trabalha → /consolidar guarda nos arquivos → /clear
+        ↑                                               │
+        └──── conversa nova já lê instruções e mapa ←───┘
+```
+
+1. **Uma conversa nova para cada assunto.** Se a resposta parecer genérica, digite `/<projeto>` para carregar o mapa.
+2. **Dúvida sobre a fonte externa:** *"pergunte ao pesquisador"*, ou deixe o Claude delegar sozinho (a descrição do agente pede isso).
+3. **Antes de encerrar uma conversa longa:** `/consolidar`. O Claude lista o que a conversa descobriu, descarta o que dá para deduzir dos arquivos e põe cada item no lugar certo. Mostra uma tabela e pergunta antes de commitar.
 4. **Depois:** `/clear` sem medo.
 
-Para conferir o que carregou numa sessão: `/context` mostra *Memory files*
-(instruções e rules) e *Skills*.
-
-## Como manter
+## Regras de manutenção
 
 - **Um fato, um lugar.** Se aparece em dois arquivos, um deles vai envelhecer.
 - **Apague mais do que acrescenta.** Mapa velho engana mais que mapa nenhum.
-- **Reveja a memória do agente** de vez em quando: `.claude/agent-memory/claude-code-pesquisador/MEMORY.md`. Os fatos têm data e versão.
-- **Mudou algo grande no projeto?** Atualize a skill `dev-sandbox` no mesmo commit.
-- **Testou se funciona?** Uma sessão nova e descartável, sem esta conversa, mostra o que ela realmente sabe:
-  `claude -p --no-session-persistence "pergunta real sobre o projeto; no fim, diga quais skills usou"`.
-
-## No seu projeto
-
-O molde vale para qualquer repositório, inclusive fora do dev-sandbox:
-
-```text
-seu-projeto/
-├── AGENTS.md                         # só o que vale em toda tarefa
-└── .claude/
-    ├── rules/<parte>.md              # com paths: — checklist de quem mexe ali
-    ├── skills/<projeto>/SKILL.md     # mapa: como funciona, decisões, onde está cada coisa
-    ├── skills/consolidar/SKILL.md    # copie a deste repositório
-    └── agents/<pesquisador>.md       # opcional: pesquisa externa que muda rápido, com memory: project
-```
-
-Comece pequeno: escreva o mapa na primeira vez que uma conversa longa ficar
-"esperta", rodando `/consolidar` nela.
+- **Mudou algo grande no projeto?** Atualize o mapa no mesmo commit.
+- **Reveja a memória do pesquisador** de vez em quando. Os fatos têm data e versão.
 
 ## Funcionou?
 
@@ -103,6 +85,7 @@ Resultado neste repositório (outubro/2026, Claude Code 2.1.310):
 | Sessões novas, sem a conversa antiga | Responderam com o conhecimento do projeto nos testes feitos depois da implementação | Evidência |
 | `/consolidar` no fim da conversa que montou tudo | Achou poucas mudanças: a conversa já tinha posto o conhecimento nos arquivos certos | Evidência |
 | Custo de tokens numa sessão nova | **Ainda não medido.** Para conferir: `/context` no começo de uma sessão nova, com e sem a pasta `.claude/` | — |
+| Skill `/montar-consultor` em outro projeto | **Ainda não testada** fora do dev-sandbox | — |
 
 O `/consolidar` achar pouco é bom sinal: quer dizer que o conhecimento já
 estava fora da conversa. Mas isso sozinho não prova nada, porque foi a mesma
@@ -110,7 +93,12 @@ conversa que montou os arquivos. A prova são as sessões novas.
 
 ## Limites
 
-- Instruções e skills são lidas e seguidas na maior parte das vezes, sem garantia. O que **precisa** acontecer vai num mecanismo (hook, permissão, script).
-- O Claude decide sozinho quando carregar uma skill pela descrição. Se não carregar, chame pelo nome.
+- Instruções e skills são lidas e seguidas na maior parte das vezes, sem garantia. O que **precisa** acontecer vai num mecanismo: hook, permissão, script ([instrução ou mecanismo](./instrucao-ou-mecanismo.md)).
+- O Claude decide sozinho quando carregar uma skill, pela descrição. Se não carregar, chame pelo nome.
 - Os agentes embutidos Explore e Plan não recebem `AGENTS.md`/`CLAUDE.md` ([subagentes](./por-baixo-dos-panos/subagentes-o-que-herdam.md)).
 - A memória de agente não funciona com a memória automática desligada.
+
+Base: documentação oficial de [memória](https://code.claude.com/docs/en/memory),
+[skills](https://code.claude.com/docs/en/skills) e
+[subagentes](https://code.claude.com/docs/en/sub-agents). Conferido em
+outubro/2026 (Claude Code 2.1.310).
