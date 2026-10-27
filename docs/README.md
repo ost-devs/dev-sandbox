@@ -24,6 +24,7 @@ script e do `Dockerfile` está em [`DOCUMENTACAO.md`](../DOCUMENTACAO.md).
 | [Migrar memórias](./claude-code/migrar-memorias.md) | Levar memórias de um caminho de projeto para outro |
 | [Por baixo dos panos](./claude-code/por-baixo-dos-panos/README.md) | Entender contexto, cache, compactação e subagentes, e por que conversas longas custam mais |
 | [Modelo e esforço](./claude-code/modelo-e-esforco.md) | Escolher modelo e esforço sem usar bazuca para matar mosca |
+| [Um consultor do projeto](./claude-code/consultor-do-projeto.md) | Não depender de uma conversa longa para o Claude conhecer o projeto |
 
 ## Aprendizados
 

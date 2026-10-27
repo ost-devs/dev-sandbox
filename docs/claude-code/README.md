@@ -12,6 +12,7 @@ proveito dele. Valem também, em boa parte, fora do Docker.
 | [Migrar memórias](./migrar-memorias.md) | Levar memórias de uma pasta de projeto para outra (saída da v0.1, uso de `--nome`, projeto movido) |
 | [Por baixo dos panos](./por-baixo-dos-panos/README.md) | Como o Claude Code funciona por dentro: janela de contexto, o que carrega e quando, reenvio a cada pedido, cache, compactação, subagentes |
 | [Modelo e esforço](./modelo-e-esforco.md) | Qual modelo e qual nível de esforço usar, com um diário de campo para comparar com a prática (esboço) |
+| [Um consultor do projeto](./consultor-do-projeto.md) | Como uma conversa nova já começa sabendo o projeto: rules, skills, agente pesquisador, memória e `/consolidar` |
 
 Relacionados: [backup e git](../guias/backup-e-git.md) (como não perder
 `~/.claude`) e [sessões paralelas](../guias/portas-e-sessoes-paralelas.md)
