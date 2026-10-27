@@ -412,9 +412,22 @@ importância da ferramenta.
 O caso do `cargo install` é o mais contraintuitivo: o **cache de
 compilação** (`registry`) persiste, mas o **binário final** instalado via
 `cargo install` some — porque só a subpasta `registry` está montada, não
-`$CARGO_HOME` inteiro. Se isso incomodar no dia a dia, a correção é
-trocar o mount de `.../registry` por `$CARGO_HOME` inteiro — mesmo
-princípio já usado para `$HOME`.
+`$CARGO_HOME` inteiro.
+
+**Não monte `$CARGO_HOME` inteiro** para resolver isso: o próprio Rust da
+imagem (`cargo`, `rustc`, `rustup`, `rustfmt`) mora em `/usr/local/cargo/bin`,
+e uma pasta vazia do host montada por cima esconderia tudo. A sessão ficaria
+sem Rust. Se precisar que os binários persistam, mande só o `cargo install`
+para dentro do `$HOME`, que já persiste. No `Dockerfile`, no bloco do Rust:
+
+```dockerfile
+ENV CARGO_INSTALL_ROOT=/tmp/dev-home/.cargo-install \
+    PATH=/tmp/dev-home/.cargo-install/bin:/usr/local/cargo/bin:$PATH
+```
+
+Os binários ficam em `~/.cache/dev-sandbox/home/.cargo-install/bin` no host.
+Depois de uma imagem nova com outro Rust, um binário antigo pode quebrar:
+reinstale com `cargo install --force`.
 
 **Como confirmar isso na prática** (sem depender só da teoria):
 
