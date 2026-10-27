@@ -80,7 +80,8 @@ ENV DISABLE_AUTOUPDATER=1
 COPY sandbox/AGENTS.md /etc/dev-sandbox/AGENTS.md
 COPY sandbox/AGENTS.md /etc/claude-code/CLAUDE.md
 # Bloqueia as ferramentas de leitura/edição do Claude nas credenciais dos
-# agentes. Não custa tokens; não cobre um `cat` pelo terminal.
+# agentes, inclusive via `cat`/`head`/`sed`. Não custa tokens; não cobre um
+# script (Python, Node) que abra o arquivo sozinho.
 COPY sandbox/managed-settings.json /etc/claude-code/managed-settings.json
 
 # ── Permissões para rodar como usuário não-root ──────────────────

@@ -14,7 +14,8 @@ conhecimento de uma sessão para outra:
 
 Nenhum dos dois é uma *trava*: o Claude lê e tenta seguir, mas não há
 garantia. Para algo que **precisa** acontecer sempre (bloquear um comando,
-rodar o lint antes de commit), use um **hook** em `settings.json`.
+rodar o lint antes de commit), use um **hook** em `settings.json`
+([instrução ou mecanismo?](./instrucao-ou-mecanismo.md)).
 
 Fonte oficial: <https://code.claude.com/docs/en/memory>. O que está abaixo foi
 conferido contra ela em outubro/2026 (Claude Code 2.1.30x).

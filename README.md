@@ -127,3 +127,6 @@ ferramentas que faltam. Ele vai para dentro da imagem.
 - [`docs/`](docs/README.md): guias (segurança, backup, portas, imagem, atualização), Claude Code
   (projetos, memória, sessões, conversas, modelo e esforço) e
   [aprendizados](docs/aprendizados/README.md) da comunidade.
+- [Um consultor do projeto](docs/claude-code/consultor-do-projeto.md): como fazer uma conversa
+  nova do Claude já começar sabendo o projeto (rules, skills, agente e memória em `.claude/`).
+  Este repositório funciona assim e serve de modelo para o seu.

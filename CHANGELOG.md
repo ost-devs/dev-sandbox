@@ -12,9 +12,14 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
   ferramentas de leitura e edição.
 - `sandbox/AGENTS.md` mais curto; a versão integral fica em `sandbox/AGENTS-completo.md`, fora
   da imagem.
+- `sandbox/AGENTS.md`: ao passar um caminho para o usuário abrir, o agente traduz
+  `/tmp/dev-home/...` para o caminho do host.
 - Removida `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`, que o Playwright não lê
   ([aprendizado](docs/aprendizados/2026-10-playwright-ignora-chromium-da-imagem.md)).
-- Guia novo: [atualização](docs/guias/atualizacao.md).
+- Guias novos: [atualização](docs/guias/atualizacao.md) e
+  [instrução ou mecanismo](docs/claude-code/instrucao-ou-mecanismo.md).
+- Corrigido: o `deny` de credenciais cobre `cat`/`head`/`sed` no terminal (documentação oficial);
+  o que passa é um script que abra o arquivo sozinho.
 - Testado só a seco (`bash -n` e `sudo` falso); falta o teste real no host.
 
 **Ao atualizar da v0.3:** `git pull` e reconstrua a imagem (`sudo docker build -t dev-sandbox .`).

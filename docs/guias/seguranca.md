@@ -23,7 +23,7 @@ acesso ao Docker (o socket não é montado, e o seu usuário não está no grupo
 | Ponte | O que um agente comprometido consegue | O que reduz o risco |
 |---|---|---|
 | **Pasta do projeto** (leitura e escrita) | Apagar, corromper, inserir código malicioso no seu projeto | Commits frequentes e `push` do host para um remoto. Ver [backup e git](./backup-e-git.md) |
-| **Credenciais dos agentes** (`~/.claude`, `~/.codex`, `~/.gemini`) | Ler o token e mandar para fora pela internet | Modos de permissão dos agentes (não use "aprovar tudo" em repositório desconhecido). No Claude Code, a imagem bloqueia as ferramentas de leitura e edição nesses arquivos ([`sandbox/managed-settings.json`](../../sandbox/managed-settings.json)), mas não um `cat` pelo terminal. Se desconfiar: faça logout/login para revogar |
+| **Credenciais dos agentes** (`~/.claude`, `~/.codex`, `~/.gemini`) | Ler o token e mandar para fora pela internet | Modos de permissão dos agentes (não use "aprovar tudo" em repositório desconhecido). No Claude Code, a imagem bloqueia as ferramentas de leitura e edição nesses arquivos ([`sandbox/managed-settings.json`](../../sandbox/managed-settings.json)), inclusive via `cat`, `head` ou `sed` no terminal, mas não um script (Python, Node) que abra o arquivo sozinho ([permissões](https://code.claude.com/docs/en/permissions), conferido em outubro/2026, Claude Code 2.1.310; ainda não testado aqui). Se desconfiar: faça logout/login para revogar |
 | **Internet de saída** | Enviar o seu código ou tokens para qualquer servidor; acessar outros aparelhos da rede local e serviços do host que escutam em `0.0.0.0` | Difícil de fechar: os agentes precisam da API. Ver "Sessão sem rede" abaixo |
 | **Home persistente** (`~/.cache/dev-sandbox/home`) | Deixar um `.bashrc`, um cache do npm ou um binário em `~/.local/bin` envenenado para as próximas sessões | Zerar a pasta quando desconfiar ([DOCUMENTACAO.md](../../DOCUMENTACAO.md#limpando-o-cache)) |
 | **Arquivos que rodam no host** | Ver a próxima seção. É a ponte mais perigosa e a menos óbvia | Revisar antes de rodar fora do container |
@@ -65,7 +65,10 @@ Uma única linha num hook é suficiente para ler a sua `~/.ssh`. Por isso:
   inclusive o `.git` de repositórios sem proteção. Ele compara o horário de
   alteração que o sistema registra (ctime), que o agente não consegue disfarçar
   com `touch`. É um aviso, não uma trava: **antes de rodar algo no host, olhe o
-  diff** desde o último commit que você revisou:
+  diff** desde o último commit que você revisou. O relatório só aparece quando
+  a sessão termina. Com ela aberta, um `git commit` noutro terminal do host já
+  roda um hook versionado (`.husky/` etc.) que o agente tenha mudado, sem aviso
+  nenhum: revise o diff antes, mesmo no meio da sessão:
   ```bash
   git diff <commit-revisado> -- .vscode .husky .envrc package.json Makefile '*build.rs' '*tauri.conf.json'
   ```

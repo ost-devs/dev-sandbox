@@ -620,8 +620,8 @@ especificamente, limpe cada um à parte.
 | Docker (namespaces de mount) | Isola o filesystem do container do restante do sistema | Sim, sempre — não depende de nenhuma configuração |
 | Bind mount do projeto | Expõe somente o repositório em uso | Sim |
 | `.git/hooks` e `.git/config` somente leitura | Impede que o agente plante código que roda no host no próximo `git`, também nos repositórios até dois níveis dentro da pasta montada e nos submódulos ([o que fica de fora](docs/guias/seguranca.md)) | Sim, a menos que `DEV_GIT_RW=1` (v0.2; repositórios internos desde a v0.3; submódulos desde a v0.4) |
-| Relatório de saída do `dev-docker` | Lista os arquivos que rodam no host e mudaram na sessão (`.vscode`, hooks versionados, `build.rs`, `.git` sem proteção...) | Sim, exceto quando a pasta montada é a raiz ou a home (v0.4) |
-| `deny` em `/etc/claude-code/managed-settings.json` | Impede as ferramentas de leitura e edição do Claude Code de abrir as credenciais dos agentes; um `cat` pelo terminal passa | Sim, só no Claude Code (v0.4) |
+| Relatório de saída do `dev-docker` | Lista os arquivos que rodam no host e mudaram na sessão (`.vscode`, hooks versionados, `build.rs`, `.git` sem proteção...) | Só ao sair: com a sessão aberta, um `git` no host já roda o que mudou. Nunca quando a pasta montada é a raiz ou a home (v0.4) |
+| `deny` em `/etc/claude-code/managed-settings.json` | Impede as ferramentas de leitura e edição do Claude Code de abrir as credenciais dos agentes, inclusive via `cat`, `head` ou `sed` no terminal; um script (Python, Node) que abra o arquivo sozinho passa | Sim, só no Claude Code (v0.4) |
 | `--cap-drop ALL` + `no-new-privileges` | Tira do container privilégios de kernel de que ninguém precisa e bloqueia binários setuid | Sim (v0.2) |
 | Portas só em `127.0.0.1` e só com `DEV_PORTS` | Nada do container fica visível na rede local | Sim (v0.2) |
 | `--user UID:GID` | Impede que arquivos do workspace nasçam como `root` | Sim, enquanto o script tiver essa flag |

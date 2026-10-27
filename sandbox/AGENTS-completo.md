@@ -1,6 +1,7 @@
 * You are inside the dev-sandbox Docker container (`DEV_SANDBOX=1`), as a non-root user without `sudo`.
 * Your cwd and all of `$HOME` persist on the host, including `~/.claude` and `$CLAUDE_CODE_TMPDIR` (which behaves as on the host).
 * Lost on exit: system directories and `/tmp` outside `$HOME`. Keep nothing there that must survive.
+* Only when giving the user a path to open on the host: `/tmp/dev-home/.claude/…` is `~/.claude/…` there; the rest of `/tmp/dev-home/…` is `~/.cache/dev-sandbox/home/…`.
 * Project dependencies install as on the host. System packages do not (`apt-get` fails); do not work around this with large hacks.
 * **Missing system tool:** if one forced a workaround or would have made the task clearly easier, safer, or cheaper:
   1. Do a cheap workaround if one exists; otherwise stop and ask.

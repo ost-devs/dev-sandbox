@@ -44,7 +44,7 @@ costs more (silent workarounds, tokens, errors) than disk
 | Security by mechanism, not prose | Instructions are not locks; mounts, deny rules and the exit report are | `docs/guias/seguranca.md` |
 
 ## Known open gaps
-Credentials readable via shell (`cat`); outbound internet; repos deeper than 2
+Credentials readable by a script that opens files itself (deny covers `cat`/`head`/`sed`, not `python`); outbound internet; repos deeper than 2
 levels or created in-session get only the exit warning; nested sandboxes
 (`/sandbox`, agy nsjail) untested inside Docker. Full list: `docs/guias/seguranca.md`.
 
