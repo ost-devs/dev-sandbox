@@ -12,3 +12,4 @@
 - Rules: `.claude/rules/**/*.md` recursive; no `paths` = always loaded; `paths` (YAML list or comma string, globs relative to dir containing `.claude`) loads on Read/Write/Edit (or single-file cat/head) of a match. memory page, 2026-10-27, 2.1.310.
 - Subagent `model`: sonnet|opus|haiku|fable|full model ID|inherit; `memory`: user|project|local; `name` max 256 chars. sub-agents page, 2026-10-27, 2.1.310.
 - Writes under `.claude/` are protected: `claude -p` refuses them even with `--permission-mode acceptEdits` plus `--allowedTools "Edit(.claude/**)"` (rule file flagged "sensitive"); interactive sessions ask. `Write(path)` allow rules are not matched by file checks, only `Edit(path)`. Test in container, 2026-10-27, 2.1.310.
+- [Skill extra files](skill-extra-files.md) — README in skill dir: no official ban found; unreferenced files cost no context

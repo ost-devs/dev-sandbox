@@ -33,7 +33,7 @@ mkdir -p ~/.claude/skills
 cp -r ~/dev-sandbox/utils/skills/montar-consultor ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
 ```
 
-A skill [`mirrors`](../../utils/skills/mirrors/README.md) é opcional, mas
+A skill [`mirrors`](./mirrors.md) é opcional, mas
 recomendada: com ela, o `/montar-consultor` baixa o `.claude/` do dev-sandbox
 para `mirrors/dev-sandbox/` no seu projeto e o usa como exemplo pronto (sempre
 na versão mais nova do GitHub). Ele pergunta antes. Sem ela, os modelos
