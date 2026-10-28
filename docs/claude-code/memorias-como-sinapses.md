@@ -38,17 +38,20 @@ ainda não existe não é erro: marca algo que vale escrever depois.
 
 Isso é exatamente o link não resolvido do Obsidian.
 
-E não ficou só na instrução. As 8 memórias do próprio dev-sandbox já têm
-11 links entre si:
+E não ficou só na instrução. As 10 memórias do próprio dev-sandbox já têm
+14 links entre si (situação de 28/10/2026):
 
 ```mermaid
 graph LR
-  rascunhos[feedback-rascunhos-para-ia] --> mantenedor((user-mantenedor))
-  delegar[feedback-delegar-com-intencao] --> mantenedor
-  delegar --> rascunhos
+  ia[feedback-ai-files-in-english] --> mantenedor((user-mantenedor))
+  delegar[feedback-delegate-with-intent] --> mantenedor
+  delegar --> ia
+  verificar[feedback-verify-before-citing] --> mantenedor
+  verificar --> delegar
   guias[feedback-guias-vibe-coder] --> mantenedor
   guias --> delegar
-  testes[feedback-testes-e-branch] --> mantenedor
+  testes[feedback-manual-checks-become-tests] --> mantenedor
+  branch[feedback-check-branch-before-commit] --> mantenedor
   share[project-share-memories] --> mantenedor
   share --> guias
   share --> v05[project-v05]
@@ -57,13 +60,14 @@ graph LR
 
 Repare no que apareceu sozinho, sem ninguém planejar:
 
-- **Um centro.** `user-mantenedor` (quem é o usuário) recebe 5 dos 11
+- **Um centro.** `user-mantenedor` (quem é o usuário) recebe 7 dos 14
   links. Faz sentido: quase toda regra de trabalho existe *por causa* de
   quem pede.
 - **Um par.** `project-v05` e `project-testes-no-host` apontam um para o
   outro: são o mesmo assunto visto de dois lados.
-- **Uma cadeia.** `share-memories` → `guias-vibe-coder` → `delegar` →
-  `rascunhos`: cada preferência se apoia na anterior.
+- **Uma cadeia.** `share-memories` → `guias-vibe-coder` →
+  `delegate-with-intent` → `ai-files-in-english`: cada preferência se apoia
+  na anterior.
 
 Ou seja: o grafo já existe. Só ninguém está olhando para ele.
 
