@@ -288,7 +288,7 @@ class WebMirrors(Base):
         text = (self.proj / 'mirrors' / 'w').rglob('a.md').__next__().read_text()
         self.assertIn('source: "' + self.site.base + '/blog/a"', text)
         self.assertIn('modified: "2026-01-02"', text)
-        self.assertIn(self.other.base + '/elsewhere', self.run_cli('--links', 'w'))
+        self.assertIn(self.other.base + '/elsewhere  "out"', self.run_cli('--links', 'w'))
 
     def test_same_page_other_spelling_and_redirect(self):
         self.run_cli('--add', 'w', self.site.base + '/blog/b', '--web')

@@ -136,6 +136,10 @@ def git_hint(html):
     return found and (found[0][0], found[0][2])
 
 
+def link_url(x):
+    return x[0] if isinstance(x, list) else x   # [url, text]; states before 2026-10-28 kept the url only
+
+
 def load_state(dst):
     f = dst / STATE
     return json.loads(f.read_text()) if f.exists() else {}
@@ -170,7 +174,7 @@ def capture(fetcher, url, dst, state, now, label, host=None):
     prev = state.get(rel)
     state[rel] = {'url': final, 'sha256': h, 'title': fm.get('title'), 'modified': fm.get('modified'),
                   'changed': prev['changed'] if prev and prev['sha256'] == h else (now if prev else None),
-                  'links': sorted({norm(u) for u, _ in links})}
+                  'links': sorted({norm(u): t for u, t in reversed(links)}.items())}
     if not prev or prev['sha256'] != h or not (dst / rel).exists():
         write(dst, rel, md)
         tag = 'new' if not prev else 'changed' if prev['sha256'] != h else 'restored'
@@ -208,8 +212,8 @@ def crawl(label, entry, dst, seeds, depth, max_pages, set_writable):
             continue
         print(f'  already  {u}')
         if depth:   # captured before: go on from the links it recorded
-            follow(next((st['links'] for st in state.values() if st.get('url') == u), []), 1,
-                   urllib.parse.urlsplit(u).netloc)
+            follow([link_url(x) for x in next((st['links'] for st in state.values() if st.get('url') == u), [])],
+                   1, urllib.parse.urlsplit(u).netloc)
     new = 0
     try:
         while queue:
@@ -259,11 +263,14 @@ def sync(label, entry, dst, check, refresh, set_writable):
 def frontier(label, entry, dst):
     """Links inside captured articles that are not captured yet, most cited first."""
     state, have = load_state(dst), {norm(u) for u in entry['urls']}
-    cited = {}
+    cited, text = {}, {}
     for rel, s in state.items():
-        for u in s.get('links', []):
+        for x in s.get('links', []):
+            u = link_url(x)
             if u not in have:
                 cited.setdefault(u, []).append(rel)
+                if isinstance(x, list) and x[1]:
+                    text.setdefault(u, x[1])
     for u, rels in sorted(cited.items(), key=lambda kv: (-len(kv[1]), kv[0])):
-        print(f'{len(rels):3}  {u}')
+        print(f'{len(rels):3}  {u}' + (f'  "{text[u]}"' if u in text else ''))
     print(f'{len(cited)} link(s) not captured; add some with --add {label} <url> --web')
