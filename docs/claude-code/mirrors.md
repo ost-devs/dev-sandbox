@@ -76,30 +76,17 @@ Conferir: abra uma sessão nova do Claude em qualquer projeto e digite
 Na dúvida, fixe. Com cópia fixa, o `mirrors.json` diz exatamente o que o
 Claude leu quando escreveu cada documento.
 
-## Como ler as tabelas
-
-Cada linha mostra o mesmo pedido de dois jeitos: em palavras, numa sessão
-do Claude, ou como comando. No comando, `...` é o começo:
-
-| Onde | Troque `...` por |
-|---|---|
-| Numa sessão do Claude | `/mirrors` |
-| No terminal, sem o Claude (host ou container, de qualquer pasta do projeto) | `python3 ~/.claude/skills/mirrors/fetch_mirrors.py` |
-
-O que está entre `< >` é seu: `<rust-book>` é um exemplo de nome,
-`<url>` é o endereço do repositório.
-
 ## 3. Adicionar
 
-Pedindo ao Claude, ele confere a licença antes de baixar e a anota no
-`mirrors.json`. No terminal, informe você: `--license <MIT>`.
+Fale normalmente, ou use `/mirrors`. A skill confere a licença antes de
+baixar e a anota no `mirrors.json`; no terminal, informe-a com `--license`.
 
-| Você quer | Peça ao Claude | Ou use o comando |
+| Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
-| Copiar um repositório, sempre atualizado | "espelhe o <livro do Rust> e deixe sempre atualizado" | `... --add <rust-book> <url> --follow` |
-| Só uma pasta de um repositório grande | "espelhe só a pasta <do editor> do <Zed>" | `... --add <zed> <url> --include <crates/editor>` |
-| Vários repositórios da mesma organização | "espelhe o <common>, o <lr> e o <highlight> do <lezer>" | `... --add <lezer> '<url>/{member}'`, depois `... --follow <lezer/common> <lezer/lr>` |
-| Um pacote na versão publicada | "fixe o <lezer/common> na versão <1.5.2>" | `... --pin <lezer/common> @<1.5.2>` |
+| Copiar um repositório, sempre atualizado | "espelhe https://github.com/rust-lang/book como rust-book, sempre atualizado" | `... --add rust-book <url> --follow` |
+| Só uma parte de um repositório grande | "espelhe só a pasta `crates/editor` de https://github.com/zed-industries/zed como zed" | `... --add zed <url> --include crates/editor` |
+| Vários repositórios da mesma organização, um por pacote | "espelhe common, lr e highlight de https://github.com/lezer-parser como o conjunto lezer" | `... --add lezer '<url>/{member}'` e `... --follow lezer/common lezer/lr lezer/highlight` |
+| Um pacote na versão publicada | "fixe lezer/common na versão 1.5.2" | `... --pin lezer/common @1.5.2` |
 
 O terceiro caso é um **conjunto** (*set*): uma entrada no `mirrors.json`
 com o endereço `https://github.com/lezer-parser/{member}` e uma lista de
@@ -135,12 +122,12 @@ versão. Assim cada commit do projeto diz qual versão das fontes ele cita.
 
 ## 5. No dia a dia
 
-| Você quer | Peça ao Claude | Ou use o comando |
+| Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
-| Baixar tudo que está no `mirrors.json` (clonou o projeto em outra máquina) | "baixe os mirrors" | `...` |
-| Saber o que está faltando ou velho | "algum mirror está velho?" | `... --check` |
-| Subir uma cópia fixa para a versão mais nova | "atualize o <rust-book> para a versão mais nova" | `... --pin <rust-book>` |
-| Tirar uma cópia | "tire o mirror <rust-book>" | `... --remove <rust-book>` |
+| Baixar tudo que está no `mirrors.json` (clonou o projeto em outra máquina) | `/mirrors` | `...` |
+| Saber o que está faltando ou velho | `/mirrors check` | `... --check` |
+| Subir uma cópia fixa para a versão mais nova | `/mirrors pin rust-book` | `... --pin rust-book` |
+| Tirar uma cópia | `/mirrors remove rust-book` | `... --remove rust-book` |
 
 Depois de fixar ou remover, faça commit do `mirrors.json`.
 
@@ -150,13 +137,13 @@ queria a versão publicada, ele mostra o comando para fixá-la.
 
 ## Mais comandos
 
-| Você quer | Peça ao Claude | Ou use o comando |
+| Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
-| Ver todas as opções | "o que a mirrors sabe fazer?" | `... --help` |
-| Listar os espelhos | "quais mirrors eu tenho?" | `... --list` |
-| Ter as skills e agentes do dev-sandbox para consultar, sempre atualizados | "espelhe a pasta `.claude` do dev-sandbox, sempre atualizada" | `... --add dev-sandbox <url do dev-sandbox> --include .claude --follow` |
-| Fixar na versão que o `package.json` do repositório declara | "fixe o <lezer/common> na versão do package.json" | `... --pin <lezer/common> @package` |
-| Fixar todos os membros de um conjunto no commit mais novo | "fixe todo o <lezer>" | `... --pin <lezer>` |
+| Ver todas as opções | `/mirrors help` | `... --help` |
+| Listar os espelhos | `/mirrors list` | `... --list` |
+| Consultar as skills e agentes do dev-sandbox, sempre atualizados | "espelhe a pasta `.claude` de https://github.com/ost-devs/dev-sandbox como dev-sandbox, sempre atualizado" | `... --add dev-sandbox <url> --include .claude --follow` |
+| Fixar na versão que o `package.json` do repositório declara | "fixe lezer/common na versão do package.json" | `... --pin lezer/common @package` |
+| Fixar todos os membros de um conjunto no commit mais novo | `/mirrors pin lezer` | `... --pin lezer` |
 
 ## Problemas comuns
 
@@ -165,9 +152,9 @@ queria a versão publicada, ele mostra o comando para fixá-la.
 | `/mirrors` não aparece | Skill não instalada em `~/.claude/skills/`, ou sessão aberta antes da instalação | Confira com `ls ~/.claude/skills/mirrors/SKILL.md` e abra uma sessão nova |
 | `warning .gitignore: another rule overrides...` | Outra linha do `.gitignore` (por exemplo `mirrors/`) ignora também o `mirrors.json` | Apague essa linha e deixe só as duas da skill |
 | `mirrors/<nome>/` aparece no `git status` | O `.gitignore` foi apagado ou editado | Rode `/mirrors` de novo: ele devolve as duas linhas |
-| `Permission denied` ao apagar a cópia | A cópia é somente leitura de propósito | Use `/mirrors --remove <nome>`. À mão: `chmod -R u+w mirrors/<nome> && rm -rf mirrors/<nome>` |
+| `Permission denied` ao apagar a cópia | A cópia é somente leitura de propósito | Use `/mirrors remove <nome>`. À mão: `chmod -R u+w mirrors/<nome> && rm -rf mirrors/<nome>` |
 | `version 1.2.3 has no tag 1.2.3 or v1.2.3` | O repositório não criou tag para essa versão (comum quando o `package.json` já tem a próxima versão, ainda não publicada) | Escolha uma versão que tenha tag, ou fixe num commit |
-| `unpinned <nome>` | O membro foi criado sem modo | `/mirrors --pin <nome>` ou `/mirrors --follow <nome>` |
+| `unpinned <nome>` | O membro foi criado sem modo | `/mirrors pin <nome>` ou `/mirrors follow <nome>` |
 | `refused ... license not in` | Num workspace Rust com `"license_check": "cargo"`, uma pasta incluída tem licença fora da lista | Tire a pasta do `include` ou, se a licença serve, acrescente-a em `license` |
 
 ## Base

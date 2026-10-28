@@ -152,7 +152,7 @@ pronto é o [`.claude/`](../../.claude/) deste repositório.
 | Sintoma | Causa provável | O que fazer |
 |---|---|---|
 | `/montar-consultor` não aparece | Skill não instalada em `~/.claude/skills/`, ou sessão aberta antes da instalação | Confira com `ls ~/.claude/skills/montar-consultor/SKILL.md` e abra uma sessão nova |
-| Aparece uma pasta `mirrors/` no projeto | Você aceitou baixar o exemplo do dev-sandbox | É só leitura e fica fora do git (só o `mirrors/mirrors.json` vai). Para tirar: `/mirrors --remove dev-sandbox` |
+| Aparece uma pasta `mirrors/` no projeto | Você aceitou baixar o exemplo do dev-sandbox | É só leitura e fica fora do git (só o `mirrors/mirrors.json` vai). Para tirar: `/mirrors remove dev-sandbox` |
 | O Claude ignora o `AGENTS.md` | O projeto também tem `CLAUDE.md`, e aí o Claude Code lê só ele | Ponha `@AGENTS.md` na primeira linha do `CLAUDE.md` |
 | A rule não aparece no `/context` | Rules com `paths:` só carregam quando o Claude lê ou edita um arquivo que combina | Normal. Peça para ele abrir um arquivo da parte e confira de novo |
 | O mapa não carrega sozinho | A `description` não cita o assunto da pergunta | Chame `/<projeto>` e melhore a `description` |

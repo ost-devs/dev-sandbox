@@ -10,5 +10,5 @@ paths:
 - A fixed bug gets a test that fails without the fix; check it by reverting the fix once.
 - Tests use a fake `~/.claude` (`CLAUDE_CONFIG_DIR` in a temp folder); never touch the real one.
 - The design rests on Write/Edit refusing to write through a symlink (checked 2026-10-28). If that changes, sync breaks silently: recheck it when the guide's stamp is refreshed.
-- The usage table in `README.md` (skill folder) and in `docs/claude-code/compartilhar-memorias.md` are the same: change both, with real commands only, in the format of `.claude/rules/mirrors-docs.md` (legend before the table, `...` commands, `< >` placeholders, plain-speech requests); new names or commands also go to `docs/ingles-para-devs/glossario.md`.
+- The usage table in `README.md` (skill folder) and in `docs/claude-code/compartilhar-memorias.md` are the same: change both, with real commands only, in the format of `.claude/rules/mirrors-docs.md` (script prefix in the column header, `...` commands, slash commands or direct requests with real names); new names or commands also go to `docs/ingles-para-devs/glossario.md`.
 - Delete `__pycache__/` before committing.

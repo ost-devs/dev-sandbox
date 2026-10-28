@@ -57,41 +57,28 @@ Testado em outubro/2026. Os sites mudam: confira antes (veja abaixo como).
 | Svelte, Hono, Tauri | `.../llms.txt` | 0 (só arquivos únicos) | Sim | Git |
 | Rust | Não tem | | `rust-lang/book`, `rust-lang/reference` | Git |
 
-## Como ler as tabelas
-
-Cada linha mostra o mesmo pedido de dois jeitos: em palavras, numa sessão
-do Claude, ou como comando. No comando, `...` é o começo:
-
-| Onde | Troque `...` por |
-|---|---|
-| Numa sessão do Claude | `/mirrors` |
-| No terminal, sem o Claude (host ou container, de qualquer pasta do projeto) | `python3 ~/.claude/skills/mirrors/fetch_mirrors.py` |
-
-O que está entre `< >` é seu: `<claude-code-docs>` é um exemplo de nome,
-`<site>` é o endereço da documentação.
-
 ## 1. Conferir se um site serve
 
-Peça ao Claude: "a documentação do <Stripe> tem llms.txt com páginas .md?".
-Ou confira no terminal (host ou container):
+Peça ao Claude: "https://docs.stripe.com tem llms.txt com páginas .md?". Ou
+confira no terminal (host ou container):
 
 ```bash
-curl -s <site>/llms.txt | grep -c '\.md)'
+curl -s https://docs.stripe.com/llms.txt | grep -c '\.md)'
 ```
 
 Um número alto quer dizer que serve. Zero quer dizer que não serve.
 
 ## 2. Adicionar
 
-| Você quer | Peça ao Claude | Ou use o comando |
+| Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
-| Copiar a documentação de um site | "espelhe a documentação do <Claude Code>" | `... --add <claude-code-docs> <site>/llms.txt` |
-| Só uma parte (um idioma, um produto, uma seção) | "... só em <inglês>" | o mesmo com `--include <en>` |
+| Copiar a documentação de um site | "espelhe https://code.claude.com/docs/llms.txt como claude-code-docs" | `... --add claude-code-docs <url>` |
+| Só uma parte (um idioma, um produto, uma seção) | "... só em inglês" | o mesmo com `--include en` |
 
 | Opção | Para quê |
 |---|---|
-| `--include <en>` | Só as páginas cujo caminho começa com `en/`. Pode ser mais de uma: `--include <payments> <api>` |
-| `--license <id>` | A licença da documentação (pedindo ao Claude, ele confere). Muitas não são abertas: aí escreva um nome seu, como `LicenseRef-Anthropic-docs`, e não ponha a cópia no git (a skill já a deixa fora) |
+| `--include en` | Só as páginas cujo caminho começa com `en/`. Pode ser mais de uma: `--include payments api` |
+| `--license` | A licença da documentação (pedindo ao Claude, ele confere). Muitas não são abertas: aí escreva, por exemplo, `LicenseRef-Anthropic-docs`, e não ponha a cópia no git (a skill já a deixa fora) |
 
 A cópia fica em `mirrors/<nome>/`. Dentro dela:
 
@@ -107,13 +94,13 @@ Um espelho de site é sempre "atualizado": não dá para fixar uma versão,
 porque o site não tem commits. Cada atualização baixa **todas** as páginas,
 porque o site não diz quais mudaram, e compara cada uma com a anterior.
 
-| Você quer | Peça ao Claude | Ou use o comando |
+| Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
-| Atualizar e ver o que mudou | "atualize os mirrors" | `...` |
-| Atualizar só se a última conferência tiver mais de um dia | "atualize a <claude-code-docs> se tiver mais de um dia" | `... --max-age 24 <claude-code-docs>` |
-| Só saber se mudou, sem gravar | "algum mirror está velho?" | `... --check` |
-| Saber quais textos seus citam páginas que mudaram | "quais textos citam páginas que mudaram na <claude-code-docs>?" | `... --stale <claude-code-docs> <docs/>` |
-| Tirar a cópia | "tire o mirror <claude-code-docs>" | `... --remove <claude-code-docs>` |
+| Atualizar e ver o que mudou | `/mirrors` | `...` |
+| Atualizar só se a última conferência tiver mais de um dia | "atualize claude-code-docs se tiver mais de um dia" | `... --max-age 24 claude-code-docs` |
+| Só saber se mudou, sem gravar | `/mirrors check` | `... --check` |
+| Saber quais textos seus citam páginas que mudaram | "quais docs citam páginas que mudaram em claude-code-docs?" | `... --stale claude-code-docs docs/` |
+| Tirar a cópia | `/mirrors remove claude-code-docs` | `... --remove claude-code-docs` |
 
 O `--max-age 24` é o que um agente pesquisador usa: uma busca não baixa o
 site de novo. O `--stale` está explicado em

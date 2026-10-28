@@ -53,28 +53,15 @@ skill (Defuddle 0.19.5 e 26 dependências), e o `--ignore-scripts` impede que
 qualquer pacote rode código na instalação. Sem o Defuddle, só a captura de
 artigos fica fora; o resto da skill funciona.
 
-## Como ler as tabelas
-
-Cada linha mostra o mesmo pedido de dois jeitos: em palavras, numa sessão
-do Claude, ou como comando. No comando, `...` é o começo:
-
-| Onde | Troque `...` por |
-|---|---|
-| Numa sessão do Claude | `/mirrors` |
-| No terminal, sem o Claude (host ou container, de qualquer pasta do projeto) | `python3 ~/.claude/skills/mirrors/fetch_mirrors.py` |
-
-O que está entre `< >` é seu: `<testes>` é um exemplo de nome para um grupo
-de artigos sobre um tema, `<url>` é o endereço do artigo.
-
 ## 2. Capturar
 
-| Você quer | Peça ao Claude | Ou use o comando |
+| Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
-| Guardar um artigo | "guarde este artigo sobre <testes>: <url>" | `... --add <testes> <url> --web` |
-| Mais um no mesmo tema | "guarde também <url> em <testes>" | `... --add <testes> <url> --web` |
-| Ver o que os artigos citam e ainda não foi capturado | "o que os artigos de <testes> citam?" | `... --links <testes>` |
-| Seguir a cadeia | "guarde também os artigos que ele cita, até <10>" | `... --add <testes> <url> --web --depth 1 --max-pages <10>` |
-| Tirar o tema inteiro | "apague os artigos de <testes>" | `... --remove <testes>` |
+| Um artigo | "capture este artigo como testes: <url>" | `... --add testes <url> --web` |
+| Mais um no mesmo grupo | "acrescente <url> em testes" | o mesmo, com a outra URL |
+| Ver o que os artigos citam e ainda não foi capturado | "o que os artigos de testes citam?" | `... --links testes` |
+| Seguir a cadeia | "capture os artigos que ele cita, até 10" | `... --add testes <url> --web --depth 1 --max-pages 10` |
+| Tirar o grupo | `/mirrors remove testes` | `... --remove testes` |
 
 **Comece sem profundidade.** Capture o artigo, veja a lista do `--links` e
 escolha, como você faria abrindo abas. Os sites se citam muito: no teste, um
@@ -97,12 +84,12 @@ Um artigo capturado é uma **foto**: rodar a skill de novo não baixa o que já
 está lá, só o que falta (por exemplo, depois de clonar o projeto). Assim a
 busca local continua local.
 
-| Você quer | Peça ao Claude | Ou use o comando |
+| Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
-| Baixar o que falta | "baixe os mirrors" | `...` |
-| Saber se falta algo (sem rede) | "falta algum mirror?" | `... --check` |
-| Baixar tudo de novo e ver o que mudou | "veja se os artigos de <testes> mudaram" | `... --refresh <testes>` |
-| Saber quais textos seus citam artigos que mudaram | "quais textos citam artigos de <testes> que mudaram?" | `... --stale <testes> <docs/>` |
+| Baixar o que falta | `/mirrors` | `...` |
+| Saber se falta algo (sem rede) | `/mirrors check` | `... --check` |
+| Baixar tudo de novo e ver o que mudou | "atualize os artigos de testes" | `... --refresh testes` |
+| Saber quais textos seus citam artigos que mudaram | "quais docs citam artigos de testes que mudaram?" | `... --stale testes docs/` |
 
 A data de modificação que o site informa fica no topo de cada arquivo
 (`modified`), mas só se sabe dela baixando a página. Por isso o `--refresh`
