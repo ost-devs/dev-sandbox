@@ -1,6 +1,6 @@
 ---
 name: dev-sandbox
-description: Working map of the dev-sandbox repo (Docker sandbox for AI coding agents) - how dev-docker, the Dockerfile and the mounts fit, the non-obvious decisions behind them, and where each topic lives. Use before answering how dev-sandbox works, judging a change to it, or answering Claude Code questions in this repo.
+description: Working map of the dev-sandbox repo (Docker sandbox for AI coding agents, plus Claude Code skills and guides for any project) - how dev-docker, the Dockerfile and the mounts fit, the non-obvious decisions behind them, and where each topic lives. Use before answering how dev-sandbox works, judging a change to it, or answering Claude Code questions in this repo.
 ---
 
 # dev-sandbox: working map
@@ -64,7 +64,7 @@ levels or created in-session get only the exit warning; nested sandboxes
 | Claude Code behavior (memory, sessions, context, cache, subagents, model) | `docs/claude-code/README.md` (index) |
 | Official Claude Code and Claude API docs (pricing, caching, models), local and read-only (not in git: the license isn't open) | `mirrors/claude-code-docs/`, `mirrors/claude-api-docs/` (`mirrors/mirrors.json`; refetch with `python3 utils/skills/mirrors/fetch_mirrors.py`) |
 | Real problems and their causes | `docs/aprendizados/README.md` (index) |
-| Shareable skills/agents not tied to dev-sandbox (`montar-consultor`, `mirrors`) | `utils/` (index: `utils/README.md`) |
+| Shareable skills/agents not tied to dev-sandbox (`montar-consultor`, `mirrors`, `estudar`; what `estudar` learned: `docs/claude-code/estudar-calibracao.md`) | `utils/` (index: `utils/README.md`) |
 | Missing tools reported by agents | host `~/.cache/dev-sandbox/home/.dev-sandbox/feedback.md` |
 
 ## Claude Code questions

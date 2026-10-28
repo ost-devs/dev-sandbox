@@ -1,8 +1,16 @@
 # dev-sandbox
 
-Ambiente Docker para rodar agentes de IA de programação (Claude Code, Codex,
-Antigravity CLI) **isolados do seu sistema**, com os arquivos do projeto
-pertencendo ao seu usuário normal, não a `root`.
+Duas coisas num repositório só:
+
+| Parte | O que é | Precisa de Docker? |
+|---|---|---|
+| **O sandbox** | Ambiente Docker para rodar agentes de IA de programação (Claude Code, Codex, Antigravity CLI) **isolados do seu sistema** | Sim |
+| **[O kit para qualquer projeto](#kit-para-qualquer-projeto)** | Skills e guias para trabalhar melhor com o Claude Code: fazer uma conversa nova já saber o projeto, trazer documentação e artigos para dentro dele, e escrever guias conferidos na fonte oficial | Não: funciona dentro ou fora do container |
+
+## O sandbox
+
+O agente roda num container, com os arquivos do projeto pertencendo ao seu
+usuário normal, não a `root`.
 
 - O agente só enxerga o projeto aberto e as próprias configurações. Suas chaves
   SSH, navegador, documentos e outros projetos ficam fora do alcance.
@@ -14,7 +22,7 @@ pertencendo ao seu usuário normal, não a `root`.
 Isolamento não é invulnerabilidade: leia [o que o sandbox protege e o que
 não protege](docs/guias/seguranca.md) antes de confiar nele para código de terceiros.
 
-## O que vem na imagem
+### O que vem na imagem
 
 | Categoria | Inclui |
 |---|---|
@@ -26,7 +34,7 @@ não protege](docs/guias/seguranca.md) antes de confiar nele para código de ter
 
 É uma imagem grande (6–8 GB) de propósito: [por quê](docs/guias/filosofia-da-imagem.md).
 
-## Instalação
+### Instalação
 
 **1. Docker.** Se ainda não tem, ver [Instalar o Docker](DOCUMENTACAO.md#instalar-o-docker).
 **Não** coloque seu usuário no grupo `docker` ([motivo](DOCUMENTACAO.md#por-que-nao-usar-o-grupo-docker)):
@@ -58,7 +66,7 @@ touch teste.txt && exit
 stat -c '%u:%g %n' teste.txt    # deve bater com: echo "$(id -u):$(id -g)"
 ```
 
-## Uso
+### Uso
 
 Abra um terminal na pasta do projeto (`cd ~/Dev/meu-projeto`, ou no gerenciador
 de arquivos: botão direito na pasta → **Abrir no terminal**) e rode:
@@ -105,7 +113,7 @@ Cuidados, como corrigir e o efeito na memória do Claude: [atalhos](DOCUMENTACAO
 `exit` destrói o container. O projeto, os logins e os caches continuam no host.
 Faça `git push` pelo terminal do host: as chaves SSH não entram no container.
 
-## Instruções do ambiente para os agentes
+### Instruções do ambiente para os agentes
 
 O arquivo [`sandbox/AGENTS.md`](sandbox/AGENTS.md) explica ao agente onde ele
 está: o que persiste, que não há `sudo`, como lidar com portas e com
@@ -120,13 +128,31 @@ ferramentas que faltam. Ele vai para dentro da imagem.
   If the environment variable DEV_SANDBOX is 1, read /etc/dev-sandbox/AGENTS.md before starting any task.
   ```
 
+## Kit para qualquer projeto
+
+Skills do Claude Code que você instala uma vez, na sua pasta pessoal, e usa
+em todos os projetos ([instalação](utils/README.md#instalar)):
+
+| Skill | Para quê | Guia |
+|---|---|---|
+| `/montar-consultor` | Monta os arquivos que fazem uma conversa nova já saber o projeto: instruções, rules, um mapa, o `/consolidar` e, se o projeto depende de algo que muda rápido, um agente pesquisador | [Montar o consultor](docs/claude-code/montar-consultor.md) |
+| `/mirrors` | Traz para o projeto, só para leitura e fora do git, o que o Claude precisa consultar: repositórios, sites de documentação e artigos da web | [Repositórios](docs/claude-code/mirrors.md), [sites](docs/claude-code/mirrors-de-sites.md), [artigos](docs/claude-code/mirrors-de-artigos.md) |
+| `/estudar` | Transforma artigos (um, uma lista ou uma cadeia) em guias do seu projeto, conferindo números e versões na fonte oficial, e aprende com as suas correções | [Base de conhecimento](docs/claude-code/base-de-conhecimento.md) |
+
+Junto vêm os guias sobre como o Claude Code funciona por dentro: o que vai
+a cada pedido, o cache, [quanto custa uma sessão](docs/claude-code/por-baixo-dos-panos/quanto-custa.md),
+o [limite de uso](docs/claude-code/limite-de-uso.md), memória, sessões e
+modelo ([índice](docs/claude-code/README.md)).
+
+**Este repositório usa o próprio kit:** tem consultor (`.claude/`), um
+pesquisador que consulta a documentação oficial copiada em `mirrors/`, e
+guias escritos com a `/estudar`. Serve de exemplo para o seu
+([por que funciona assim](docs/claude-code/consultor-do-projeto.md)).
+
 ## Documentação
 
 - [`CHANGELOG.md`](CHANGELOG.md): o que mudou em cada versão e como atualizar.
 - [`DOCUMENTACAO.md`](DOCUMENTACAO.md): o *porquê* de cada decisão do script e do `Dockerfile`.
-- [`docs/`](docs/README.md): guias (segurança, backup, portas, imagem, atualização), Claude Code
-  (projetos, memória, sessões, conversas, modelo e esforço) e
+- [`docs/`](docs/README.md): guias do sandbox (segurança, backup, portas, imagem, atualização),
+  do Claude Code ([índice](docs/claude-code/README.md)) e
   [aprendizados](docs/aprendizados/README.md) da comunidade.
-- [Um consultor do projeto](docs/claude-code/consultor-do-projeto.md): como fazer uma conversa
-  nova do Claude já começar sabendo o projeto (rules, skills, agente e memória em `.claude/`).
-  Este repositório funciona assim e serve de modelo para o seu.

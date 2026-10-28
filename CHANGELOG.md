@@ -3,7 +3,46 @@
 Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DOCUMENTACAO.md) e
 [`docs/aprendizados/`](docs/aprendizados/README.md).
 
-## v0.4 (em desenvolvimento)
+## v0.5 (em desenvolvimento)
+
+O dev-sandbox passa a ser também um **kit para trabalhar com o Claude Code em qualquer projeto**:
+fontes externas copiadas para o projeto, guias escritos a partir delas e conferidos na documentação
+oficial. Nada muda na imagem nem no `dev-docker`.
+
+- [`/mirrors`](utils/skills/mirrors/SKILL.md) copia três tipos de fonte para `mirrors/`, só
+  leitura e fora do git: repositórios git ([guia](docs/claude-code/mirrors.md)), sites de
+  documentação com `llms.txt` ([guia](docs/claude-code/mirrors-de-sites.md)) e artigos da web em
+  Markdown, um, uma lista ou uma cadeia, com o Defuddle do Obsidian Web Clipper
+  ([guia](docs/claude-code/mirrors-de-artigos.md)).
+  - Fixa na versão publicada (`--pin <alvo> @1.2.3` ou `@package`) e opera conjuntos em lote.
+  - Cria as linhas do `.gitignore` mesmo antes do `git init`.
+  - `--stale` aponta os guias que citam páginas que mudaram; `--max-age` evita baixar de novo a
+    cada busca; ao espelhar um site, avisa se a documentação está num repositório git.
+  - 15 testes sem internet, e uma rule que manda rodá-los a cada mudança.
+- [`/estudar`](utils/skills/estudar/SKILL.md): transforma artigos em guias do projeto. Captura,
+  deixa você escolher o que seguir, confere números e versões na fonte oficial, mostra o plano e
+  só então escreve. Aprende com cada estudo e com as suas correções
+  ([calibração](docs/claude-code/estudar-calibracao.md)).
+- [`/montar-consultor`](docs/claude-code/montar-consultor.md): o pesquisador ganha um espelho da
+  documentação (cita o texto exato em vez de buscar na web); a auditoria lista guias com fontes
+  alteradas; as rules pedem teste para cada bug corrigido.
+- Neste repositório: a documentação oficial do Claude Code e da API do Claude fica em
+  `mirrors/`, e o agente `claude-code-pesquisador` consulta a cópia local primeiro.
+- Guias novos: [base de conhecimento sob demanda](docs/claude-code/base-de-conhecimento.md),
+  [quanto custa uma sessão](docs/claude-code/por-baixo-dos-panos/quanto-custa.md) e
+  [limite de uso](docs/claude-code/limite-de-uso.md).
+- Corrigido: [modelo e esforço](docs/claude-code/modelo-e-esforco.md) dizia que não existe modelo
+  Mythos (existe, só para organizações verificadas).
+- [Aprendizado](docs/aprendizados/2026-10-robots-txt-403-proibe-tudo.md): o leitor de
+  `robots.txt` do Python tratava um 403 como "tudo proibido".
+
+**Ao atualizar da v0.4:** `git pull` e copie as skills de novo para `~/.claude/skills/`
+([como](utils/README.md#instalar)). Para capturar artigos da web, rode também
+`npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts` (precisa de Node.js). Não precisa
+reconstruir a imagem.
+
+## v0.4 (fechada; falta o teste no host)
+
 
 - Submódulos: `.git/modules/*/hooks` e `config` também somente leitura.
 - Relatório de saída: ao sair, o `dev-docker` lista os arquivos que rodam no host e mudaram na
@@ -23,7 +62,7 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
   somente leitura de repositórios de fora.
 - Corrigido: o `deny` de credenciais cobre `cat`/`head`/`sed` no terminal (documentação oficial);
   o que passa é um script que abra o arquivo sozinho.
-- Testado só a seco (`bash -n` e `sudo` falso); falta o teste real no host.
+- Testado só a seco (`bash -n` e `sudo` falso); falta o teste real no host. Novidades vão para a v0.5.
 
 **Ao atualizar da v0.3:** `git pull` e reconstrua a imagem (`sudo docker build -t dev-sandbox .`).
 

@@ -1,6 +1,6 @@
 # dev-sandbox — instructions for agents working on this repo
 
-Docker environment for running AI coding agents isolated from the host.
+Docker environment for running AI coding agents isolated from the host, plus a kit of Claude Code skills (`utils/`) and guides (`docs/claude-code/`) for any project.
 Audience: Brazilian developers, including beginners ("vibe coders").
 
 ## Language
