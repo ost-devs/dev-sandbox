@@ -100,6 +100,13 @@ que ele trabalhe), `project` (decisões e prazos que não estão no código) e
 
 ### É automático?
 
+- **Idioma:** a documentação não fixa. O Claude escreve no idioma que o
+  contexto sugere: aqui, as memórias de um projeto de tradução saíram em
+  português, e as do dev-sandbox (cujo `AGENTS.md` pede inglês para a IA)
+  em inglês. Para fixar em todos os projetos, ponha a regra no
+  `~/.claude/CLAUDE.md` (uma memória não serve: só vale num projeto e só é
+  lida quando lembrada). Base: observação em 28/10/2026.
+
 - **Gravar:** sim, por padrão. Quando aparece "Saved 1 memory" ou
   "Recalled 2 memories", é isso acontecendo. Você também pode pedir:
   *"lembre que os testes de API precisam do Redis rodando"*.

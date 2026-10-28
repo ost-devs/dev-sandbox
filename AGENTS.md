@@ -6,6 +6,7 @@ Audience: Brazilian developers, including beginners ("vibe coders").
 ## Language
 - Docs for humans (`README.md`, `DOCUMENTACAO.md`, `docs/`): Brazilian Portuguese, plain and direct.
 - Instructions for AI (`AGENTS.md`, `sandbox/AGENTS.md`, rules): English, short.
+- New skill names and commands: English, each with a row in `docs/ingles-para-devs/glossario.md`. Older Portuguese names (`montar-consultor`, `estudar`) stay unless the maintainer decides otherwise.
 
 ## Sources of truth
 - `Dockerfile` and `dev-docker` are the real configuration. Docs link to them and quote short excerpts; never paste whole copies that will drift.

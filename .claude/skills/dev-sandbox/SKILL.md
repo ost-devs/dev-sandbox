@@ -64,10 +64,13 @@ levels or created in-session get only the exit warning; nested sandboxes
 | Claude Code behavior (memory, sessions, context, cache, subagents, model) | `docs/claude-code/README.md` (index) |
 | Official Claude Code and Claude API docs (pricing, caching, models), local and read-only (not in git: the license isn't open) | `mirrors/claude-code-docs/`, `mirrors/claude-api-docs/` (`mirrors/mirrors.json`; refetch with `python3 utils/skills/mirrors/fetch_mirrors.py`) |
 | Real problems and their causes | `docs/aprendizados/README.md` (index) |
-| Shareable skills/agents not tied to dev-sandbox (`montar-consultor`, `mirrors`, `estudar`; what `estudar` learned: `docs/claude-code/estudar-calibracao.md`) | `utils/` (index: `utils/README.md`) |
+| Shareable skills/agents not tied to dev-sandbox (`montar-consultor`, `mirrors`, `estudar`, `share-memories`; what `estudar` learned: `docs/claude-code/estudar-calibracao.md`). "Not tied" means no examples that only make sense inside this repo, not a ban on dev-sandbox examples | `utils/` (index: `utils/README.md`) |
+| English names of skills and commands, for readers who don't read English | `docs/ingles-para-devs/` |
 | Missing tools reported by agents | host `~/.cache/dev-sandbox/home/.dev-sandbox/feedback.md` |
 
 ## Claude Code questions
 1. Find the guide in `docs/claude-code/README.md` and read it. Those guides were verified against the official docs (stamp at the bottom of each).
-2. Not covered, or possibly outdated: delegate to the `claude-code-pesquisador` agent instead of reading docs here (official pages exceed 100k characters; it greps the local mirror).
+2. Not covered, or possibly outdated:
+   - one narrow fact (a setting, a hook field): grep `mirrors/claude-code-docs/en/` yourself and read only the matching lines (`sed -n`); never Read a whole page (they exceed 100k characters). The maintainer prefers this for quick lookups (2026-10-28).
+   - a broad or multi-page question: delegate to `claude-code-pesquisador`, which does the same and keeps the pages out of this conversation.
 3. Sandbox-specific: the built-in Explore and Plan agents get no CLAUDE.md, so they don't know the container rules; `/etc/claude-code/CLAUDE.md` can't be excluded per project; instruction edits apply only to the next session (and to the image only after a rebuild).
