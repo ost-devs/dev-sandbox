@@ -48,3 +48,4 @@ Link para o commit/arquivo, ou "nada: só documentação".
 | 2026-10 | [O Playwright ignora o Chromium da imagem e pede para baixar navegadores](./2026-10-playwright-ignora-chromium-da-imagem.md) |
 | 2026-10 | [Conversa longa parece memória, mas não é](./2026-10-conversa-longa-nao-e-memoria.md) |
 | 2026-10 | [O leitor de `robots.txt` do Python proibia um site que libera tudo](./2026-10-robots-txt-403-proibe-tudo.md) |
+| 2026-10 | [O Write e o Edit do Claude se recusam a escrever num link simbólico](./2026-10-write-edit-recusam-symlink.md) |
