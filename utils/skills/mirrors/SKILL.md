@@ -1,7 +1,7 @@
 ---
 name: mirrors
 description: Keeps read-only local copies of outside sources in mirrors/ at the repo root - git repositories (pinned or following a branch), documentation sites with llms.txt, and web articles captured as markdown with the articles they link to. Use when the user wants to mirror, capture, update or check an outside source, or when a task needs many files or pages of one and reading them locally beats fetching pages.
-argument-hint: "[add <name> <url> [--web] | check | pin <target>... [@version] | follow <target>... | links <name> | remove <target>]"
+argument-hint: "[--add <name> <url> [--web] | --check | --pin <target>... [@version] | --follow <target>... | --links <name> | --remove <target>]"
 allowed-tools: Bash(python3 *fetch_mirrors.py*)
 ---
 
