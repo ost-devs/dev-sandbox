@@ -15,6 +15,21 @@ artigos** precisam ser conferidos de novo.
 | Artigos | Resumo e adaptação, em português, citando a fonte | `docs/...` | Sim |
 | Ligação | O link de cada página usada, no artigo | Seção **Base** de cada artigo | Sim |
 
+## De onde vem a fonte
+
+A skill [`mirrors`](./mirrors.md) copia três tipos de fonte. O mais comum
+para documentação é o site com `llms.txt`: muitos sites publicam esse
+índice para IAs, e a skill baixa todas as páginas dele de uma vez.
+
+| A fonte é... | Exemplo | Guia |
+|---|---|---|
+| Um site de documentação com `llms.txt` | Claude Code, Stripe, API do Claude | [Espelhar sites de documentação](./mirrors-de-sites.md) |
+| Um repositório git | A pasta `docs/` do uv, o livro do Rust | [Espelhar repositórios de fora](./mirrors.md) |
+| Artigos da web (posts, tutoriais) | Um artigo e os que ele cita | [Capturar artigos da web](./mirrors-de-artigos.md) |
+
+Quando a documentação está no git, prefira o repositório: tem commit e dá
+para fixar uma versão ([quando usar cada um](./mirrors-de-sites.md#quando-serve)).
+
 ## Por que local é melhor que buscar na web
 
 Medido nesta sessão com a documentação do Claude Code (227 páginas, 11 MB,

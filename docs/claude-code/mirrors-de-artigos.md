@@ -55,12 +55,17 @@ artigos fica fora; o resto da skill funciona.
 
 ## 2. Capturar
 
+O exemplo é [The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html),
+um artigo conhecido sobre testes automatizados que cita outros artigos do
+mesmo site (`mocksArentStubs`, `bliki/TestDouble` e outros).
+
 | Você quer | Peça ao Claude | Ou rode |
 |---|---|---|
-| Um artigo | "capture este artigo como tokens: <url>" | `--add tokens <url> --web` |
-| Mais um no mesmo grupo | "acrescente <url> em tokens" | o mesmo comando com outra URL |
-| Ver o que os artigos citam e ainda não foi capturado | "o que os artigos de tokens citam?" | `--links tokens` |
-| Seguir a cadeia | "capture os artigos que ele cita, até 10" | `--add tokens <url> --web --depth 1 --max-pages 10` |
+| Um artigo | "capture este artigo como testes: https://martinfowler.com/articles/practical-test-pyramid.html" | `--add testes https://martinfowler.com/articles/practical-test-pyramid.html --web` |
+| Mais um no mesmo grupo | "acrescente <url> em testes" | `--add testes <url> --web` |
+| Ver o que os artigos citam e ainda não foi capturado | "o que os artigos de testes citam?" | `--links testes` |
+| Seguir a cadeia | "capture os artigos que ele cita, até 10" | `--add testes <url> --web --depth 1 --max-pages 10` |
+| Tirar o grupo | `/mirrors remove testes` | `--remove testes` |
 
 "Rode" é `python3 ~/.claude/skills/mirrors/fetch_mirrors.py`, de qualquer
 pasta do projeto.
@@ -86,12 +91,12 @@ Um artigo capturado é uma **foto**: rodar a skill de novo não baixa o que já
 está lá, só o que falta (por exemplo, depois de clonar o projeto). Assim a
 busca local continua local.
 
-| Você quer | Rode |
-|---|---|
-| Baixar o que falta | `/mirrors`, ou o script sem argumentos |
-| Saber se falta algo (sem rede) | `--check` |
-| Baixar tudo de novo e ver o que mudou | `--refresh tokens` |
-| Saber quais textos seus citam artigos que mudaram | `--stale tokens docs/` |
+| Você quer | Peça ao Claude | Ou rode |
+|---|---|---|
+| Baixar o que falta | `/mirrors` | *(sem argumentos)* |
+| Saber se falta algo (sem rede) | `/mirrors check` | `--check` |
+| Baixar tudo de novo e ver o que mudou | "atualize os artigos de testes" | `--refresh testes` |
+| Saber quais textos seus citam artigos que mudaram | "quais docs citam artigos de testes que mudaram?" | `--stale testes docs/` |
 
 A data de modificação que o site informa fica no topo de cada arquivo
 (`modified`), mas só se sabe dela baixando a página. Por isso o `--refresh`
@@ -110,7 +115,11 @@ porque propaganda e contadores mudam a cada pedido.
 
 ## Base
 
-Testado em outubro/2026 com o artigo
+O exemplo do Martin Fowler foi capturado em outubro/2026: um artigo, e o
+`--links` listou 62 links do texto ainda não capturados, 10 deles no
+mesmo site (os que `--depth` seguiria).
+
+Os números abaixo são do primeiro teste, em outubro/2026, com o artigo
 [O que são tokens no Claude Code?](https://www.ssdnodes.com/learn/lang/pt/claude-code-token-usage-explained),
 da SSD Nodes:
 

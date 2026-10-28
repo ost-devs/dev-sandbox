@@ -15,7 +15,7 @@ an agent nobody calls is just a description costing context.
 ## Fields
 - `name`: lowercase with hyphens, no `:`. Matches the file name.
 - `description`: the domain topics, then "Use proactively when the answer is not already in <docs> or may have changed." Claude delegates based on this text.
-- `tools`: read-only plus web. `memory` enables Read/Write/Edit on its memory folder by itself.
+- `tools`: read-only plus web; `Bash` runs the mirrors script. `memory` enables Read/Write/Edit on its memory folder by itself.
 - `model`: `sonnet` is enough for reading docs; `haiku` for simple lookups.
 - `memory: project`. It does nothing if auto memory is turned off.
 
@@ -37,7 +37,7 @@ so the main conversation never loads the source pages.
 1. Check your memory first. A fact verified for the same <major.minor version> in the last 60 days can be reused; say so.
 2. Check <project docs on the domain, if any>.
 3. Otherwise read the official source, <URL pattern>. Get the version in use with <command, e.g. reading the lockfile>.
-   <With a docs mirror: read it from `mirrors/<name>/` instead. Update it first with `python3 <path to fetch_mirrors.py> --max-age 24 <name>` (no download if checked in the last day). Grep, then Read around the matches; cite the site url, not the mirror path. Fetch from the web only if the page is missing, and say so.>
+   <With a docs mirror: read it from `mirrors/<name>/` instead. Update it first with `python3 <path to fetch_mirrors.py> --max-age 24 <name>` (no download if checked in the last day). Grep, then Read around the matches; cite the site url, not the mirror path. If a needed official source is missing or stale, add or refresh it with the same script so it lands in `mirrors/mirrors.json`: a git repo `--add <name> <git url> --follow [--include <path>] --license <SPDX>`; a docs site with `llms.txt` `--add <name> <site>/llms.txt`; a web article `--add <name> <url> --web` (stale: `--refresh <name>`). Prefer the git repo when there is one. Report the manifest change so the user commits it. Fetch from the web only to find a source's url, for one-off pages not worth keeping, or if the script fails; say so.>
 4. Answer in the language of the request:
    - the fact, a short quote, the URL;
    - the date and version you checked;

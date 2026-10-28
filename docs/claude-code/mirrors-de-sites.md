@@ -2,7 +2,8 @@
 
 Este guia mostra **quando e como** copiar para o seu projeto a documentação
 de um site que não está num repositório git. O exemplo é a documentação
-oficial do Claude Code, que o dev-sandbox já usa. O mesmo vale para outras.
+da Stripe (pagamentos); o mesmo vale para outras, como a do Claude Code,
+que o dev-sandbox usa (veja [No dev-sandbox](#no-dev-sandbox)).
 O uso geral da skill está em [Espelhar repositórios de fora](./mirrors.md);
 o que fazer com a cópia está em
 [Base de conhecimento sob demanda](./base-de-conhecimento.md).
@@ -59,28 +60,26 @@ Testado em outubro/2026. Os sites mudam: confira antes (veja abaixo como).
 
 ## 1. Conferir se um site serve
 
-Peça ao Claude: "o site X tem llms.txt com páginas .md?". Ou confira no
-terminal (host ou container):
-
-```bash
-curl -s https://docs.stripe.com/llms.txt | grep -c '\.md)'
-```
+| Você quer | Peça ao Claude | Ou rode (host ou container) |
+|---|---|---|
+| Saber se o site tem `llms.txt` com páginas `.md` | "o site da Stripe tem llms.txt com páginas .md?" | `curl -s https://docs.stripe.com/llms.txt \| grep -c '\.md)'` |
 
 Um número alto quer dizer que serve. Zero quer dizer que não serve.
 
 ## 2. Adicionar
 
-Fale normalmente ("espelhe a documentação da API do Claude"), ou rode no
-projeto:
+| Você quer | Peça ao Claude | Ou rode |
+|---|---|---|
+| Copiar a documentação inteira | "espelhe a documentação da Stripe como stripe-docs" | `--add stripe-docs https://docs.stripe.com/llms.txt --license LicenseRef-Stripe-docs` |
+| Só uma parte (um idioma, um produto, uma seção) | "... só pagamentos e API" | o mesmo com `--include payments api` |
 
-```bash
-python3 ~/.claude/skills/mirrors/fetch_mirrors.py --add claude-api-docs https://platform.claude.com/llms.txt --license LicenseRef-Anthropic-docs
-```
+"Rode" é `python3 ~/.claude/skills/mirrors/fetch_mirrors.py`, de qualquer
+pasta do projeto (host ou container).
 
 | Opção | Para quê |
 |---|---|
-| `--include en` | Só as páginas cujo caminho começa com `en/` (um idioma, um produto, uma seção) |
-| `--license` | A licença da documentação. Muitas não são abertas: aí escreva, por exemplo, `LicenseRef-Anthropic-docs`, e não ponha a cópia no git (a skill já a deixa fora) |
+| `--include payments api` | Só as páginas cujo caminho começa com `payments/` ou `api/`. Na do Claude Code, `--include en` fica só com o inglês |
+| `--license` | A licença da documentação. Muitas não são abertas: aí escreva um nome seu, como `LicenseRef-Stripe-docs`, e não ponha a cópia no git (a skill já a deixa fora) |
 
 A cópia fica em `mirrors/<nome>/`. Dentro dela:
 
@@ -96,12 +95,13 @@ Um espelho de site é sempre "atualizado": não dá para fixar uma versão,
 porque o site não tem commits. Cada atualização baixa **todas** as páginas,
 porque o site não diz quais mudaram, e compara cada uma com a anterior.
 
-| Você quer | Peça ou rode |
-|---|---|
-| Atualizar e ver o que mudou | `/mirrors`, ou o script sem argumentos |
-| Atualizar só se a última conferência tiver mais de um dia | `--max-age 24` (o pesquisador usa assim: uma busca não baixa o site de novo) |
-| Só saber se mudou, sem gravar | `/mirrors check` |
-| Saber quais artigos seus citam páginas que mudaram | `--stale <nome> docs/` ([como funciona](./base-de-conhecimento.md#como-funciona)) |
+| Você quer | Peça ao Claude | Ou rode |
+|---|---|---|
+| Atualizar e ver o que mudou | `/mirrors` | *(sem argumentos)* |
+| Atualizar só se a última conferência tiver mais de um dia | "atualize a stripe-docs se tiver mais de um dia" | `--max-age 24 stripe-docs` (o pesquisador do dev-sandbox usa assim: uma busca não baixa o site de novo) |
+| Só saber se mudou, sem gravar | `/mirrors check` | `--check` |
+| Saber quais textos seus citam páginas que mudaram | "quais docs citam páginas que mudaram na stripe-docs?" | `--stale stripe-docs docs/` ([como funciona](./base-de-conhecimento.md#como-funciona)) |
+| Tirar a cópia | `/mirrors remove stripe-docs` | `--remove stripe-docs` |
 
 A data de mudança é a da atualização que viu a mudança, não a da edição no
 site. Quem atualiza toda semana sabe a data com folga de uma semana.

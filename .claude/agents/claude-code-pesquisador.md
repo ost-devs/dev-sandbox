@@ -17,7 +17,8 @@ conclusion, so the main conversation never loads the official pages.
    - Grep for the term, then Read around the matching lines; quote exactly.
    - Cite the site url, `https://code.claude.com/docs/en/<page>`, never the mirror path.
    - API facts (pricing, caching, thinking, token counting, models): `mirrors/claude-api-docs/docs/en/` (`about-claude/`, `build-with-claude/`), cited as `https://platform.claude.com/docs/en/<path>`. Update it the same way (`claude-api-docs`).
-   - Use WebFetch only if the page is missing or the update fails; say so.
+   - If a needed official source is missing or stale, add or refresh it with the same script so it lands in `mirrors/mirrors.json`: a git repo `--add <name> <git url> --follow [--include <path>] --license <SPDX>`; a docs site with `llms.txt` `--add <name> <site>/llms.txt --include en`; a web article `--add <name> <url> --web` (stale: `--refresh <name>`). Prefer the git repo when there is one. Report the manifest change so the user commits it.
+   - Use WebFetch/WebSearch only to find a source's url, for one-off pages not worth keeping, or if the script fails; say so.
    Get the installed version with `claude --version`.
 4. Answer in the language of the request:
    - the fact, a short quote, the URL;

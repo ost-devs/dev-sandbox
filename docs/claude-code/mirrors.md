@@ -78,15 +78,19 @@ Claude leu quando escreveu cada documento.
 
 ## 3. Adicionar
 
-Fale normalmente, ou use `/mirrors`. A skill confere a licença antes de
-baixar e a anota no `mirrors.json`.
+Peça ao Claude, ou rode o script você mesmo. A skill confere a licença
+antes de baixar e a anota no `mirrors.json`; rodando à mão, informe a
+licença com `--license`.
 
-| Você quer | Peça |
-|---|---|
-| Copiar um repositório | "espelhe https://github.com/rust-lang/book como rust-book, sempre atualizado" |
-| Só uma parte de um repositório grande | "espelhe só a pasta `crates/editor` de https://github.com/zed-industries/zed como zed" |
-| Vários repositórios da mesma organização, um por pacote | "espelhe common, lr e highlight de https://github.com/lezer-parser como o conjunto lezer" |
-| Um pacote na versão publicada | "fixe lezer/common na versão 1.5.2" |
+| Você quer | Peça ao Claude | Ou rode |
+|---|---|---|
+| Copiar um repositório, sempre atualizado | "espelhe https://github.com/rust-lang/book como rust-book, sempre atualizado" | `--add rust-book https://github.com/rust-lang/book --license MIT Apache-2.0 --follow` |
+| Só uma parte de um repositório grande | "espelhe só a pasta `crates/editor` de https://github.com/zed-industries/zed como zed" | `--add zed https://github.com/zed-industries/zed --include crates/editor --license GPL-3.0-or-later` |
+| Vários repositórios da mesma organização, um por pacote | "espelhe common, lr e highlight de https://github.com/lezer-parser como o conjunto lezer" | `--add lezer 'https://github.com/lezer-parser/{member}' --license MIT` e depois `--follow lezer/common lezer/lr lezer/highlight` |
+| Um pacote na versão publicada | "fixe lezer/common na versão 1.5.2" | `--pin lezer/common @1.5.2` |
+
+"Rode" é `python3 ~/.claude/skills/mirrors/fetch_mirrors.py`, de qualquer
+pasta do projeto (host ou container).
 
 O terceiro caso é um **conjunto** (*set*): uma entrada no `mirrors.json`
 com o endereço `https://github.com/lezer-parser/{member}` e uma lista de
@@ -122,12 +126,14 @@ versão. Assim cada commit do projeto diz qual versão das fontes ele cita.
 
 ## 5. No dia a dia
 
-| Quando | Peça ou rode |
-|---|---|
-| Clonou o projeto em outra máquina | `/mirrors` (baixa tudo que está no `mirrors.json`) |
-| Quer saber o que está faltando ou velho | `/mirrors check` |
-| Quer subir uma cópia fixa para a versão mais nova | `/mirrors pin <nome>` e commit do `mirrors.json` |
-| Não precisa mais de uma cópia | `/mirrors remove <nome>` e commit do `mirrors.json` |
+| Você quer | Peça ao Claude | Ou rode |
+|---|---|---|
+| Baixar tudo que está no `mirrors.json` (clonou o projeto em outra máquina) | `/mirrors` | *(sem argumentos)* |
+| Saber o que está faltando ou velho | `/mirrors check` | `--check` |
+| Subir uma cópia fixa para a versão mais nova | `/mirrors pin <nome>` | `--pin <nome>` |
+| Tirar uma cópia | `/mirrors remove <nome>` | `--remove <nome>` |
+
+Depois de fixar ou remover, faça commit do `mirrors.json`.
 
 O `check` também avisa quando uma cópia fixa não é o commit da versão que o
 seu `package.json` declara (o commit veio depois da publicação). Se você
@@ -136,24 +142,15 @@ queria a versão publicada, ele mostra o comando para fixá-la.
 ## Rodar sem o Claude
 
 O script funciona sozinho, de qualquer pasta dentro do projeto (host ou
-container):
-
-```bash
-python3 ~/.claude/skills/mirrors/fetch_mirrors.py --help
-```
+container). Além dos comandos das tabelas acima:
 
 | Para | Rode |
 |---|---|
-| Baixar tudo do `mirrors.json` | `python3 ~/.claude/skills/mirrors/fetch_mirrors.py` |
-| Ver o que falta ou está velho | `... --check` |
-| Adicionar sempre atualizado | `... --add rust-book https://github.com/rust-lang/book --license MIT Apache-2.0 --follow` |
+| Ver todas as opções | `... --help` |
+| Listar os espelhos | `... --list` |
 | Adicionar o `.claude/` do dev-sandbox, sempre atualizado | `... --add dev-sandbox https://github.com/ost-devs/dev-sandbox --include .claude --follow` |
-| Adicionar só uma pasta | `... --add zed https://github.com/zed-industries/zed --include crates/editor --license GPL-3.0-or-later` |
-| Criar um conjunto | `... --add lezer 'https://github.com/lezer-parser/{member}' --license MIT` |
-| Pôr membros sempre atualizados | `... --follow lezer/common lezer/lr lezer/highlight` |
-| Fixar na versão publicada | `... --pin lezer/common @1.5.2` |
 | Fixar na versão do `package.json` do repositório | `... --pin lezer/common lezer/lr @package` |
-| Fixar todos os membros no commit mais novo | `... --pin lezer` |
+| Fixar todos os membros de um conjunto no commit mais novo | `... --pin lezer` |
 
 Troque `...` por `python3 ~/.claude/skills/mirrors/fetch_mirrors.py`.
 
