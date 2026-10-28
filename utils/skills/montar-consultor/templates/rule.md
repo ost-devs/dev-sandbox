@@ -29,6 +29,7 @@ paths:
 ## Validate
 - <Exact command(s) to run after a change, e.g. `pnpm test api`.>
 - <What can't be tested here and must be reported as untested.>
+- <If the part has tests: a fixed bug gets a test that fails without the fix. This rule is what makes the next session run them; nobody remembers on their own.>
 
 ## Propagate (one change, every place that describes it)
 | Changed | Also update |

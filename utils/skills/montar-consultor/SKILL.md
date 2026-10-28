@@ -27,7 +27,7 @@ Collect facts, citing the file each came from:
 4. Parts with their own rules: dirs whose changes need different checks or force updates elsewhere (API + client, schema + migrations, script + its docs).
 5. Non-obvious decisions: `git log --oneline -200` (look for fix, revert, "because"), comments with `NOTE|HACK|WHY|porque|because`, ADRs, "why" sections in docs.
 6. Docs: where they live, their language, whether there is an index.
-7. Fast-changing external dependency with big docs (a framework, an API, Claude Code itself, a regulation) that people ask about often: candidate for a researcher agent.
+7. Fast-changing external dependency with big docs (a framework, an API, Claude Code itself, a regulation) that people ask about often: candidate for a researcher agent. Note whether its docs can be mirrored: a git repository (often a `docs/` folder), or a site whose `llms.txt` links `.md` pages (`curl -s <site>/llms.txt | grep -c '\.md)'`).
 8. Workflow: branch and commit conventions, from instructions and `git log`.
 
 Big repo (over ~300 tracked files): delegate the sweep to an Explore agent and ask for the list above as the answer. Explore does not load CLAUDE.md, so put any rule it needs in the prompt.
@@ -54,6 +54,7 @@ Decide each piece with this table:
 | Path-scoped rule | `.claude/rules/<part>.md` with `paths:` | A part has its own validation or a "changed X, also update Y" list | `templates/rule.md` |
 | Project map skill | `.claude/skills/<project>/SKILL.md` | Understanding the project takes reading several files | `templates/map-skill.md` |
 | Session closer | `.claude/skills/consolidar/SKILL.md` | Always | `templates/consolidar.md` |
+| Docs mirror | `mirrors/<name>/` through the `mirrors` skill (only `mirrors/mirrors.json` goes to git) | There is a researcher and its source can be mirrored (step 1.7), and the `mirrors` skill is installed. A local grep quotes exactly; web fetching truncates long pages and may summarize instead of quoting | `mirrors` skill: `--add <name> <git url or site/llms.txt> [--include <path>]` |
 | Researcher agent | `.claude/agents/<domain>-pesquisador.md` + `.claude/agent-memory/<name>/MEMORY.md` | A fast-changing external source with big docs (step 1.7) | `templates/researcher-agent.md` |
 
 Small project (a few files, one stack): instructions + `/consolidar` may be enough. Say so instead of creating empty pieces.
@@ -69,7 +70,7 @@ Read the template for each piece, then write it from the survey facts. For every
 - **Nothing invented.** A fact without a source from step 1 or the user stays out, or goes in marked as a question for the user.
 - Existing content: move it, don't duplicate it; never drop a user's line without listing it in the report.
 
-Order: rules, map skill, researcher, `/consolidar` (its routing table names the pieces that now exist), instructions last (they may point to the others).
+Order: rules, map skill, docs mirror, researcher, `/consolidar` (its routing table names the pieces that now exist), instructions last (they may point to the others).
 
 Claude Code protects `.claude/`: each write there asks the user, and non-interactive runs refuse it. If a write is refused, stop and report; never write instructions that point to files that don't exist, and never write through Bash to get around it.
 
@@ -101,5 +102,6 @@ For a project that already has the consultant. Read every piece and check:
 | Content copied from a doc | Replace with a pointer |
 | Map over the size limit | Cut what the linked docs already say |
 | Researcher memory facts older than 60 days or a previous major.minor | Mark for re-check |
+| Docs citing official pages that changed since the doc's last commit (docs mirror of a site or of web articles) | List them with the `mirrors` skill: `--stale <mirror> <docs folder>`; recheck each with the researcher |
 
 Report findings as a table (problem → file:line → proposed fix) and apply only after the user agrees.

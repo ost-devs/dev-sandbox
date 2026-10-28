@@ -17,6 +17,7 @@ plano e só escreve depois que você aprova.
 | `.claude/rules/<parte>.md` | Checklist de quem mexe numa parte (ex.: "mudou a API? atualize o cliente") | Se o projeto tiver partes com regras próprias |
 | `.claude/skills/<projeto>/SKILL.md` | O mapa: como funciona, decisões que parecem erradas, onde está cada assunto | Se entender o projeto exige ler vários arquivos |
 | `.claude/skills/consolidar/SKILL.md` | O `/consolidar`, que guarda o que uma conversa aprendeu | Sim |
+| `mirrors/<nome>/` | Cópia local da documentação que o pesquisador consulta, para ele citar o texto exato em vez de buscar na web ([como](./mirrors-de-sites.md)) | Só com pesquisador, se a documentação estiver num repositório git ou num site com `llms.txt`, e com a skill `mirrors` instalada |
 | `.claude/agents/<assunto>-pesquisador.md` | Um agente que pesquisa documentação externa e anota o que confirmou | Só se o projeto depende de algo que muda rápido (um framework, uma API) |
 
 Projeto pequeno pode ficar só com as instruções e o `/consolidar`. A skill
@@ -89,7 +90,7 @@ calma, principalmente o mapa:
 | `AGENTS.md` / `CLAUDE.md` | Cada linha vale para **toda** tarefa? Se não, devia estar numa rule |
 | Rules | O comando de validação está certo? A tabela "mudou X, atualize Y" está completa? |
 | Mapa (`.claude/skills/<projeto>/`) | As decisões têm o motivo certo? Falta alguma armadilha que você conhece? |
-| Pesquisador | A fonte oficial é a certa? |
+| Pesquisador | A fonte oficial é a certa? Com espelho, ele procura primeiro na cópia local? |
 
 Para ver as mudanças antes do commit, no terminal do projeto:
 

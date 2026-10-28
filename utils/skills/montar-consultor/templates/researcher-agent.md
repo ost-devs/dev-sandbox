@@ -1,7 +1,9 @@
 # Template: researcher agent (`.claude/agents/<domain>-pesquisador.md`)
 
 For an external source that changes fast and has long docs (a framework, an
-API, Claude Code itself). The agent reads the docs in its own context and
+API, Claude Code itself). Pair it with a docs mirror when the source allows
+(SKILL.md, step 3): web fetching of long pages truncates them and may return
+a summary instead of the text, so quotes can't be checked. The agent reads the docs in its own context and
 returns only the conclusion, so the main conversation never loads the pages.
 With `memory: project`, it writes each verified fact to
 `.claude/agent-memory/<name>/MEMORY.md`, which goes to git: the next person
@@ -35,6 +37,7 @@ so the main conversation never loads the source pages.
 1. Check your memory first. A fact verified for the same <major.minor version> in the last 60 days can be reused; say so.
 2. Check <project docs on the domain, if any>.
 3. Otherwise read the official source, <URL pattern>. Get the version in use with <command, e.g. reading the lockfile>.
+   <With a docs mirror: read it from `mirrors/<name>/` instead. Update it first with `python3 <path to fetch_mirrors.py> --max-age 24 <name>` (no download if checked in the last day). Grep, then Read around the matches; cite the site url, not the mirror path. Fetch from the web only if the page is missing, and say so.>
 4. Answer in the language of the request:
    - the fact, a short quote, the URL;
    - the date and version you checked;
