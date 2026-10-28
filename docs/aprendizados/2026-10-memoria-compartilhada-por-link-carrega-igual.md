@@ -14,15 +14,16 @@ enxerga uma nota criada ali mesmo, sem sair do projeto para procurar?
 
 | Teste | Resultado |
 |---|---|
-| Linha da memória linkada no `MEMORY.md` do projeto | Aparece no contexto desde o início da sessão, igual às notas comuns (com a marca `(group dev)`) |
+| Linha da memória linkada no `MEMORY.md` do projeto | Aparece no contexto desde o início da sessão, igual às notas comuns (com a marca `(group dev)`, hoje `(shared, group dev)`) |
 | `Read` em `feedback-ai-files-in-english.md` (link, grupo `todos`) | Abriu pelo caminho do projeto; frontmatter e corpo íntegros |
 | `Read` em `honest-security-tradeoffs.md` (memória exclusiva de outro projeto) | "File does not exist": o projeto não enxerga o que não foi linkado nele |
 
 ## Causa
 Para o Claude, o link é um arquivo comum: o `Read` o segue. O que a sessão carrega sozinha é o
 índice `MEMORY.md`; o corpo só é lido quando o Claude abre o arquivo. Como o índice trata
-memória linkada e memória local do mesmo jeito, a descrição (o gatilho "Use when...") fica
-visível nos dois casos. Isso é dedução desse mecanismo, não algo que a documentação afirme.
+memória linkada e memória local do mesmo jeito, a linha da memória fica visível nos dois casos
+(no teste era a descrição, o gatilho "Use when..."; desde o commit 850eab0 é o título e o
+resumo que o Claude escreveu). Isso é dedução desse mecanismo, não algo que a documentação afirme.
 
 ## Solução
 Nada a consertar. Compartilhar por link não perde nada em relação a criar a nota no projeto, e
