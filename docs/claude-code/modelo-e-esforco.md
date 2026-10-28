@@ -29,8 +29,12 @@ faixas e confira no `/model` qual modelo está em cada uma hoje:
 
 Um modelo de topo com outro nome, de outra oferta ou de um acesso especial,
 cabe na mesma tabela: o raciocínio abaixo é sobre faixas, não sobre nomes.
-(Não encontrei nas fontes oficiais lidas um modelo chamado "Mythos"; se for o
-seu caso, ponha-o na faixa em que ele se comporta e registre no diário.)
+Exemplo: os modelos **Mythos** (Mythos 5.1, Mythos 5, Mythos Preview) têm a
+mesma capacidade do Fable, mas só para organizações verificadas pela
+Anthropic, e não aparecem no `/model` do Claude Code (conferido em 28/out/2026
+nas páginas de [escolha de modelo](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
+e de [configuração de modelo](https://code.claude.com/docs/en/model-config)).
+Se for o seu caso, ponha-o na faixa de topo e registre no diário.
 
 Não usar bazuca para matar mosca já é meio caminho: o modelo maior e o
 esforço máximo **não** são sempre melhores. A própria documentação avisa que
@@ -69,7 +73,19 @@ tarefa.
 **Custo:** modelo maior custa mais por token, mas numa tarefa difícil "o custo
 total por tarefa pode sair menor" (menos voltas). O esforço molda o consumo,
 não o limita. Nos planos por assinatura, sessões, subagentes e sessões na
-nuvem gastam o mesmo limite de uso.
+nuvem gastam o mesmo limite de uso. Preços e a conta de um turno:
+[quanto custa](./por-baixo-dos-panos/quanto-custa.md).
+
+O modelo barato sai caro quando **verificar a resposta é difícil**: cada
+tentativa errada volta como contexto na seguinte, e no fim você sobe de
+modelo do mesmo jeito (o argumento é do artigo
+[Qual modelo Claude usar?](https://www.ssdnodes.com/learn/lang/pt/opus-sonnet-haiku-which-model),
+da SSD Nodes; os preços dele, de julho, estão velhos). Se o erro aparece num
+segundo, vá de modelo pequeno; se exige ler um diff com cuidado, não.
+
+Troque de modelo **entre tarefas**, depois de um `/clear`: cada modelo tem o
+seu cache, e trocar no meio da conversa relê tudo sem desconto
+([prompt caching](https://code.claude.com/docs/en/prompt-caching#switching-models)).
 
 ## Como trocar
 

@@ -69,7 +69,7 @@ desenvolvedor por dia de uso** (90% ficam abaixo de $30).
 | | Assinatura (Pro, Max, Team) | Chave de API ou nuvem |
 |---|---|---|
 | Como paga | Desconta de uma janela de **5 horas** e de uma **semanal**, compartilhadas com o chat do Claude e entre todos os modelos | Por token, nos preços acima |
-| Trocar de modelo ao bater o limite | Não adianta: a janela é a mesma | Não se aplica |
+| Trocar de modelo ao bater o limite | Só adianta no limite de uma família (`Opus limit`, `Sonnet limit`); nas janelas de 5 horas e semanal, não ([limite de uso](../limite-de-uso.md)) | Não se aplica |
 | Cache da conversa principal | **1 hora** dentro do uso do plano; **5 minutos** ao passar a usar créditos de uso | **5 minutos**. `promptCacheTtl: "1h"` pede 1 hora, com gravação a 2× |
 | O valor em dólares do `/usage` | Só informativo | Estimativa; a fatura oficial está na Console |
 | Passou do limite | `/usage-credits` configura créditos de uso | Não se aplica |

@@ -107,7 +107,10 @@ memória detalhada só é lida quando o assunto aparece.
   parar. Qualquer sessão nova continua dali.
 - **Limite de uso no meio de uma tarefa longa:** o Claude continua sozinho
   quando o limite volta, **mas só numa sessão interativa que continua
-  aberta**. Sessões em background (`claude --bg`) e `claude -p` não esperam.
+  aberta**, com assinatura, e sozinho só se o limite volta em até 24 horas
+  (mais longe: `/rate-limit-options`). Sessões em background (`claude --bg`),
+  `claude -p` e chave de API não esperam. Qual limite é e o que fazer:
+  [limite de uso](./limite-de-uso.md).
   Para não ficar com o terminal aberto, rode tudo dentro de um `tmux` **no
   host** (lá fora, não dentro do container):
 
