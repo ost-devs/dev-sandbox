@@ -8,9 +8,11 @@ through a symlink and point at the target, so every edit lands on the single
 copy and all projects see it.
 
 Groups are in <claude>/shared-memories/groups.json:
-    {"groups": {"all": ["*"], "dev": ["-dev-sandbox", "/home/me/Dev/*"]}}
+    {"groups": {"all": ["*"], "dev": ["-dev-sandbox", "/home/me/Dev/*"]},
+     "lines": {"dev/feedback-x.md": {"title": "Short title", "summary": "short summary"}}}
 An entry is a project folder name under <claude>/projects/ or a project path,
-both with optional * globs.
+both with optional * globs. "lines" keeps the title and summary of Claude's own
+MEMORY.md line, taken at share time; without one, name and description are used.
 """
 
 import argparse
@@ -42,15 +44,31 @@ class Env:
         self.store = self.root / STORE_NAME
         self.config = self.store / "groups.json"
 
-    def groups(self):
+    def data(self):
         if not self.config.exists():
             return {}
-        data = json.loads(self.config.read_text(encoding="utf-8"))
-        return {g: list(v) for g, v in data.get("groups", {}).items()}
+        return json.loads(self.config.read_text(encoding="utf-8"))
+
+    def groups(self):
+        return {g: list(v) for g, v in self.data().get("groups", {}).items()}
+
+    def lines(self):
+        """{"<group>/<file>": {"title": ..., "summary": ...}} for the shared memories' index lines."""
+        return dict(self.data().get("lines", {}))
+
+    def save(self, groups=None, lines=None):
+        data = self.data()
+        if groups is not None:
+            data["groups"] = groups
+        if lines is not None:
+            data["lines"] = dict(sorted(lines.items()))
+        if not data.get("lines"):
+            data.pop("lines", None)
+        self.store.mkdir(parents=True, exist_ok=True)
+        write_atomic(self.config, json.dumps(data, indent=2, ensure_ascii=False) + "\n")
 
     def save_groups(self, groups):
-        self.store.mkdir(parents=True, exist_ok=True)
-        write_atomic(self.config, json.dumps({"groups": groups}, indent=2, ensure_ascii=False) + "\n")
+        self.save(groups=groups)
 
     def groups_of(self, slug):
         return sorted(g for g, entries in self.groups().items()
@@ -106,10 +124,26 @@ def front(path):
     return name, desc
 
 
+def own_line(index, fname):
+    """Title and summary of Claude's own MEMORY.md line for a memory, or None."""
+    if not index.exists():
+        return None
+    for line in BLOCK_RE.sub("\n", index.read_text(encoding="utf-8")).splitlines():
+        m = re.match(rf"\s*-\s*\[(.*)\]\({re.escape(fname)}\)\s*(?:[—–-]+\s*)?(.*)", line)
+        if m:
+            return {"title": m.group(1), "summary": m.group(2).strip()}
+    return None
+
+
 def index_line(env, fname, group, tag=True):
-    name, desc = front(env.store / group / fname)
-    line = f"- [{name}]({fname}) — {desc}" if desc else f"- [{name}]({fname})"
-    return f"{line} _(group {group})_" if tag else line
+    saved = env.lines().get(f"{group}/{fname}")
+    if saved:
+        title, summary = saved.get("title") or Path(fname).stem, saved.get("summary", "")
+    else:
+        title, summary = front(env.store / group / fname)
+    line = f"- [{title}]({fname}) — {summary}" if summary else f"- [{title}]({fname})"
+    # The block's HTML comments are stripped when MEMORY.md loads: this tag is what Claude sees.
+    return f"{line} _(shared, group {group})_" if tag else line
 
 
 def write_atomic(path, text):
@@ -242,9 +276,14 @@ def cmd_share(env, args):
                 sys.exit(f"error: {g}/{path.name} already exists; rename the memory first")
         dest = env.store / args.group
         dest.mkdir(parents=True, exist_ok=True)
+        lines = env.lines()
         for path in files:
+            own = own_line(path.parent / "MEMORY.md", path.name)
+            if own:
+                lines[f"{args.group}/{path.name}"] = own
             shutil.move(str(path), dest / path.name)
             print(f"shared   {path.name} -> group {args.group}")
+        env.save(lines=lines)
         print_report(reconcile_all(env))
 
 
@@ -256,6 +295,7 @@ def cmd_unshare(env, args):
         if not keep.is_dir():
             sys.exit(f"error: {keep} does not exist")
     with env.lock():
+        lines = env.lines()
         for group, fname, src in refs:
             if keep:
                 if (keep / fname).is_symlink():
@@ -267,7 +307,9 @@ def cmd_unshare(env, args):
                 add_local_line(keep / "MEMORY.md", line)
             else:
                 src.unlink()
+            lines.pop(f"{group}/{fname}", None)
             print(f"unshared {group}/{fname}" + (f" (kept in {args.keep})" if keep else ""))
+        env.save(lines=lines)
         print_report(reconcile_all(env))
 
 
@@ -282,10 +324,31 @@ def cmd_move(env, args):
             if g:
                 sys.exit(f"error: {g}/{fname} already exists")
         (env.store / args.group).mkdir(parents=True, exist_ok=True)
+        lines = env.lines()
         for group, fname, src in refs:
             os.replace(src, env.store / args.group / fname)
+            if f"{group}/{fname}" in lines:
+                lines[f"{args.group}/{fname}"] = lines.pop(f"{group}/{fname}")
             print(f"moved    {group}/{fname} -> {args.group}")
+        env.save(lines=lines)
         print_report(reconcile_all(env))
+
+
+def cmd_line(env, args):
+    group, fname, src = shared_ref(env, args.memory)
+    if args.title is not None or args.summary is not None:
+        with env.lock():
+            lines = env.lines()
+            key = f"{group}/{fname}"
+            cur = dict(lines.get(key) or dict(zip(("title", "summary"), front(src))))
+            if args.title is not None:
+                cur["title"] = args.title
+            if args.summary is not None:
+                cur["summary"] = args.summary
+            lines[key] = cur
+            env.save(lines=lines)
+            print_report(reconcile_all(env, env.members(group)))
+    print(f"line     {index_line(env, fname, group)}")
 
 
 def cmd_group(env, args):
@@ -329,12 +392,16 @@ def cmd_status(env, args):
     groups = env.groups()
     if not groups:
         print(f"no groups yet: group <name> --add <project folder or path>")
+    lines = env.lines()
     for g, entries in groups.items():
         folder = env.store / g
         files = sorted(f.name for f in folder.glob("*.md")) if folder.is_dir() else []
         print(f"\n[{g}] {', '.join(entries)}")
         print(f"  projects: {', '.join(env.members(g)) or '(none with memory yet)'}")
         print(f"  memories: {', '.join(files) or '(none)'}")
+        fallback = [f for f in files if f"{g}/{f}" not in lines]
+        if fallback:
+            print(f"  index line from name and description (set it with line): {', '.join(fallback)}")
     pending = []
     for slug in env.with_memory():
         added, removed, conflicts = reconcile(env, slug, dry=True)
@@ -498,6 +565,10 @@ def main():
     s = sub.add_parser("move", help="move shared memories to another group")
     s.add_argument("group")
     s.add_argument("memories", nargs="+", help="<group>/<file>.md")
+    s = sub.add_parser("line", help="show or set a shared memory's MEMORY.md line")
+    s.add_argument("memory", help="<group>/<file>.md")
+    s.add_argument("--title")
+    s.add_argument("--summary")
     s = sub.add_parser("group", help="show, create, change or delete a group")
     s.add_argument("name")
     s.add_argument("--add", action="append", default=[], metavar="ENTRY", help="project folder or path (* allowed); repeatable")
@@ -511,7 +582,7 @@ def main():
     args = ap.parse_args(protect(sys.argv[1:]))
     env = Env(claude_dir())
     {"status": cmd_status, "share": cmd_share, "unshare": cmd_unshare, "move": cmd_move,
-     "group": cmd_group, "sync": cmd_sync, "install": cmd_install, "hook": cmd_hook}[args.cmd](env, args)
+     "line": cmd_line, "group": cmd_group, "sync": cmd_sync, "install": cmd_install, "hook": cmd_hook}[args.cmd](env, args)
 
 
 def protect(argv):

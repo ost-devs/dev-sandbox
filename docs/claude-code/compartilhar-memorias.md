@@ -14,7 +14,7 @@ O nome e os comandos são em inglês ([glossário](../ingles-para-devs/glossario
 
 ```text
 ~/.claude/shared-memories/
-├── groups.json                ← quais projetos estão em cada grupo
+├── groups.json                ← quais projetos estão em cada grupo e a linha de cada memória
 └── dev/
     └── review-in-pt.md        ← a única cópia da memória
 
@@ -84,6 +84,7 @@ Um projeto é a pasta dele em `~/.claude/projects/` (`-ferrum`) ou o caminho
 | Ver tudo e o que está fora do lugar | `/share-memories status` | `... status` |
 | Compartilhar memórias | "compartilhe essa memória com o grupo dev" | `... share dev <caminho da memória>` |
 | Mudar de grupo | "passe dev/x.md para o grupo all" | `... move all dev/x.md` |
+| Mudar a linha da memória no `MEMORY.md` | "mude o título de dev/x.md no índice para Delegate with intent" | `... line dev/x.md --title "Delegate with intent"` (resumo: `--summary "..."`) |
 | Desfazer, deixando uma cópia num projeto | "tire dev/x.md do grupo e deixe só no ferrum" | `... unshare dev/x.md --keep -ferrum` |
 | Desfazer e apagar | `/share-memories unshare dev/x.md` | `... unshare dev/x.md` |
 | Revisar as memórias de um grupo | "mostre as memórias do grupo dev" | `... status` |
@@ -95,6 +96,16 @@ que não quer.
 
 Não edite o bloco `share-memories` do `MEMORY.md`: ele é refeito. Edite a memória.
 
+A linha de cada memória no bloco é a que o Claude escreveu no `MEMORY.md` do projeto onde ela
+nasceu (título e resumo). O `share` guarda essa linha no `groups.json`, e o `unshare --keep` a
+devolve ao projeto. Para mudar, use `line`. Se a memória não tinha linha própria, o bloco usa o
+nome e a descrição dela, e o `status` avisa.
+
+Cada linha termina em `_(shared, group dev)_`. O Claude Code apaga os comentários HTML do
+`MEMORY.md` antes de carregá-lo
+([aprendizado](../aprendizados/2026-10-comentarios-do-memory-md-nao-chegam-ao-claude.md)), então
+essa marca é o único sinal, para o Claude, de que uma edição vale em outros projetos.
+
 ## Limites
 
 - **Conflito de nome:** se um projeto do grupo já tem uma memória própria com o mesmo nome e
@@ -103,8 +114,9 @@ Não edite o bloco `share-memories` do `MEMORY.md`: ele é refeito. Edite a mem�
   igual, o próximo hook refaz o link; se for diferente, vira conflito.
 - **O projeto é a pasta**, não o repositório: o mesmo repo aberto com `dev-docker --nome` ou em
   outro caminho é outro membro (use os dois nomes no grupo).
-- **Não testado ainda numa sessão real com os hooks instalados.** O script e os hooks foram
-  testados com a entrada que a documentação descreve (25 testes em
+- **Testado em parte numa sessão real.** Em 28/10/2026 o hook `PostToolUse` disparou e o aviso
+  de memória nova chegou ao Claude; o `SessionStart` ainda não foi observado. O script e os
+  hooks também são testados com a entrada que a documentação descreve (30 testes em
   [`tests/`](../../utils/skills/share-memories/tests/test_share_memories.py)).
 
 Fontes: <https://code.claude.com/docs/en/memory> (pasta da memória, `autoMemoryDirectory`) e

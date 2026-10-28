@@ -25,7 +25,7 @@ class Base(unittest.TestCase):
         for slug in ("-a", "-b", "-c"):
             (self.root / "projects" / slug / "memory").mkdir(parents=True)
         self.put("-a", "regra.md", memory("regra", "Rule for all dev"))
-        self.index("-a", "- [Mine](local.md) — stays\n- [Regra](regra.md) — Rule for all dev\n")
+        self.index("-a", "- [Mine](local.md) — stays\n- [Regra](regra.md) — short hook\n")
         self.put("-a", "local.md", memory("local", "stays"))
 
     def tearDown(self):
@@ -33,6 +33,9 @@ class Base(unittest.TestCase):
 
     def groups(self, g):
         (self.store / "groups.json").write_text(json.dumps({"groups": g}))
+
+    def lines(self):
+        return json.loads((self.store / "groups.json").read_text()).get("lines", {})
 
     def mem(self, slug):
         return self.root / "projects" / slug / "memory"
@@ -70,11 +73,12 @@ class Share(Base):
             link = self.mem(slug) / "regra.md"
             self.assertTrue(link.is_symlink())
             self.assertEqual(os.readlink(link), "../../../shared-memories/dev/regra.md")
-            self.assertIn("- [regra](regra.md) — Rule for all dev _(group dev)_", self.index(slug))
+            self.assertIn("- [Regra](regra.md) — short hook _(shared, group dev)_", self.index(slug))
         self.assertFalse((self.mem("-c") / "regra.md").exists())
         # Claude's own line for it is gone from the free part; other lines stay.
         a = self.index("-a")
-        self.assertNotIn("[Regra](regra.md)", a)
+        self.assertEqual(a.count("(regra.md)"), 1)
+        self.assertEqual(self.lines(), {"dev/regra.md": {"title": "Regra", "summary": "short hook"}})
         self.assertTrue(a.startswith("- [Mine](local.md) — stays\n"))
 
     def test_refuses_project_outside_group(self):
@@ -101,14 +105,23 @@ class Share(Base):
 
 class Sync(Base):
     def test_edit_of_shared_copy_refreshes_every_index(self):
+        # Shared without a line of Claude's own: the line comes from the description.
+        self.index("-a", "- [Mine](local.md) — stays\n")
         self.share()
         shared = self.store / "dev" / "regra.md"
         shared.write_text(memory("regra", "New description"))
         self.assertIsNone(self.hook({"hook_event_name": "PostToolUse", "tool_name": "Edit",
                                      "tool_input": {"file_path": str(shared)}}))
         for slug in ("-a", "-b"):
-            self.assertIn("— New description _(group dev)_", self.index(slug))
+            self.assertIn("- [regra](regra.md) — New description _(shared, group dev)_", self.index(slug))
             self.assertNotIn("Rule for all dev", self.index(slug))
+
+    def test_saved_line_survives_description_edit(self):
+        self.share()
+        (self.store / "dev" / "regra.md").write_text(memory("regra", "New description"))
+        self.run_script("sync")
+        self.assertIn("- [Regra](regra.md) — short hook", self.index("-b"))
+        self.assertNotIn("New description", self.index("-b"))
 
     def test_plain_copy_with_same_content_becomes_link_again(self):
         # e.g. `sed -i` replaced the symlink with a regular file
@@ -145,6 +158,37 @@ class Sync(Base):
         self.assertIn("-b: missing regra.md", out)
         self.assertIn("warning: hooks not installed", out)
         self.assertFalse((self.mem("-b") / "regra.md").exists())
+
+
+    def test_status_names_memories_without_saved_line(self):
+        self.index("-a", "")
+        self.share()
+        self.assertIn("index line from name and description (set it with line): regra.md",
+                      self.run_script("status").stdout)
+
+
+class Line(Base):
+    def test_sets_title_and_summary_in_every_member(self):
+        self.share()
+        r = self.run_script("line", "dev/regra.md", "--summary", "new hook")
+        self.assertIn("line     - [Regra](regra.md) — new hook _(shared, group dev)_", r.stdout)
+        r = self.run_script("line", "dev/regra.md", "--title", "Rule")
+        for slug in ("-a", "-b"):
+            self.assertIn("- [Rule](regra.md) — new hook _(shared, group dev)_", self.index(slug))
+        self.assertEqual(self.lines(), {"dev/regra.md": {"title": "Rule", "summary": "new hook"}})
+
+    def test_without_options_only_shows(self):
+        self.share()
+        before = (self.store / "groups.json").read_text()
+        r = self.run_script("line", "dev/regra.md")
+        self.assertIn("— short hook", r.stdout)
+        self.assertEqual((self.store / "groups.json").read_text(), before)
+
+    def test_changing_groups_keeps_lines(self):
+        self.share()
+        self.run_script("group", "dev", "--add", "-c")
+        self.assertEqual(list(self.lines()), ["dev/regra.md"])
+        self.assertIn("— short hook _(shared, group dev)_", self.index("-c"))
 
 
 class Hooks(Base):
@@ -199,7 +243,9 @@ class Unshare(Base):
         self.assertTrue(a.is_file() and not a.is_symlink())
         self.assertFalse((self.mem("-b") / "regra.md").exists())
         self.assertFalse((self.store / "dev" / "regra.md").exists())
-        self.assertEqual(self.index("-a"), "- [Mine](local.md) — stays\n- [regra](regra.md) — Rule for all dev\n")
+        # Claude's original line comes back, not one made from the description.
+        self.assertEqual(self.index("-a"), "- [Mine](local.md) — stays\n- [Regra](regra.md) — short hook\n")
+        self.assertEqual(self.lines(), {})
         self.assertEqual(self.index("-b"), "")
 
 
@@ -226,8 +272,9 @@ class Batch(Base):
         self.run_script("move", "all", "dev/regra.md")
         self.assertTrue((self.store / "all" / "regra.md").is_file())
         self.assertEqual(os.readlink(self.mem("-c") / "regra.md"), "../../../shared-memories/all/regra.md")
-        self.assertIn("_(group all)_", self.index("-a"))
-        self.assertNotIn("_(group dev)_", self.index("-a"))
+        self.assertIn("— short hook _(shared, group all)_", self.index("-a"))
+        self.assertNotIn("group dev", self.index("-a"))
+        self.assertEqual(list(self.lines()), ["all/regra.md"])
 
     def test_unshare_several(self):
         self.run_script("share", "dev", str(self.mem("-a") / "regra.md"), str(self.mem("-a") / "dois.md"))

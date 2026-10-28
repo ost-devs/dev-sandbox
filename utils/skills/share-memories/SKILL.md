@@ -1,7 +1,7 @@
 ---
 name: share-memories
 description: Shares Claude Code auto-memories between projects - all of them, a list, or a category such as dev - and keeps them in sync (one copy, linked into each project). Use when a hook reports a new memory in a project that belongs to a shared-memory group, when the user wants to share, unshare, move, group, review or check memories across projects, or to install it.
-argument-hint: "[status | share <group> <memory>... | unshare <group>/<file>... | move <group> <group>/<file>... | group <name> | install]"
+argument-hint: "[status | share <group> <memory>... | unshare <group>/<file>... | move <group> <group>/<file>... | line <group>/<file> | group <name> | install]"
 allowed-tools: Bash(python3 *share_memories.py*)
 ---
 
@@ -14,8 +14,11 @@ you do the judging.
 
 How it works: a shared memory has one copy in `~/.claude/shared-memories/<group>/`.
 Each member project's `memory/` has a relative symlink to it, and its `MEMORY.md`
-lists it in a generated block (`share-memories:start` … `end`). Never edit that
-block; edit the memory. Write and Edit refuse to write through the symlink and
+lists it in a generated block (`share-memories:start` … `end`). The line is the
+one Claude wrote for it (title and summary, kept in `groups.json` at share time),
+tagged `_(shared, group <g>)_`: the block's comments are stripped when MEMORY.md
+loads, so the tag is how you know an edit reaches other projects. Never edit that
+block; edit the memory, or its line with `line`. Write and Edit refuse to write through the symlink and
 name the target: write to the target, and the change reaches every project.
 Hooks re-link and refresh the blocks; new projects of a group get the links at
 their first session.
@@ -49,7 +52,8 @@ keep it local: sharing later is one command, an unneeded line costs every day.
    general part and keep a short local memory with the specific remainder,
    linking `[[the-shared-name]]`. If nothing useful survives generalizing,
    keep it local.
-4. Write the approved text to the memory file, then run `share`.
+4. Write the approved text to the memory file and its usual MEMORY.md line,
+   then run `share`: it keeps that line.
 
 Without an answer, leave the memory local and unchanged.
 
@@ -68,6 +72,7 @@ they don't want one. The file keeps its language.
 | Share (moves the files, links them in all members) | `share <group> <memory path>...` |
 | Unshare: delete, or keep a plain copy in one project | `unshare <group>/<file>.md... [--keep <project folder>]` |
 | Move to another group | `move <new group> <group>/<file>.md...` |
+| Show or change a shared memory's MEMORY.md line | `line <group>/<file>.md [--title <text>] [--summary <text>]` |
 | Show a group; create it or change its members | `group <name> [--add <entry>...] [--remove <entry>...]` |
 | Delete an empty group | `group <name> --delete` |
 | Repair links and blocks (after a manual change) | `sync [--project <project folder>]` |

@@ -20,6 +20,7 @@ Um projeto é a pasta dele em `~/.claude/projects/` (`-ferrum`) ou o caminho
 | Ver tudo e o que está fora do lugar | `/share-memories status` | `... status` |
 | Compartilhar memórias | "compartilhe essa memória com o grupo dev" | `... share dev <caminho da memória>` |
 | Mudar de grupo | "passe dev/x.md para o grupo all" | `... move all dev/x.md` |
+| Mudar a linha da memória no `MEMORY.md` | "mude o título de dev/x.md no índice para Delegate with intent" | `... line dev/x.md --title "Delegate with intent"` (resumo: `--summary "..."`) |
 | Desfazer, deixando uma cópia num projeto | "tire dev/x.md do grupo e deixe só no ferrum" | `... unshare dev/x.md --keep -ferrum` |
 | Desfazer e apagar | `/share-memories unshare dev/x.md` | `... unshare dev/x.md` |
 | Revisar as memórias de um grupo | "mostre as memórias do grupo dev" | `... status` |
