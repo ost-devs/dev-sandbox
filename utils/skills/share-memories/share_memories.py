@@ -13,6 +13,9 @@ Groups are in <claude>/shared-memories/groups.json:
 An entry is a project folder name under <claude>/projects/ or a project path,
 both with optional * globs. "lines" keeps the title and summary of Claude's own
 MEMORY.md line, taken at share time; without one, name and description are used.
+The key is <group>/<file> on purpose: the file's folder already says where the
+memory lives, so nothing else records it, and unshare drops the entry because
+the line goes back to the project's MEMORY.md, where Claude keeps editing it.
 """
 
 import argparse
