@@ -15,6 +15,7 @@ outubro/2026 (Claude Code 2.1.310). Onde há dedução minha, está marcado.
 | [Quando cada coisa carrega](./quando-cada-coisa-carrega.md) | O `CLAUDE.md` é relido a cada mensagem? Quando entram subpastas, rules, memória, skills? |
 | [A cada pedido o contexto vai junto](./a-cada-mensagem-o-contexto-vai-junto.md) | Por que uma conversa longa fica cara? Cada ferramenta é um pedido novo? |
 | [Cache de prompt](./cache-de-prompt.md) | Como o reenvio fica mais barato? O que quebra o cache? |
+| [Quanto custa](./quanto-custa.md) | Quanto custa um turno em dólares? Assinatura ou chave de API? Onde vejo o meu consumo? |
 | [Compactação](./compactacao.md) | O que acontece quando a conversa enche? O que sobrevive, o que se perde? |
 | [Subagentes](./subagentes-o-que-herdam.md) | O subagente recebe o `CLAUDE.md`? E o que eu disse na conversa? |
 | [Vários pedidos de uma vez](./varios-pedidos-de-uma-vez.md) | Juntar pedidos relacionados economiza? |

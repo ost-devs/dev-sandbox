@@ -33,6 +33,20 @@ e similares ficam com 5 minutos por padrão. Dá para escolher (`promptCacheTtl`
 Na prática: a **primeira mensagem depois de uma pausa longa** é mais lenta e
 mais cara, porque o cache já expirou.
 
+## Quanto ele economiza
+
+Em relação ao preço normal de entrada do modelo:
+
+| Operação | Custa |
+|---|---|
+| Gravar no cache de 5 minutos | 1,25× |
+| Gravar no cache de 1 hora | 2× |
+| Ler do cache | 0,1× na maioria dos modelos; 0,05× no Opus 5.5 e no Sonnet 5.5; 0,025× no Fable 5.1 |
+
+No cache de 5 minutos, uma leitura já paga o custo extra da gravação; no de
+1 hora, são precisas duas (conta minha). Os preços de cada modelo e a
+conta de um turno com e sem cache estão em [quanto custa](./quanto-custa.md).
+
 ## O que invalida o cache (próximo pedido sai caro)
 
 - trocar de modelo com `/model` (cada modelo tem o seu cache);
@@ -66,4 +80,5 @@ aproveitam o cache uma da outra. Sessões paralelas **na mesma pasta** podem.
 
 Conferido em outubro/2026 (Claude Code 2.1.310):
 [prompt caching](https://code.claude.com/docs/en/prompt-caching),
-[custos](https://code.claude.com/docs/en/costs).
+[custos](https://code.claude.com/docs/en/costs),
+[preços da API](https://platform.claude.com/docs/en/about-claude/pricing).
