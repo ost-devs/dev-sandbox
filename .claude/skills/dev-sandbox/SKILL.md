@@ -62,7 +62,7 @@ levels or created in-session get only the exit warning; nested sandboxes
 | Image size, disk, Timeshift | `docs/guias/filosofia-da-imagem.md` |
 | Backup of `~/.claude` without leaking secrets | `docs/guias/backup-e-git.md` |
 | Claude Code behavior (memory, sessions, context, cache, subagents, model) | `docs/claude-code/README.md` (index) |
-| Official Claude Code docs, local and read-only (not in git: the license isn't open) | `mirrors/claude-code-docs/` (`mirrors/mirrors.json`; refetch with `python3 utils/skills/mirrors/fetch_mirrors.py`) |
+| Official Claude Code and Claude API docs (pricing, caching, models), local and read-only (not in git: the license isn't open) | `mirrors/claude-code-docs/`, `mirrors/claude-api-docs/` (`mirrors/mirrors.json`; refetch with `python3 utils/skills/mirrors/fetch_mirrors.py`) |
 | Real problems and their causes | `docs/aprendizados/README.md` (index) |
 | Shareable skills/agents not tied to dev-sandbox (`montar-consultor`, `mirrors`) | `utils/` (index: `utils/README.md`) |
 | Missing tools reported by agents | host `~/.cache/dev-sandbox/home/.dev-sandbox/feedback.md` |

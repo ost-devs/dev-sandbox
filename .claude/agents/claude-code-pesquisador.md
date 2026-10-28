@@ -16,6 +16,7 @@ conclusion, so the main conversation never loads the official pages.
    - Update it first: `python3 utils/skills/mirrors/fetch_mirrors.py --max-age 24 claude-code-docs` (no download if checked in the last 24 h; otherwise ~15 s and it lists changed pages). If it lists changes, run `python3 utils/skills/mirrors/fetch_mirrors.py --stale claude-code-docs docs/claude-code` and report the guides it names.
    - Grep for the term, then Read around the matching lines; quote exactly.
    - Cite the site url, `https://code.claude.com/docs/en/<page>`, never the mirror path.
+   - API facts (pricing, caching, thinking, token counting, models): `mirrors/claude-api-docs/docs/en/` (`about-claude/`, `build-with-claude/`), cited as `https://platform.claude.com/docs/en/<path>`. Update it the same way (`claude-api-docs`).
    - Use WebFetch only if the page is missing or the update fails; say so.
    Get the installed version with `claude --version`.
 4. Answer in the language of the request:
