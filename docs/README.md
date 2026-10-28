@@ -38,3 +38,9 @@ dev-sandbox, como `/montar-consultor` e `/mirrors`.
 
 [`aprendizados/`](./aprendizados/README.md): problemas reais, causas e
 soluções. Contribuições são bem-vindas.
+
+## Inglês para devs
+
+| Material | Para quando você quer... |
+|---|---|
+| [Glossário](./ingles-para-devs/glossario.md) | Entender os nomes e comandos em inglês das skills (`share-memories` e as próximas) |

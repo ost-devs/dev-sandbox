@@ -26,10 +26,13 @@ oficial. Nada muda na imagem nem no `dev-docker`.
 - [`/montar-consultor`](docs/claude-code/montar-consultor.md): o pesquisador ganha um espelho da
   documentação (cita o texto exato em vez de buscar na web); a auditoria lista guias com fontes
   alteradas; as rules pedem teste para cada bug corrigido.
-- [`/compartilhar-memorias`](utils/skills/compartilhar-memorias/SKILL.md): leva uma memória
-  para todos os projetos, uma lista ou uma categoria, com uma cópia só e um link em cada projeto;
-  o Claude decide o que é geral e só reescreve uma memória com a sua permissão
-  ([guia](docs/claude-code/compartilhar-memorias.md)). 15 testes sem internet.
+- [`/share-memories`](utils/skills/share-memories/SKILL.md): leva uma memória para todos os
+  projetos, uma lista ou uma categoria, com uma cópia só e um link em cada projeto; o Claude
+  decide o que é geral e só reescreve uma memória com a sua permissão. Instala os próprios hooks,
+  cria e muda grupos, opera em lote ([guia](docs/claude-code/compartilhar-memorias.md)). 25
+  testes sem internet.
+- [Inglês para devs](docs/ingles-para-devs/README.md): nomes e comandos para a IA ficam em
+  inglês; o [glossário](docs/ingles-para-devs/glossario.md) explica cada um, com pronúncia.
 - Neste repositório: a documentação oficial do Claude Code e da API do Claude fica em
   `mirrors/`, e o agente `claude-code-pesquisador` consulta a cópia local primeiro.
 - Guias novos: [base de conhecimento sob demanda](docs/claude-code/base-de-conhecimento.md),

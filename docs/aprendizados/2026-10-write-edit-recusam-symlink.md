@@ -28,6 +28,6 @@ construção, porque toda edição feita pelo Claude cai na cópia. Comandos de 
 continuam trocando o link por arquivo; isso precisa de conserto à parte.
 
 ## O que mudou no dev-sandbox
-A skill [`compartilhar-memorias`](../../utils/skills/compartilhar-memorias/SKILL.md) foi
+A skill [`share-memories`](../../utils/skills/share-memories/SKILL.md) foi
 desenhada sobre isso ([guia](../claude-code/compartilhar-memorias.md)); a rule dela manda
 reconferir o comportamento.

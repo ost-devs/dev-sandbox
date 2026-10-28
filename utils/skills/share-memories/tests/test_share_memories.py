@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-SCRIPT = Path(__file__).resolve().parent.parent / "compartilhar.py"
+SCRIPT = Path(__file__).resolve().parent.parent / "share_memories.py"
 
 
 def memory(name, desc, body="Body."):
@@ -19,9 +19,9 @@ class Base(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name) / ".claude"
-        self.store = self.root / "memorias-compartilhadas"
+        self.store = self.root / "shared-memories"
         self.store.mkdir(parents=True)
-        self.groups({"dev": ["-a", "-b", "/home/me/Dev/*"], "outro": ["-c"]})
+        self.groups({"dev": ["-a", "-b", "/home/me/Dev/*"], "other": ["-c"]})
         for slug in ("-a", "-b", "-c"):
             (self.root / "projects" / slug / "memory").mkdir(parents=True)
         self.put("-a", "regra.md", memory("regra", "Rule for all dev"))
@@ -32,7 +32,7 @@ class Base(unittest.TestCase):
         self.tmp.cleanup()
 
     def groups(self, g):
-        (self.store / "grupos.json").write_text(json.dumps({"grupos": g}))
+        (self.store / "groups.json").write_text(json.dumps({"groups": g}))
 
     def mem(self, slug):
         return self.root / "projects" / slug / "memory"
@@ -59,7 +59,7 @@ class Base(unittest.TestCase):
         return json.loads(out)["hookSpecificOutput"]["additionalContext"] if out.strip() else None
 
     def share(self):
-        self.run_script("compartilhar", str(self.mem("-a") / "regra.md"), "dev")
+        self.run_script("share", "dev", str(self.mem("-a") / "regra.md"))
 
 
 class Share(Base):
@@ -69,8 +69,8 @@ class Share(Base):
         for slug in ("-a", "-b"):
             link = self.mem(slug) / "regra.md"
             self.assertTrue(link.is_symlink())
-            self.assertEqual(os.readlink(link), "../../../memorias-compartilhadas/dev/regra.md")
-            self.assertIn("- [regra](regra.md) — Rule for all dev _(grupo dev)_", self.index(slug))
+            self.assertEqual(os.readlink(link), "../../../shared-memories/dev/regra.md")
+            self.assertIn("- [regra](regra.md) — Rule for all dev _(group dev)_", self.index(slug))
         self.assertFalse((self.mem("-c") / "regra.md").exists())
         # Claude's own line for it is gone from the free part; other lines stay.
         a = self.index("-a")
@@ -79,22 +79,22 @@ class Share(Base):
 
     def test_refuses_project_outside_group(self):
         self.put("-c", "x.md", memory("x", "d"))
-        r = self.run_script("compartilhar", str(self.mem("-c") / "x.md"), "dev", ok=False)
+        r = self.run_script("share", "dev", str(self.mem("-c") / "x.md"), ok=False)
         self.assertNotEqual(r.returncode, 0)
         self.assertTrue((self.mem("-c") / "x.md").is_file())
 
     def test_refuses_name_taken_in_overlapping_group(self):
-        self.groups({"dev": ["-a", "-b"], "todos": ["*"]})
-        (self.store / "todos").mkdir()
-        (self.store / "todos" / "regra.md").write_text(memory("regra", "other"))
-        r = self.run_script("compartilhar", str(self.mem("-a") / "regra.md"), "dev", ok=False)
-        self.assertIn("já existe todos/regra.md", r.stderr)
+        self.groups({"dev": ["-a", "-b"], "all": ["*"]})
+        (self.store / "all").mkdir()
+        (self.store / "all" / "regra.md").write_text(memory("regra", "other"))
+        r = self.run_script("share", "dev", str(self.mem("-a") / "regra.md"), ok=False)
+        self.assertIn("all/regra.md already exists", r.stderr)
         self.assertTrue((self.mem("-a") / "regra.md").is_file())
 
     def test_different_local_file_is_a_conflict_not_overwritten(self):
         self.put("-b", "regra.md", memory("regra", "b's own"))
-        r = self.run_script("compartilhar", str(self.mem("-a") / "regra.md"), "dev")
-        self.assertIn("conflito: -b/regra.md", r.stdout)
+        r = self.run_script("share", "dev", str(self.mem("-a") / "regra.md"))
+        self.assertIn("conflict: -b/regra.md", r.stdout)
         self.assertIn("b's own", (self.mem("-b") / "regra.md").read_text())
         self.assertFalse((self.mem("-b") / "regra.md").is_symlink())
 
@@ -107,7 +107,7 @@ class Sync(Base):
         self.assertIsNone(self.hook({"hook_event_name": "PostToolUse", "tool_name": "Edit",
                                      "tool_input": {"file_path": str(shared)}}))
         for slug in ("-a", "-b"):
-            self.assertIn("— New description _(grupo dev)_", self.index(slug))
+            self.assertIn("— New description _(group dev)_", self.index(slug))
             self.assertNotIn("Rule for all dev", self.index(slug))
 
     def test_plain_copy_with_same_content_becomes_link_again(self):
@@ -117,7 +117,7 @@ class Sync(Base):
         content = link.read_text()
         link.unlink()
         link.write_text(content)
-        self.run_script("sincronizar")
+        self.run_script("sync")
         self.assertTrue(link.is_symlink())
 
     def test_rewritten_index_gets_block_back(self):
@@ -127,13 +127,13 @@ class Sync(Base):
                    "tool_input": {"file_path": str(self.mem("-b") / "MEMORY.md")},
                    "tool_response": {"type": "update"}})
         b = self.index("-b")
-        self.assertTrue(b.startswith("- [Other](other.md) — x\n\n<!-- compartilhar-memorias:inicio"))
+        self.assertTrue(b.startswith("- [Other](other.md) — x\n\n<!-- share-memories:start"))
         self.assertIn("(regra.md)", b)
 
     def test_leaving_group_removes_link_and_block(self):
         self.share()
         self.groups({"dev": ["-a"]})
-        self.run_script("sincronizar")
+        self.run_script("sync")
         self.assertFalse((self.mem("-b") / "regra.md").exists())
         self.assertEqual(self.index("-b"), "")
         self.assertTrue((self.mem("-a") / "regra.md").is_symlink())
@@ -142,8 +142,8 @@ class Sync(Base):
         self.share()
         (self.mem("-b") / "regra.md").unlink()
         out = self.run_script("status").stdout
-        self.assertIn("-b: falta regra.md", out)
-        self.assertIn("aviso: os hooks não estão", out)
+        self.assertIn("-b: missing regra.md", out)
+        self.assertIn("warning: hooks not installed", out)
         self.assertFalse((self.mem("-b") / "regra.md").exists())
 
 
@@ -194,13 +194,102 @@ class Hooks(Base):
 class Unshare(Base):
     def test_keep_plain_copy_in_one_project(self):
         self.share()
-        self.run_script("descompartilhar", "dev/regra.md", "--manter", "-a")
+        self.run_script("unshare", "dev/regra.md", "--keep", "-a")
         a = self.mem("-a") / "regra.md"
         self.assertTrue(a.is_file() and not a.is_symlink())
         self.assertFalse((self.mem("-b") / "regra.md").exists())
         self.assertFalse((self.store / "dev" / "regra.md").exists())
         self.assertEqual(self.index("-a"), "- [Mine](local.md) — stays\n- [regra](regra.md) — Rule for all dev\n")
         self.assertEqual(self.index("-b"), "")
+
+
+class Batch(Base):
+    def setUp(self):
+        super().setUp()
+        self.put("-a", "dois.md", memory("dois", "Second"))
+
+    def test_share_several_at_once(self):
+        r = self.run_script("share", "dev", str(self.mem("-a") / "regra.md"), str(self.mem("-a") / "dois.md"))
+        self.assertIn("shared   dois.md -> group dev", r.stdout)
+        for f in ("regra.md", "dois.md"):
+            self.assertTrue((self.mem("-b") / f).is_symlink())
+
+    def test_one_bad_path_shares_nothing(self):
+        r = self.run_script("share", "dev", str(self.mem("-a") / "regra.md"), str(self.mem("-c") / "nope.md"), ok=False)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertFalse((self.store / "dev").exists())
+        self.assertTrue((self.mem("-a") / "regra.md").is_file())
+
+    def test_move_between_groups(self):
+        self.groups({"dev": ["-a", "-b"], "all": ["*"]})
+        self.share()
+        self.run_script("move", "all", "dev/regra.md")
+        self.assertTrue((self.store / "all" / "regra.md").is_file())
+        self.assertEqual(os.readlink(self.mem("-c") / "regra.md"), "../../../shared-memories/all/regra.md")
+        self.assertIn("_(group all)_", self.index("-a"))
+        self.assertNotIn("_(group dev)_", self.index("-a"))
+
+    def test_unshare_several(self):
+        self.run_script("share", "dev", str(self.mem("-a") / "regra.md"), str(self.mem("-a") / "dois.md"))
+        self.run_script("unshare", "dev/regra.md", "dev/dois.md")
+        self.assertEqual(list((self.store / "dev").glob("*.md")), [])
+        self.assertEqual(self.index("-b"), "")
+
+
+class Groups(Base):
+    def test_create_add_remove_with_dash_names(self):
+        r = self.run_script("group", "rust", "--add", "-c", "-a")
+        self.assertIn("group    rust: -c, -a", r.stdout)
+        self.run_script("group", "rust", "--remove", "-a")
+        data = json.loads((self.store / "groups.json").read_text())
+        self.assertEqual(data["groups"]["rust"], ["-c"])
+
+    def test_adding_a_project_links_existing_memories(self):
+        self.share()
+        self.run_script("group", "dev", "--add", "-c")
+        self.assertTrue((self.mem("-c") / "regra.md").is_symlink())
+
+    def test_delete_refuses_group_with_memories(self):
+        self.share()
+        r = self.run_script("group", "dev", "--delete", ok=False)
+        self.assertIn("still has memories", r.stderr)
+        self.run_script("group", "other", "--delete")
+        self.assertNotIn("other", json.loads((self.store / "groups.json").read_text())["groups"])
+
+
+class Install(Base):
+    def settings(self, data=None):
+        p = self.root / "settings.json"
+        if data is not None:
+            p.write_text(data if isinstance(data, str) else json.dumps(data))
+            return None
+        return json.loads(p.read_text())
+
+    def test_merges_with_existing_hooks_once(self):
+        mine = {"type": "command", "command": "python3 other.py"}
+        self.settings({"model": "opus", "hooks": {"SessionStart": [{"hooks": [mine]}]}})
+        self.run_script("install")
+        self.run_script("install")
+        s = self.settings()
+        self.assertEqual(s["model"], "opus")
+        self.assertEqual(len(s["hooks"]["SessionStart"]), 2)
+        self.assertEqual(s["hooks"]["SessionStart"][0]["hooks"], [mine])
+        self.assertEqual(s["hooks"]["PostToolUse"][0]["matcher"], "Write|Edit")
+        self.assertIn("share_memories.py", s["hooks"]["PostToolUse"][0]["hooks"][0]["command"])
+        self.assertTrue((self.root / "settings.json.bak").exists())
+        self.assertNotIn("warning", self.run_script("status").stdout)
+
+    def test_dry_run_writes_nothing(self):
+        self.settings({"model": "opus"})
+        r = self.run_script("install", "--dry-run")
+        self.assertIn("would add PostToolUse, SessionStart", r.stdout)
+        self.assertEqual(self.settings(), {"model": "opus"})
+
+    def test_refuses_invalid_settings(self):
+        self.settings("{not json")
+        r = self.run_script("install", ok=False)
+        self.assertIn("not valid JSON", r.stderr)
+        self.assertEqual((self.root / "settings.json").read_text(), "{not json")
 
 
 if __name__ == "__main__":
