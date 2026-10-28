@@ -7,8 +7,12 @@ for Claude Code) and compares sha256 hashes to tell what changed. The copy keeps
 each page's hash and the first fetch that saw its current content ("changed"; null from the first
 fetch, whose real date is unknown).
 
-stale() lists the markdown files under a folder that cite a page (by its site url or its mirrors/ path)
-whose "changed" is newer than the file's last commit: articles to check against their source.
+The state file's mtime is the last check: with max_age (hours), a fetch younger than that skips the
+download, so a local search stays local.
+
+stale() lists the markdown files under a folder that cite a page (by its url or its mirrors/ path) whose
+"changed" is newer than the file's last commit: articles to check against their source. It serves "web"
+mirrors too, whose state records each page's url.
 """
 import hashlib, json, os, pathlib, re, shutil, subprocess, sys, tempfile, urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -50,8 +54,14 @@ def compare(old, pages, now):
     return state, added, changed, sorted(set(old) - set(state))
 
 
-def sync(label, entry, dst, check, set_writable, delete):
+def sync(label, entry, dst, check, set_writable, delete, max_age=None):
     """Download every page; with check, report only. Returns 1 when the copy is missing or outdated."""
+    state_file = dst / STATE
+    if max_age is not None and state_file.exists():
+        age = (datetime.now().timestamp() - state_file.stat().st_mtime) / 3600
+        if age < max_age:
+            print(f'fresh    {label} (checked {age:.1f} h ago)')
+            return 0
     index = get(entry['url'])
     rels = page_urls(entry, index.decode())
     if not rels:
@@ -62,7 +72,6 @@ def sync(label, entry, dst, check, set_writable, delete):
     # a page redirected off the site (e.g. to an HTML page elsewhere) changes on every request
     moved = {r: u for r, (u, _) in got.items() if not u.startswith(base)}
     pages = {r: data for r, (u, data) in got.items() if r not in moved}
-    state_file = dst / STATE
     old = json.loads(state_file.read_text()) if state_file.exists() else {}
     now = datetime.now(timezone.utc).isoformat(timespec='seconds')
     state, added, changed, removed = compare(old, pages, now)
@@ -71,6 +80,8 @@ def sync(label, entry, dst, check, set_writable, delete):
         print(f'  skipped  {r}: redirects off the site to {u}')
     if not (added or changed or removed):
         print(f'ok       {label} ({len(state)} pages)')
+        if state_file.exists():
+            os.utime(state_file)   # the owner may touch a read-only file
         return 0
     if check:
         print(f'{"missing" if not old else "outdated":8} {label} ({summary})')
@@ -101,17 +112,30 @@ def last_commit(path, root):
     return datetime.fromisoformat(out) if out else None
 
 
+def norm(url):
+    url = url.split('#')[0].rstrip('.,;:')
+    return url[:-1] if url.endswith('/') else url
+
+
 def stale(root, name, entry, dst, folder):
     """Markdown files under folder citing a page whose content changed after the file's last commit."""
     state_file = dst / STATE
     if not state_file.exists():
         sys.exit(f'{name}: not fetched yet')
     state = json.loads(state_file.read_text())
-    cite = re.compile('(?:' + re.escape(base_of(entry['url'])) + '|' + re.escape(f'mirrors/{name}/')
-                      + r')([\w./-]+?)(?:\.md)?(?=[#)\s`"\'>]|$)')
+    keys = {}
+    for rel, st in state.items():
+        keys[f'mirrors/{name}/{rel}'] = rel
+        if 'url' in st:
+            keys[norm(st['url'])] = rel
+        else:
+            keys[base_of(entry['url']) + rel] = keys[base_of(entry['url']) + rel[:-3]] = rel
+    cite = re.compile(r'https?://[^\s)\]>"\'`]+|mirrors/' + re.escape(name) + r'/[\w./-]+')
     found = 0
     for md in sorted(pathlib.Path(folder).rglob('*.md')):
-        rels = {m + '.md' for m in cite.findall(md.read_text(errors='replace'))} & set(state)
+        if dst.resolve() in md.resolve().parents:
+            continue
+        rels = {keys[k] for k in map(norm, cite.findall(md.read_text(errors='replace'))) if k in keys}
         if not rels:
             continue
         since = last_commit(md.resolve().relative_to(root), root)
@@ -119,7 +143,7 @@ def stale(root, name, entry, dst, folder):
                        (since is None or datetime.fromisoformat(state[r]['changed']) > since))
         if newer:
             found += 1
-            print(f'stale    {md.relative_to(root) if md.is_absolute() else md}: ' + ', '.join(
+            print(f'stale    {md.resolve().relative_to(root)}: ' + ', '.join(
                 f'{r} ({state[r]["changed"][:10]})' for r in newer))
     print(f'{found} file(s) cite pages changed after their last commit')
     return 1 if found else 0

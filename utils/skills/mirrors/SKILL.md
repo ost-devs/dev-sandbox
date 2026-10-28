@@ -1,7 +1,7 @@
 ---
 name: mirrors
-description: Keeps read-only local copies of outside git repositories (docs, reference code, example configs) in mirrors/ at the repo root, pinned to a commit or following a branch. Use when the user wants to mirror, update or check an outside repository, or when a task needs many files of an outside repository and reading them locally beats fetching pages.
-argument-hint: "[add <name> <url> | check | pin <target>... [@version] | follow <target>... | remove <target>]"
+description: Keeps read-only local copies of outside sources in mirrors/ at the repo root - git repositories (pinned or following a branch), documentation sites with llms.txt, and web articles captured as markdown with the articles they link to. Use when the user wants to mirror, capture, update or check an outside source, or when a task needs many files or pages of one and reading them locally beats fetching pages.
+argument-hint: "[add <name> <url> [--web] | check | pin <target>... [@version] | follow <target>... | links <name> | remove <target>]"
 allowed-tools: Bash(python3 *fetch_mirrors.py*)
 ---
 
@@ -28,7 +28,12 @@ can run from it), is read-only on disk, and records its commit in
 | Switch to following | `--follow <target>...` |
 | Delete the copy and the entry | `--remove <target>` |
 | Add a docs site that publishes `llms.txt` (pages, always following) | `--add <name> <site>/llms.txt [--include en]` |
-| Files citing pages changed since their last commit | `--stale <name> [<folder>]` |
+| Capture a web article as markdown (a snapshot) | `--add <name> <url> --web` |
+| ... and the articles its text links to, on the same site | the same plus `--depth <n> [--max-pages <n>]` (default 20) |
+| Links inside captured articles not captured yet | `--links <name>` |
+| Fetch web articles again (pages: now, ignoring `--max-age`) | `--refresh [<target>...]` |
+| Fetch, but skip pages mirrors checked less than H hours ago | `--max-age <H> [<target>...]` |
+| Files citing pages or articles changed since their last commit | `--stale <name> [<folder>]` |
 
 A target is a mirror name, or `<set>/<member>` for a set: a url with
 `{member}` (one repository per package, e.g. `https://host/org/{member}`).
@@ -39,7 +44,14 @@ the ref when it is not a target. A version with no tag fails.
 ## Pages mirrors
 For documentation sites with no git repository (e.g. `https://code.claude.com/docs/llms.txt`). Every fetch downloads all pages and compares hashes; there is no pin. Pages that redirect off the site are skipped. Search the copy with grep and read only the matching lines; `llms.txt` in the copy lists each page with one line saying what it covers.
 
+Before adding a site, prefer its git repository when it has one; `--add` prints a hint when the pages link to their source on GitHub. For lookups, fetch with `--max-age 24` so a search does not download the site again.
+
 When an article is written from these pages, cite the site url of each page used. After a fetch that reports changed pages, run `--stale` on the articles folder and recheck only the files it lists.
+
+## Web mirrors
+Articles converted by Defuddle (`fetch_web.py`); without it the script prints the install command (`npm ci --prefix "${CLAUDE_SKILL_DIR}" --ignore-scripts`). A capture is a snapshot: a plain fetch only gets missing pages, `--refresh` fetches again and reports changes. Each file starts with front matter (title, author, published, modified, source). Articles are usually all rights reserved: never copy one into the project; write your own text and cite the source url.
+
+Following a chain: start with depth 0, show the user `--links <name>` and let them pick, or use `--depth 1` with a small `--max-pages`. Sites cross-link a lot (one blog left 67 uncaptured links after two levels).
 
 ## Pinned or following
 - **Pinned** (`commit` in the manifest): code or specs that documents cite. Commit the manifest together with the documents that cite the new version, so the project's commit fixes the sources it cites.

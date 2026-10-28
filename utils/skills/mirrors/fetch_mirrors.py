@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Keep read-only copies of outside git repositories in mirrors/ at the repository root.
+"""Keep read-only copies of outside sources (git repositories, docs sites, web articles) in mirrors/.
 
 The manifest mirrors/mirrors.json (versioned) says what is fetched, from where and at which commit;
 the copies (mirrors/<name>/, gitignored) have no .git, are read-only and record their commit in
@@ -15,12 +15,18 @@ the copies (mirrors/<name>/, gitignored) have no .git, are read-only and record 
                                              version's tag) into the manifest, fetch
   fetch_mirrors.py --follow target ...       always fetch the newest commit of the ref (docs that change often)
   fetch_mirrors.py --remove target           delete the copy and the manifest entry
-  fetch_mirrors.py --stale name [folder]     markdown files citing pages of a "pages" mirror changed since
-                                             the file's last commit (default folder: the repository)
+  fetch_mirrors.py --add name url --web [--depth N] [--max-pages N]
+                                             capture a web article as markdown (Defuddle), and the articles its
+                                             text links to on the same site, N levels deep; again adds more
+  fetch_mirrors.py --links name              links inside captured articles not captured yet, most cited first
+  fetch_mirrors.py --refresh [target ...]    fetch again: web articles (a snapshot otherwise), pages now
+  fetch_mirrors.py --max-age H [target ...]  like a plain fetch, but pages checked less than H hours ago wait
+  fetch_mirrors.py --stale name [folder]     markdown files citing pages of a "pages" or "web" mirror changed
+                                             since the file's last commit (default folder: the repository)
 
 A target is a mirror (`zed`; a set = all its members) or one member of a set (`cm6/view`). A url with
 `{member}` makes a set; a url ending in llms.txt makes a "pages" mirror: the .md pages that index links,
-always following (fetch_pages.py). --pin or --follow on a member it does not list yet adds it. A ref is `main`,
+always following (fetch_pages.py). --web makes a "web" mirror of articles (fetch_web.py). --pin or --follow on a member it does not list yet adds it. A ref is `main`,
 `v1.2`, a full `refs/...` name or HEAD; with --pin, the last argument is the ref when it is not a target.
 `@1.2.3` pins the tag of a published version (`1.2.3` or `v1.2.3`); `@package` takes the version from
 package.json at the tip of the default branch. --check also notes pinned copies whose package.json
@@ -30,7 +36,7 @@ crates whose Cargo.toml license is not in "license". The manifest and the .gitig
 when missing, with or without .git (without it, other .gitignore rules are not checked).
 """
 import argparse, json, os, pathlib, re, shutil, stat, subprocess, sys, tempfile
-import fetch_pages
+import fetch_pages, fetch_web
 
 GITIGNORE = ['/mirrors/*', '!/mirrors/mirrors.json']
 WHAT = ('Read-only copies of outside repositories, fetched into mirrors/<name>/ (gitignored) by the mirrors '
@@ -160,7 +166,7 @@ def targets(data, names):
             for mem in [member] if member else list(e['members']):
                 yield f'{mirror}/{mem}', e['members'][mem], e['url'].format(member=mem), MIRRORS / mirror / mem, e
         else:
-            yield mirror, e, e['url'], MIRRORS / mirror, e
+            yield mirror, e, e.get('url'), MIRRORS / mirror, e
 
 
 def expand(data, names):
@@ -266,11 +272,15 @@ def fetch(label, entry, url, dst, mirror, commit):
         print(f'  dropped link pointing outside the mirror: {d}')
 
 
-def sync(data, names, check):
+def sync(data, names, check, refresh=False, max_age=None):
     problems = 0
     for label, entry, url, dst, mirror in targets(data, names):
         if mirror['kind'] == 'pages':
-            problems += fetch_pages.sync(label, entry, dst, check, set_writable, delete)
+            problems += fetch_pages.sync(label, entry, dst, check, set_writable, delete,
+                                         None if refresh or check else max_age)
+            continue
+        if mirror['kind'] == 'web':
+            problems += fetch_web.sync(label, entry, dst, check, refresh, set_writable)
             continue
         stamp = dst / '.mirror-commit'
         have = stamp.read_text().strip() if stamp.exists() else None
@@ -303,6 +313,12 @@ def main():
     act.add_argument('--pin', action='store_true', help='targets: TARGET ... [REF|COMMIT|@VERSION|@package]')
     act.add_argument('--remove', action='store_true')
     act.add_argument('--stale', action='store_true', help='targets: NAME [FOLDER]')
+    act.add_argument('--links', action='store_true', help='target: NAME of a web mirror')
+    act.add_argument('--refresh', action='store_true', help='fetch web articles again too')
+    p.add_argument('--max-age', type=float, metavar='HOURS', help='pages mirrors: skip if checked this recently')
+    p.add_argument('--web', action='store_true', help='with --add: capture a web article (and add more to it)')
+    p.add_argument('--depth', type=int, default=0, help='with --web: levels of in-text links to follow (default 0)')
+    p.add_argument('--max-pages', type=int, default=20, help='with --web: new pages per run at most (default 20)')
     p.add_argument('--follow', action='store_true', help='TARGET ...: follow its ref from now on (adds new set members); with --add: add it following')
     p.add_argument('--ref', help='with --add: branch, tag or refs/... (default: the remote HEAD branch)')
     p.add_argument('--include', nargs='+', default=[], metavar='PATH', help='with --add: fetch only these paths')
@@ -313,12 +329,27 @@ def main():
 
     if a.list:
         for label, entry, url, dst, mirror in targets(data, a.targets):
+            if mirror['kind'] == 'web':
+                print(f'{label:24} {"web (snapshot)":32} {len(entry["urls"])} page(s)')
+                continue
             how = 'pages (follow)' if mirror['kind'] == 'pages' else f'follow {entry["ref"]}' if following(entry, mirror) else f'pin {(entry.get("commit") or "none")[:7]} ({entry["ref"]})'
             print(f'{label:24} {how:32} {url}')
         return 0
 
     if a.add:
         name, url = a.add
+        if a.web:
+            e = data['mirrors'].setdefault(name, {'kind': 'web', 'urls': [], 'license': a.license})
+            if e['kind'] != 'web':
+                sys.exit(f'{name} already exists and is not a web mirror')
+            try:
+                fetch_web.crawl(name, e, MIRRORS / name, [url], a.depth, a.max_pages, set_writable)
+            finally:
+                save(data)
+            print('  (commit mirrors/mirrors.json)')
+            if not e['license']:
+                print('  no license recorded: articles are usually all rights reserved; keep the copy out of git')
+            return 0
         if name in data['mirrors']:
             sys.exit(f'{name} already exists')
         if '{member}' in url:
@@ -333,7 +364,15 @@ def main():
             data['mirrors'][name] = e
             save(data)
             print(f'added    {name} pages of {url} (following) (commit mirrors/mirrors.json)')
-            return sync(data, [name], False)
+            problems = sync(data, [name], False)
+            first = next(iter(fetch_pages.page_urls(e, fetch_pages.get(url).decode())), None)
+            try:
+                hint = first and fetch_web.git_hint(fetch_web.Fetcher().get(fetch_pages.base_of(url) + first[:-3])[1])
+            except ValueError:
+                hint = None
+            if hint:
+                print(f'  hint: pages are edited in github.com/{hint[0]} ({hint[1]}); a git mirror of it can pin versions')
+            return problems
         ref, commit = resolve(url, a.ref or default_ref(url))
         e = {'kind': 'repo', 'url': url, 'ref': ref}
         e.update({'follow': True} if a.follow else {'commit': commit})
@@ -350,12 +389,21 @@ def main():
     if a.follow and (a.check or a.list or a.pin or a.remove):
         sys.exit('--follow goes alone with a target, or with --add')
 
+    if a.links:
+        if not a.targets:
+            sys.exit('name a web mirror')
+        mirror, _, e = split(data, a.targets[0])
+        if e['kind'] != 'web':
+            sys.exit(f'{mirror} is not a web mirror')
+        fetch_web.frontier(mirror, e, MIRRORS / mirror)
+        return 0
+
     if a.stale:
         if not a.targets:
-            sys.exit('name a pages mirror')
+            sys.exit('name a pages or web mirror')
         mirror, _, e = split(data, a.targets[0])
-        if e['kind'] != 'pages':
-            sys.exit(f'{mirror} is not a pages mirror')
+        if e['kind'] not in ('pages', 'web'):
+            sys.exit(f'{mirror} is not a pages or web mirror')
         return fetch_pages.stale(ROOT, mirror, e, MIRRORS / mirror, a.targets[1] if len(a.targets) > 1 else ROOT)
 
     if a.pin or a.follow or a.remove:
@@ -378,8 +426,8 @@ def main():
         print(f'removed  {name} (commit mirrors/mirrors.json)')
         return 0
 
-    if (a.pin or a.follow) and any(split(data, n)[2]['kind'] == 'pages' for n in names):
-        sys.exit('pages mirrors have no commits: they always follow the site')
+    if (a.pin or a.follow) and any(split(data, n)[2]['kind'] in ('pages', 'web') for n in names):
+        sys.exit('pages and web mirrors have no commits: pages follow the site, web articles are snapshots')
 
     if a.follow:
         names = expand(data, names)
@@ -419,7 +467,7 @@ def main():
         print('  (commit mirrors/mirrors.json)')
         return sync(data, names, False)
 
-    return 1 if sync(data, a.targets, a.check) else 0
+    return 1 if sync(data, a.targets, a.check, a.refresh, a.max_age) else 0
 
 
 if __name__ == '__main__':

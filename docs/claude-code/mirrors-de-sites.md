@@ -19,9 +19,15 @@ Escolha o caminho nesta ordem:
 | A documentação... | Use | Por quê |
 |---|---|---|
 | Está num repositório git (a pasta `docs/` de um projeto, por exemplo) | Espelho git, do [guia geral](./mirrors.md), com `--include` na pasta | Tem commit: dá para fixar uma versão, e o download é só do que mudou |
+| É um artigo ou uma série de artigos, não documentação | [Capturar artigos da web](./mirrors-de-artigos.md) | Cada página vira Markdown, sem menu nem propaganda |
 | Não está, mas o site tem `llms.txt` com páginas `.md` | Espelho de site (este guia) | É a única forma de ter a documentação inteira e local |
 | Tem só um arquivo único (`llms-full.txt`) ou links para páginas HTML | Ainda não é suportado. Procure o repositório git da documentação | |
 | Não tem `llms.txt` | Ainda não é suportado. Peça ao Claude para ler as páginas que você precisa | |
+
+Ao adicionar um site, a skill procura nas páginas o link "editar no GitHub".
+Se achar, mostra uma dica com o repositório e o arquivo. Nos testes, a dica
+apareceu certa para Supabase, Expo, Bun e Cloudflare, e não apareceu para uv
+e React (que também estão no git). É uma dica: quem decide é você.
 
 Na prática, o espelho de site é para documentação **fechada**: a de
 produtos cujo código não é aberto. Projetos de código aberto quase sempre
@@ -93,6 +99,7 @@ porque o site não diz quais mudaram, e compara cada uma com a anterior.
 | Você quer | Peça ou rode |
 |---|---|
 | Atualizar e ver o que mudou | `/mirrors`, ou o script sem argumentos |
+| Atualizar só se a última conferência tiver mais de um dia | `--max-age 24` (o pesquisador usa assim: uma busca não baixa o site de novo) |
 | Só saber se mudou, sem gravar | `/mirrors check` |
 | Saber quais artigos seus citam páginas que mudaram | `--stale <nome> docs/` ([como funciona](./base-de-conhecimento.md#como-funciona)) |
 

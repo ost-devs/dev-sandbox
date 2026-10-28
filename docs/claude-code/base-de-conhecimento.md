@@ -64,14 +64,15 @@ Descoberta no teste: `en/claude-tag.md` redireciona para uma página HTML em
 | Onde guardar a documentação oficial? | Em `mirrors/claude-code-docs/`, **não** em `docs/claude-code/official/`. O dev-sandbox é público: pôr a documentação da Anthropic no git é redistribuí-la, e a licença não é aberta. E cada atualização somaria até 11 MB ao histórico |
 | O pesquisador muda? | Já mudou: atualiza o espelho uma vez por tarefa, procura nele com `grep` e só vai à web se a página não existir |
 | E o "Conferido em outubro/2026"? | Continua, porque diz a versão do Claude Code. O `--stale` passa a dizer **quando** conferir de novo, em vez de depender de lembrar |
-| Quem roda a atualização? | O agente, no começo de uma pesquisa (13 s), ou você, com `/mirrors` |
+| Quem roda a atualização? | O pesquisador, com `--max-age 24`: no máximo uma vez por dia (13 s), senão usa a cópia como está. Ou você, com `/mirrors` |
 
 ## Em outros contextos
 
 O mesmo fluxo serve para qualquer série de artigos sobre uma fonte que muda:
 
-1. Espelhe a fonte: repositório git (fixo ou sempre atualizado) ou site com
-   `llms.txt` (sempre atualizado).
+1. Espelhe a fonte: repositório git (fixo ou sempre atualizado), site com
+   `llms.txt` (sempre atualizado) ou artigos da web
+   ([capturados como foto](./mirrors-de-artigos.md)).
 2. Escreva cada artigo a partir da cópia local, citando as páginas usadas.
 3. A cada atualização da fonte, rode `--stale` e revise só os artigos
    apontados.
