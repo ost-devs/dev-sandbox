@@ -82,6 +82,28 @@ documentação](./mirrors-de-sites.md#sites-testados). O site da Anthropic tem
 também versões traduzidas, inclusive `pt-br`
 (`https://code.claude.com/docs/_llms/pt-br.txt`), que o script ainda não trata.
 
+## Escrever a partir de artigos: `/estudar`
+
+A skill [`/estudar`](../../utils/skills/estudar/SKILL.md) faz o ciclo inteiro
+a partir de artigos da web. Ela usa a `mirrors` para capturar, e as duas
+precisam estar instaladas lado a lado em `~/.claude/skills/` (instalação em
+[`utils/README.md`](../../utils/README.md#instalar)).
+
+```text
+/estudar https://exemplo.com/artigo
+```
+
+| Etapa | O Claude faz | Você faz |
+|---|---|---|
+| 1. Capturar | Guarda o artigo e mostra os artigos que ele cita, com o texto de cada link | Escolhe quais seguir, como abriria abas. Ou diz um limite: "seguir até 10" |
+| 2. Mapear | Lê tudo, procura o que o projeto já tem sobre o assunto e mostra uma tabela: cada artigo, data, o que acrescenta, o que pode estar velho | Confere se o recorte faz sentido |
+| 3. Conferir | Lista números, preços, limites, modelos e versões, e confere cada um na fonte oficial (no dev-sandbox, pelo pesquisador) | Espera |
+| 4. Plano | Mostra os arquivos a criar ou editar e a tabela do que foi confirmado, atualizado ou não verificado | Aprova ou pede mudanças |
+| 5. Escrever | Texto próprio, adaptado ao projeto, citando as fontes na seção Base | Revisa e faz o commit |
+
+O que ela nunca faz: traduzir ou colar o artigo (direitos autorais), nem pôr
+no texto um número que não conferiu sem dizer de onde veio.
+
 ## Em aberto
 
 - O `.mirror-pages.json` fica na cópia, fora do git. Num clone novo, as datas

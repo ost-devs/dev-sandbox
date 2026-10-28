@@ -10,6 +10,24 @@
       "include": [
         "en"
       ]
+    },
+    "tokens": {
+      "kind": "web",
+      "urls": [
+        "https://www.ssdnodes.com/learn/lang/pt/claude-code-token-usage-explained"
+      ],
+      "license": []
+    },
+    "claude-api-docs": {
+      "kind": "pages",
+      "url": "https://platform.claude.com/llms.txt",
+      "license": [
+        "LicenseRef-Anthropic-docs"
+      ],
+      "include": [
+        "docs/en/about-claude",
+        "docs/en/build-with-claude"
+      ]
     }
   }
 }

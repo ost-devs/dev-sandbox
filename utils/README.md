@@ -6,6 +6,7 @@ dentro ou fora do container, em qualquer repositório.
 | Ferramenta | Tipo | Para quê | Como usar |
 |---|---|---|---|
 | [`montar-consultor`](./skills/montar-consultor/SKILL.md) | Skill | Montar os arquivos que fazem uma conversa nova já saber o projeto | [Guia](../docs/claude-code/montar-consultor.md) |
+| [`estudar`](./skills/estudar/SKILL.md) | Skill | Transformar artigos da web (um, uma lista ou uma cadeia) em artigos do projeto, conferindo números e versões na fonte oficial. Precisa da `mirrors` | [Guia](../docs/claude-code/base-de-conhecimento.md#escrever-a-partir-de-artigos-estudar) |
 | [`mirrors`](./skills/mirrors/SKILL.md) | Skill | Guardar cópias somente leitura de repositórios de fora (docs, código de referência) | [Guia](../docs/claude-code/mirrors.md) |
 
 ## Instalar
