@@ -45,11 +45,21 @@ A pasta leva o `SKILL.md` e o script, que a IA usa, e um `README.md` curto
 para você consultar sem abrir o dev-sandbox. O Claude não carrega o README:
 ele só entra no contexto se o Claude decidir abrir o arquivo.
 
-Para atualizar depois de um `git pull` no dev-sandbox, rode no host:
+Para capturar artigos da web, instale também o Defuddle (precisa de Node.js;
+detalhes em [Capturar artigos da web](./mirrors-de-artigos.md#1-instalar-o-defuddle-uma-vez-só)):
+
+```bash
+npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts
+```
+
+Para atualizar depois de um `git pull` no dev-sandbox, rode no host. A
+última linha só se você usa a captura de artigos: o `rm -rf` apaga o
+Defuddle junto.
 
 ```bash
 rm -rf ~/.claude/skills/mirrors
 cp -r ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
+npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts
 ```
 
 Conferir: abra uma sessão nova do Claude em qualquer projeto e digite

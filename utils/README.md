@@ -26,5 +26,10 @@ rm -rf ~/.claude/skills/<nome>
 cp -r ~/dev-sandbox/utils/skills/<nome> ~/.claude/skills/
 ```
 
+A `mirrors` tem um passo a mais para capturar artigos da web: depois de
+copiar (e de cada atualização), rode
+`npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts`
+([por quê](../docs/claude-code/mirrors-de-artigos.md#1-instalar-o-defuddle-uma-vez-só)).
+
 Conferir: numa sessão nova, digite `/` e o começo do nome. A skill deve
 aparecer na lista.
