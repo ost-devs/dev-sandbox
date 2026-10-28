@@ -20,6 +20,7 @@ proveito dele. Valem também, em boa parte, fora do Docker.
 | [Preservar conversas](./preservar-conversas.md) | O que o Claude apaga e quando, como guardar sessões valiosas (nome, `/export`, PKM) e um hook que arquiva tudo |
 | [Migrar memórias](./migrar-memorias.md) | Levar memórias de uma pasta de projeto para outra (saída da v0.1, uso de `--nome`, projeto movido) |
 | [Compartilhar memórias](./compartilhar-memorias.md) | Como uma memória vale em todos os projetos, numa lista ou numa categoria (`dev`), sincronizada, sem misturar as específicas, com a skill `/share-memories` |
+| [Memórias que se conectam](./memorias-como-sinapses.md) | (Especulativo) Se a memória do Claude Code está virando um grafo tipo Obsidian, ou sinapses; como ver o grafo hoje |
 | [Por baixo dos panos](./por-baixo-dos-panos/README.md) | Como o Claude Code funciona por dentro: janela de contexto, o que carrega e quando, reenvio a cada pedido, cache, compactação, subagentes |
 | [Modelo e esforço](./modelo-e-esforco.md) | Qual modelo e qual nível de esforço usar, com um diário de campo para comparar com a prática (esboço) |
 
