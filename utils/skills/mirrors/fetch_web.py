@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 STATE = '.mirror-pages.json'
 AGENT = 'Mozilla/5.0 (compatible; mirrors-skill)'
 MAX_BYTES = 5_000_000
-PAUSE = 0.5
+PAUSE = float(os.environ.get('MIRRORS_PAUSE', 0.5))   # seconds between requests to one site
 TRACKING = re.compile(r'^(utm_\w+|fbclid|gclid|ref|mc_\w+)$')
 
 
