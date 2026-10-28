@@ -104,6 +104,11 @@ precisam estar instaladas lado a lado em `~/.claude/skills/` (instalação em
 O que ela nunca faz: traduzir ou colar o artigo (direitos autorais), nem pôr
 no texto um número que não conferiu sem dizer de onde veio.
 
+Ela melhora com o uso: antes de cada estudo lê a
+[calibração](./estudar-calibracao.md) (regras, fontes, estudos anteriores) e
+compara o que escreveu da última vez com o que você corrigiu depois. Você
+calibra corrigindo os guias ou com `/estudar calibrar: <regra>`.
+
 ## Em aberto
 
 - O `.mirror-pages.json` fica na cópia, fora do git. Num clone novo, as datas

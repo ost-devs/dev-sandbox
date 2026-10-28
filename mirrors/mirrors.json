@@ -14,7 +14,13 @@
     "tokens": {
       "kind": "web",
       "urls": [
-        "https://www.ssdnodes.com/learn/lang/pt/claude-code-token-usage-explained"
+        "https://www.ssdnodes.com/learn/lang/pt/claude-code-token-usage-explained",
+        "https://www.ssdnodes.com/learn/lang/pt/claude-code-on-a-vps-with-tmux",
+        "https://www.ssdnodes.com/learn/lang/pt/claude-vs-chatgpt-api-pricing",
+        "https://www.ssdnodes.com/learn/lang/pt/how-much-is-1m-tokens-claude",
+        "https://www.ssdnodes.com/learn/lang/pt/claude-on-linux-desktop-and-cli",
+        "https://www.ssdnodes.com/learn/lang/pt/opus-sonnet-haiku-which-model",
+        "https://www.ssdnodes.com/learn/lang/pt/claude-limit-reached-what-to-do"
       ],
       "license": []
     },
