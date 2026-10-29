@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: triage-issues
+expected_outcome: |
+  triage.csv with all 80 issues typed (bug/feature/duvida) and the 12 duplicates pointing to their originals, with no near-miss (same component, different problem) marked as a duplicate.
+context:
+  scaffold_script: place-files.sh

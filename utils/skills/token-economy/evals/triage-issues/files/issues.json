@@ -1,0 +1,562 @@
+[
+ {
+  "number": 101,
+  "title": "A busca procura também nas observações?",
+  "body": "Se eu escrevi algo no campo de observações do cliente, a busca geral encontra esse texto?",
+  "user": "fabio.r",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 102,
+  "title": "Cancelamento não remove o evento do Google Agenda",
+  "body": "Quando cancelo um horário no sistema, o evento continua no Google Agenda.",
+  "user": "ana.lima",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 103,
+  "title": "Notificação push não chega no Android",
+  "body": "Não recebo as notificações de novo agendamento no celular, mesmo com tudo permitido nas configurações.",
+  "user": "dioguinho",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 104,
+  "title": "Modo escuro desliga sozinho ao recarregar",
+  "body": "Ativo o modo escuro, aperto F5 e ele volta para o claro.",
+  "user": "ana.lima",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 105,
+  "title": "Qual o separador do CSV?",
+  "body": "O arquivo exportado usa vírgula ou ponto e vírgula? Preciso configurar a importação no nosso ERP.",
+  "user": "fabio.r",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 106,
+  "title": "Versão em espanhol",
+  "body": "Vamos abrir uma unidade na Argentina e precisamos do sistema em espanhol.",
+  "user": "gabi",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 107,
+  "title": "Token da API para de funcionar depois de 24h",
+  "body": "Gero o token de API no painel e no dia seguinte todas as chamadas retornam 401, embora a tela diga que não expira.",
+  "user": "erica.p",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 108,
+  "title": "E-mail de redefinição de senha não chega",
+  "body": "Peço para redefinir a senha e o e-mail nunca chega, nem no spam.",
+  "user": "bruno.s",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 109,
+  "title": "Upload de PDF acima de 5 MB dá erro 413",
+  "body": "Tentei anexar um exame de 7 MB e apareceu 'Erro 413'. O limite informado na tela é 20 MB.",
+  "user": "dioguinho",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 110,
+  "title": "Sincronizar com o calendário do iPhone",
+  "body": "Além do Google, seria bom sincronizar com o iCloud/Calendário da Apple.",
+  "user": "joao.v",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 111,
+  "title": "E-mails de confirmação caindo no spam do Outlook",
+  "body": "Desde semana passada, quase todas as confirmações para endereços @outlook.com vão para a caixa de spam.",
+  "user": "fabio.r",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 112,
+  "title": "Agendamento recorrente pula o dia 31",
+  "body": "Criei um agendamento mensal para o dia 31 e ele não aparece nos meses que têm 31 dias depois de fevereiro.",
+  "user": "dioguinho",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 113,
+  "title": "Widget de agenda do dia",
+  "body": "Um widget na tela inicial do Android mostrando os horários do dia seria muito útil.",
+  "user": "heitor.c",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 114,
+  "title": "Fatura cobrada duas vezes no cartão",
+  "body": "Neste mês apareceram duas cobranças iguais da assinatura no cartão da empresa, no mesmo dia.",
+  "user": "gabi",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 115,
+  "title": "Arrastar e soltar arquivos",
+  "body": "Seria prático poder arrastar o arquivo da área de trabalho direto para o agendamento, em vez de clicar em 'Anexar'.",
+  "user": "heitor.c",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 116,
+  "title": "Webhooks para novos agendamentos",
+  "body": "Queremos receber um webhook quando um agendamento é criado ou cancelado, em vez de ficar consultando a API.",
+  "user": "carla_m",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 117,
+  "title": "Como cancelo a assinatura?",
+  "body": "Não achei a opção de cancelar o plano. É pelo sistema ou preciso falar com o suporte?",
+  "user": "erica.p",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 118,
+  "title": "O que conta como 'no-show' no relatório?",
+  "body": "Qual é o critério para um agendamento aparecer como no-show? O cliente precisa ser marcado manualmente?",
+  "user": "carla_m",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 119,
+  "title": "Endpoint /appointments ignora o parâmetro de data",
+  "body": "GET /appointments?from=2026-10-01 retorna agendamentos de todas as datas.",
+  "user": "dioguinho",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 120,
+  "title": "Escolher quais cards aparecem no dashboard",
+  "body": "Gostaria de esconder os cards que não uso e reorganizar os outros.",
+  "user": "isa.n",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 121,
+  "title": "Quais formatos de arquivo posso anexar?",
+  "body": "Posso anexar arquivos .docx e .heic ou só PDF e imagens?",
+  "user": "isa.n",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 122,
+  "title": "Pagamento por Pix",
+  "body": "Queríamos pagar a assinatura por Pix em vez de cartão ou boleto.",
+  "user": "erica.p",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 123,
+  "title": "Com quanto tempo de antecedência o lembrete é enviado?",
+  "body": "O e-mail de lembrete sai 24h antes ou no dia? Dá para mudar isso em algum lugar?",
+  "user": "joao.v",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 124,
+  "title": "Recepcionista consegue ver dados financeiros",
+  "body": "O perfil 'Recepção' está acessando a tela de faturamento, mas nas permissões ela está desmarcada.",
+  "user": "gabi",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 125,
+  "title": "Cada usuário pode escolher o idioma?",
+  "body": "O idioma é da conta inteira ou cada pessoa pode usar o seu?",
+  "user": "joao.v",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 126,
+  "title": "Importação de contatos ignora a coluna telefone",
+  "body": "Importei uma planilha com nome, e-mail e telefone; os contatos entraram sem telefone.",
+  "user": "gabi",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 127,
+  "title": "Autenticação em dois fatores",
+  "body": "Precisamos de 2FA por aplicativo autenticador para atender a política de segurança da empresa.",
+  "user": "fabio.r",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 128,
+  "title": "Perfil de acesso somente leitura",
+  "body": "Precisamos de um perfil para a contabilidade que só consegue ver, sem editar nada.",
+  "user": "dioguinho",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 129,
+  "title": "Texto invisível no modo escuro na tela de relatórios",
+  "body": "Com o modo escuro ligado, os números das tabelas de relatório ficam pretos sobre fundo preto.",
+  "user": "carla_m",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 130,
+  "title": "Dashboard mostra o dia anterior depois da meia-noite",
+  "body": "Entre meia-noite e 3h o painel inicial continua mostrando os agendamentos do dia anterior.",
+  "user": "isa.n",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 131,
+  "title": "CSV exportado quebra acentos no Excel",
+  "body": "Ao abrir o CSV de agendamentos no Excel, 'João' aparece como 'JoÃ£o'. No LibreOffice abre certo.",
+  "user": "heitor.c",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 132,
+  "title": "Relatório mensal soma cancelados no faturamento",
+  "body": "O total do relatório de faturamento de setembro inclui agendamentos cancelados.",
+  "user": "bruno.s",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 133,
+  "title": "Nota fiscal sai com CNPJ antigo",
+  "body": "Atualizei o CNPJ nas configurações há dois meses e as notas continuam saindo com o número antigo.",
+  "user": "ana.lima",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 134,
+  "title": "Importação cria clientes duplicados",
+  "body": "Importei a mesma planilha corrigida e cada cliente apareceu duas vezes em vez de atualizar.",
+  "user": "bruno.s",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 135,
+  "title": "Personalizar o texto do lembrete",
+  "body": "Queria poder editar o texto do e-mail de lembrete, colocar o endereço da clínica e instruções de preparo.",
+  "user": "carla_m",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 136,
+  "title": "Login com Google volta para a tela inicial",
+  "body": "Clico em 'Entrar com Google', escolho a conta e caio de novo na tela de login, sem mensagem nenhuma. Chrome 130, Windows.",
+  "user": "carla_m",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 137,
+  "title": "Foto anexada pelo celular aparece girada",
+  "body": "Fotos tiradas no iPhone e anexadas ao prontuário aparecem deitadas no computador.",
+  "user": "gabi",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 138,
+  "title": "Importar contatos do Google",
+  "body": "Poder puxar os contatos direto da conta Google, sem passar por planilha.",
+  "user": "joao.v",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 139,
+  "title": "API retorna 401 com token que deveria ser permanente",
+  "body": "O token criado como 'sem expiração' começa a dar não autorizado depois de mais ou menos um dia.",
+  "user": "bruno.s",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 140,
+  "title": "De onde vem a 'taxa de retorno' do dashboard?",
+  "body": "Como é calculada a taxa de retorno que aparece no painel?",
+  "user": "gabi",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 141,
+  "title": "Sincronização com Google Agenda cria eventos duplicados",
+  "body": "Cada agendamento aparece duas ou três vezes no Google Agenda do profissional.",
+  "user": "gabi",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 142,
+  "title": "Não consigo entrar usando a conta Google",
+  "body": "Depois de escolher a conta do Google o sistema me manda de volta pro começo e não loga. Já limpei cache.",
+  "user": "joao.v",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 143,
+  "title": "Seguir o tema do sistema operacional",
+  "body": "Seria bom ter a opção 'automático', que segue o claro/escuro do Windows ou macOS.",
+  "user": "heitor.c",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 144,
+  "title": "Datas aparecem no formato americano",
+  "body": "Mesmo com o idioma em português, algumas telas mostram as datas como 10/29/2026.",
+  "user": "isa.n",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 145,
+  "title": "Convite de usuário expira na hora",
+  "body": "Mando o convite para um novo funcionário e o link já abre dizendo 'convite expirado'.",
+  "user": "erica.p",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 146,
+  "title": "Reimportar a planilha duplica a base de clientes",
+  "body": "Subi de novo o arquivo de contatos com algumas correções e agora tenho todo mundo repetido no cadastro.",
+  "user": "isa.n",
+  "created_at": "2026-09-15"
+ },
+ {
+  "number": 147,
+  "title": "Busca não encontra nomes com acento",
+  "body": "Procurar 'Conceição' não acha a cliente, mas procurar 'Concei' acha. Parece que o acento atrapalha.",
+  "user": "ana.lima",
+  "created_at": "2026-09-22"
+ },
+ {
+  "number": 148,
+  "title": "Senha com caractere especial não é aceita no login",
+  "body": "Minha senha tem '&' e o login diz que está errada, mas ela foi aceita no cadastro.",
+  "user": "bruno.s",
+  "created_at": "2026-09-01"
+ },
+ {
+  "number": 149,
+  "title": "A sincronização com o Google é nos dois sentidos?",
+  "body": "Se eu criar um evento no Google Agenda, ele bloqueia o horário no sistema também?",
+  "user": "isa.n",
+  "created_at": "2026-09-08"
+ },
+ {
+  "number": 150,
+  "title": "Faturamento do relatório está maior que o real",
+  "body": "Conferi o relatório do mês e o valor total conta também as consultas que foram canceladas.",
+  "user": "erica.p",
+  "created_at": "2026-10-15"
+ },
+ {
+  "number": 151,
+  "title": "Agendar envio do relatório por e-mail",
+  "body": "Queria receber o relatório semanal automaticamente toda segunda de manhã no e-mail.",
+  "user": "fabio.r",
+  "created_at": "2026-10-22"
+ },
+ {
+  "number": 152,
+  "title": "Horário de verão desloca os agendamentos em uma hora",
+  "body": "Clientes de outro fuso estão vendo os horários uma hora adiantados desde a mudança de horário.",
+  "user": "bruno.s",
+  "created_at": "2026-10-01"
+ },
+ {
+  "number": 153,
+  "title": "Qual é a regra mínima de senha?",
+  "body": "Quantos caracteres e que tipos a senha precisa ter?",
+  "user": "erica.p",
+  "created_at": "2026-10-08"
+ },
+ {
+  "number": 154,
+  "title": "Busca fica lenta depois de digitar três letras",
+  "body": "A cada letra a tela congela por uns 2 segundos. Temos uns 30 mil clientes cadastrados.",
+  "user": "gabi",
+  "created_at": "2026-10-15"
+ },
+ {
+  "number": 155,
+  "title": "Qual modelo de planilha devo usar para importar?",
+  "body": "Tem um modelo de planilha com as colunas certas para a importação de clientes?",
+  "user": "carla_m",
+  "created_at": "2026-10-22"
+ },
+ {
+  "number": 156,
+  "title": "Sessão expira em menos de 5 minutos",
+  "body": "Mesmo marcando 'manter conectado', depois de uns 5 minutos parado preciso logar de novo.",
+  "user": "heitor.c",
+  "created_at": "2026-10-01"
+ },
+ {
+  "number": 157,
+  "title": "Login com Microsoft",
+  "body": "Boa parte da nossa equipe usa conta Microsoft 365. Seria ótimo ter 'Entrar com Microsoft' além do Google.",
+  "user": "ana.lima",
+  "created_at": "2026-10-08"
+ },
+ {
+  "number": 158,
+  "title": "O modo escuro vale para todos os usuários da conta?",
+  "body": "Se eu ativar o modo escuro, muda para a equipe toda ou só para mim?",
+  "user": "erica.p",
+  "created_at": "2026-10-15"
+ },
+ {
+  "number": 159,
+  "title": "NF emitida com dados desatualizados da empresa",
+  "body": "Mudamos de CNPJ e já salvei o novo no cadastro, mas a nota fiscal do mês veio de novo com o CNPJ anterior.",
+  "user": "isa.n",
+  "created_at": "2026-10-22"
+ },
+ {
+  "number": 160,
+  "title": "Gráfico de ocupação não carrega no Safari",
+  "body": "No Safari 18 o gráfico de taxa de ocupação fica em branco. No Chrome aparece.",
+  "user": "carla_m",
+  "created_at": "2026-10-01"
+ },
+ {
+  "number": 161,
+  "title": "Exportação trava com mais de 10 mil linhas",
+  "body": "Com o filtro do ano inteiro (uns 12 mil agendamentos) o botão de exportar fica girando e nunca baixa nada.",
+  "user": "isa.n",
+  "created_at": "2026-10-08"
+ },
+ {
+  "number": 162,
+  "title": "Visão de semana com vários profissionais lado a lado",
+  "body": "Na recepção precisamos ver a semana de 4 profissionais ao mesmo tempo, em colunas.",
+  "user": "bruno.s",
+  "created_at": "2026-10-15"
+ },
+ {
+  "number": 163,
+  "title": "Botões em inglês na tela de pagamento",
+  "body": "A tela de checkout mostra 'Pay now' e 'Cancel' mesmo com o sistema em português.",
+  "user": "erica.p",
+  "created_at": "2026-10-22"
+ },
+ {
+  "number": 164,
+  "title": "Contador de agendamentos do dia não atualiza",
+  "body": "O número no card 'Hoje' só muda se eu recarregar a página.",
+  "user": "isa.n",
+  "created_at": "2026-10-01"
+ },
+ {
+  "number": 165,
+  "title": "Quantos usuários posso ter no plano básico?",
+  "body": "O plano básico tem limite de usuários? Quero adicionar mais duas pessoas.",
+  "user": "joao.v",
+  "created_at": "2026-10-08"
+ },
+ {
+  "number": 166,
+  "title": "Exportar em XLSX",
+  "body": "Além do CSV, poder baixar direto em .xlsx com as colunas já formatadas ajudaria o financeiro.",
+  "user": "dioguinho",
+  "created_at": "2026-10-15"
+ },
+ {
+  "number": 167,
+  "title": "Existe limite de chamadas por minuto na API?",
+  "body": "Qual é o rate limit da API? Vamos sincronizar uns 5 mil registros por noite.",
+  "user": "carla_m",
+  "created_at": "2026-10-22"
+ },
+ {
+  "number": 168,
+  "title": "Lembrete por e-mail chega duas vezes",
+  "body": "Os clientes estão recebendo o lembrete do agendamento em dobro, com um minuto de diferença.",
+  "user": "fabio.r",
+  "created_at": "2026-10-01"
+ },
+ {
+  "number": 169,
+  "title": "Pesquisa ignora clientes com til e cedilha",
+  "body": "Se eu digito o nome completo 'Gonçalves' a busca volta vazia, sem acento também não acha. Só funciona com parte do nome.",
+  "user": "carla_m",
+  "created_at": "2026-10-08"
+ },
+ {
+  "number": 170,
+  "title": "Não recebo o link de recuperação de senha",
+  "body": "Cliquei em 'esqueci minha senha' várias vezes e nenhuma mensagem apareceu na minha caixa de entrada.",
+  "user": "isa.n",
+  "created_at": "2026-10-15"
+ },
+ {
+  "number": 171,
+  "title": "App Android fecha ao abrir o calendário",
+  "body": "No Android 14 (Samsung S23) o app fecha sozinho assim que toco na aba Calendário.",
+  "user": "isa.n",
+  "created_at": "2026-10-22"
+ },
+ {
+  "number": 172,
+  "title": "E-mail de lembrete duplicado",
+  "body": "Toda confirmação de horário está indo repetida para os pacientes. Eles reclamaram que recebem o mesmo aviso 2x.",
+  "user": "ana.lima",
+  "created_at": "2026-10-01"
+ },
+ {
+  "number": 173,
+  "title": "Tem versão do app para tablet?",
+  "body": "O app Android funciona bem em tablet ou é só para celular?",
+  "user": "joao.v",
+  "created_at": "2026-10-08"
+ },
+ {
+  "number": 174,
+  "title": "Como bloqueio um feriado para todos?",
+  "body": "Existe um jeito de bloquear um dia inteiro para todos os profissionais de uma vez, tipo um feriado?",
+  "user": "fabio.r",
+  "created_at": "2026-10-15"
+ },
+ {
+  "number": 175,
+  "title": "Exportação de agendamentos com caracteres estranhos",
+  "body": "Os nomes com acento ficam todos errados quando abro o arquivo exportado no Excel, tipo 'Ã§' no lugar de 'ç'.",
+  "user": "heitor.c",
+  "created_at": "2026-10-22"
+ },
+ {
+  "number": 176,
+  "title": "Aplicativo trava e sai na aba de agenda",
+  "body": "Uso um Galaxy S23 e toda vez que entro na agenda pelo app ele simplesmente fecha. Reinstalei e continua.",
+  "user": "ana.lima",
+  "created_at": "2026-10-01"
+ },
+ {
+  "number": 177,
+  "title": "Card 'Hoje' fica parado no mesmo número",
+  "body": "Os novos agendamentos entram, mas o total do dia na tela inicial não muda até eu dar refresh.",
+  "user": "bruno.s",
+  "created_at": "2026-10-08"
+ },
+ {
+  "number": 178,
+  "title": "Dá para usar o mesmo e-mail em duas empresas?",
+  "body": "Trabalho para dois clientes que usam o sistema. Consigo ter uma conta só com o mesmo e-mail nas duas empresas ou preciso de dois e-mails?",
+  "user": "fabio.r",
+  "created_at": "2026-10-15"
+ },
+ {
+  "number": 179,
+  "title": "Buscar por telefone",
+  "body": "Muitos clientes ligam e a gente só tem o número na tela. Poder buscar pelo telefone economizaria muito tempo.",
+  "user": "erica.p",
+  "created_at": "2026-10-22"
+ },
+ {
+  "number": 180,
+  "title": "Imagens do iPhone ficam de lado no anexo",
+  "body": "Quando anexo uma foto direto da câmera do iPhone ela fica rotacionada 90 graus na visualização.",
+  "user": "dioguinho",
+  "created_at": "2026-10-01"
+ }
+]

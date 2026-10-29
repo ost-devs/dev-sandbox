@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: parser-diff
+expected_outcome: |
+  Differential test of csvline/new.py against csvline/old.py: generated inputs (seeded), every difference recorded in diffs.jsonl, grouped in diff-report.md. The new parser differs in 4 ways: drops a trailing empty field, keeps "" escapes raw, strips spaces around unquoted fields, keeps text glued to a closing quote raw. The reproduce command regenerates the same diffs.jsonl.
+context:
+  scaffold_script: place-files.sh

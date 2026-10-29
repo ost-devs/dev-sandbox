@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: audit-claims-interrupted
+expected_outcome: |
+  An executed audit of 152 claims about kit/ (8 modules, 39 false), each verdict backed by a re-runnable check under checks/. Run twice per configuration: once straight through, once killed by a simulated usage limit halfway and resumed. Compared on total cost and on what the resume has to redo, with the same correctness.
+context:
+  scaffold_script: place-files.sh

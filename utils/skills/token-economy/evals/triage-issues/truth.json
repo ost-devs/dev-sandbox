@@ -1,0 +1,322 @@
+{
+ "101": {
+  "type": "question",
+  "dup_of": null
+ },
+ "102": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "103": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "104": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "105": {
+  "type": "question",
+  "dup_of": null
+ },
+ "106": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "107": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "108": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "109": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "110": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "111": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "112": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "113": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "114": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "115": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "116": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "117": {
+  "type": "question",
+  "dup_of": null
+ },
+ "118": {
+  "type": "question",
+  "dup_of": null
+ },
+ "119": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "120": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "121": {
+  "type": "question",
+  "dup_of": null
+ },
+ "122": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "123": {
+  "type": "question",
+  "dup_of": null
+ },
+ "124": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "125": {
+  "type": "question",
+  "dup_of": null
+ },
+ "126": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "127": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "128": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "129": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "130": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "131": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "132": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "133": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "134": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "135": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "136": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "137": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "138": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "139": {
+  "type": "bug",
+  "dup_of": 107
+ },
+ "140": {
+  "type": "question",
+  "dup_of": null
+ },
+ "141": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "142": {
+  "type": "bug",
+  "dup_of": 136
+ },
+ "143": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "144": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "145": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "146": {
+  "type": "bug",
+  "dup_of": 134
+ },
+ "147": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "148": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "149": {
+  "type": "question",
+  "dup_of": null
+ },
+ "150": {
+  "type": "bug",
+  "dup_of": 132
+ },
+ "151": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "152": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "153": {
+  "type": "question",
+  "dup_of": null
+ },
+ "154": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "155": {
+  "type": "question",
+  "dup_of": null
+ },
+ "156": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "157": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "158": {
+  "type": "question",
+  "dup_of": null
+ },
+ "159": {
+  "type": "bug",
+  "dup_of": 133
+ },
+ "160": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "161": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "162": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "163": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "164": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "165": {
+  "type": "question",
+  "dup_of": null
+ },
+ "166": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "167": {
+  "type": "question",
+  "dup_of": null
+ },
+ "168": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "169": {
+  "type": "bug",
+  "dup_of": 147
+ },
+ "170": {
+  "type": "bug",
+  "dup_of": 108
+ },
+ "171": {
+  "type": "bug",
+  "dup_of": null
+ },
+ "172": {
+  "type": "bug",
+  "dup_of": 168
+ },
+ "173": {
+  "type": "question",
+  "dup_of": null
+ },
+ "174": {
+  "type": "question",
+  "dup_of": null
+ },
+ "175": {
+  "type": "bug",
+  "dup_of": 131
+ },
+ "176": {
+  "type": "bug",
+  "dup_of": 171
+ },
+ "177": {
+  "type": "bug",
+  "dup_of": 164
+ },
+ "178": {
+  "type": "question",
+  "dup_of": null
+ },
+ "179": {
+  "type": "feature",
+  "dup_of": null
+ },
+ "180": {
+  "type": "bug",
+  "dup_of": 137
+ }
+}
