@@ -36,3 +36,12 @@ Skill que [compartilha memórias entre projetos](../claude-code/compartilhar-mem
 | **pending** | *pén-din* | pendente | o que `status` acha fora do lugar |
 | **missing** | *mí-sin* | faltando | `-ferrum: missing x.md`: o link ainda não está lá |
 | **stale link** | *steil link* | link velho | link para uma memória que saiu do grupo |
+
+## token-economy
+
+Skill que ajuda o Claude a chegar ao mesmo resultado gastando menos tokens.
+
+| Inglês | Pronúncia | Significa | Na skill |
+|---|---|---|---|
+| **token** | *tô-ken* | pedaço de texto que o modelo lê ou escreve | a unidade que se paga e que enche o contexto |
+| **economy** | *i-kó-no-mi* | economia | o nome da skill: `token-economy` |
