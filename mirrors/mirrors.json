@@ -9,7 +9,8 @@
       ],
       "include": [
         "en"
-      ]
+      ],
+      "max_age": 24
     },
     "tokens": {
       "kind": "web",
@@ -33,7 +34,8 @@
       "include": [
         "docs/en/about-claude",
         "docs/en/build-with-claude"
-      ]
+      ],
+      "max_age": 24
     }
   }
 }

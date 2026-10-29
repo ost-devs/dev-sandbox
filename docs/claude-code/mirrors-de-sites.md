@@ -97,13 +97,15 @@ porque o site não diz quais mudaram, e compara cada uma com a anterior.
 | Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
 | Atualizar e ver o que mudou | `/mirrors` | `...` |
-| Atualizar só se a última conferência tiver mais de um dia | "atualize claude-code-docs se tiver mais de um dia" | `... --max-age 24 claude-code-docs` |
+| Atualizar agora, mesmo conferido há menos de um dia | "atualize claude-code-docs agora" | `... --refresh claude-code-docs` |
 | Só saber se mudou, sem gravar | `/mirrors check` | `... --check` |
 | Saber quais textos seus citam páginas que mudaram | "quais docs citam páginas que mudaram em claude-code-docs?" | `... --stale claude-code-docs docs/` |
 | Tirar a cópia | `/mirrors remove claude-code-docs` | `... --remove claude-code-docs` |
 
-O `--max-age 24` é o que um agente pesquisador usa: uma busca não baixa o
-site de novo. O `--stale` está explicado em
+Um site só é baixado de novo depois de 24 horas da última conferência
+(`"max_age": 24` no `mirrors.json`; troque o número na entrada ou use
+`--max-age <horas>` no `--add`). Assim, uma busca do agente pesquisador não
+baixa o site de novo. O `--stale` está explicado em
 [base de conhecimento](./base-de-conhecimento.md#como-funciona).
 
 A data de mudança é a da atualização que viu a mudança, não a da edição no

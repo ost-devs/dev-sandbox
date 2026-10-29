@@ -7,14 +7,14 @@ for Claude Code) and compares sha256 hashes to tell what changed. The copy keeps
 each page's hash and the first fetch that saw its current content ("changed"; null from the first
 fetch, whose real date is unknown).
 
-The state file's mtime is the last check: with max_age (hours), a fetch younger than that skips the
-download, so a local search stays local.
+The state file's mtime is the last check: with max_age (hours; the entry's "max_age" unless the command
+line gives one), a fetch younger than that skips the download, so a local search stays local.
 
 stale() lists the markdown files under a folder that cite a page (by its url or its mirrors/ path) whose
 "changed" is newer than the file's last commit: articles to check against their source. It serves "web"
 mirrors too, whose state records each page's url.
 """
-import hashlib, json, os, pathlib, re, shutil, subprocess, sys, tempfile, urllib.request
+import hashlib, json, os, pathlib, re, subprocess, sys, tempfile, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
@@ -54,7 +54,7 @@ def compare(old, pages, now):
     return state, added, changed, sorted(set(old) - set(state))
 
 
-def sync(label, entry, dst, check, set_writable, delete, max_age=None):
+def sync(label, entry, dst, check, set_writable, place, max_age=None):
     """Download every page; with check, report only. Returns 1 when the copy is missing or outdated."""
     state_file = dst / STATE
     if max_age is not None and state_file.exists():
@@ -93,10 +93,7 @@ def sync(label, entry, dst, check, set_writable, delete, max_age=None):
             (t / rel).write_bytes(data)
         (t / 'llms.txt').write_bytes(index)
         (t / STATE).write_text(json.dumps(state, indent=1, sort_keys=True) + '\n')
-        delete(dst)
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(t, dst)
-        os.chmod(dst, 0o755)
+        place(t)
     set_writable(dst, False)
     print(f'fetched  {label} ({summary})')
     if old:

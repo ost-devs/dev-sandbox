@@ -25,7 +25,7 @@ precisa de `npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts`).
 | Você quer | Peça ao Claude | Ou rode `python3 ~/.claude/skills/mirrors/fetch_mirrors.py ...` |
 |---|---|---|
 | Copiar a documentação | "espelhe https://code.claude.com/docs/llms.txt como claude-code-docs, só em inglês" | `... --add claude-code-docs <url> --include en` |
-| Atualizar no máximo uma vez por dia | "atualize claude-code-docs se tiver mais de um dia" | `... --max-age 24 claude-code-docs` |
+| Atualizar agora (o normal é no máximo uma vez por dia) | "atualize claude-code-docs agora" | `... --refresh claude-code-docs` |
 
 ### Artigos da web
 
@@ -42,6 +42,7 @@ precisa de `npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts`).
 | Baixar tudo (depois de clonar o projeto) | `/mirrors` | `...` |
 | Ver o que falta ou está velho | `/mirrors check` | `... --check` |
 | Saber quais textos citam páginas que mudaram | "quais docs citam páginas que mudaram em claude-code-docs?" | `... --stale claude-code-docs docs/` |
+| Cópia que você pode editar (grifar, anotar no Obsidian) | "capture este artigo como testes, editável: <url>" | `... --add testes <url> --web --writable` |
 | Tirar um espelho | `/mirrors remove rust-book` | `... --remove rust-book` |
 
 Depois de adicionar, fixar ou remover, faça commit do `mirrors/mirrors.json`.

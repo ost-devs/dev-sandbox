@@ -30,6 +30,10 @@ Por que somente leitura e sem `.git`: o Claude não edita a cópia por engano
 repositório de fora roda na sua máquina. Links simbólicos que apontam para
 fora da cópia são apagados.
 
+Quer trabalhar na cópia (grifar, anotar, criar notas ao lado)? Peça uma
+cópia editável (`--writable`). A atualização mexe só no que você não tocou:
+arquivo que você mudou ou criou fica como está, e a skill avisa com `kept`.
+
 ## 1. Instalar a skill (uma vez só)
 
 A skill fica na sua pasta pessoal do Claude, então serve para todos os seus
@@ -126,6 +130,7 @@ versão. Assim cada commit do projeto diz qual versão das fontes ele cita.
 | Baixar tudo que está no `mirrors.json` (clonou o projeto em outra máquina) | `/mirrors` | `...` |
 | Saber o que está faltando ou velho | `/mirrors check` | `... --check` |
 | Subir uma cópia fixa para a versão mais nova | `/mirrors pin rust-book` | `... --pin rust-book` |
+| Cópia que você pode editar (grifar, anotar no Obsidian) | "capture este artigo como testes, editável: <url>" | `... --add testes <url> --web --writable` |
 | Tirar uma cópia | `/mirrors remove rust-book` | `... --remove rust-book` |
 
 Depois de fixar ou remover, faça commit do `mirrors.json`.

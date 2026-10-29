@@ -2,8 +2,8 @@
 """Keep read-only copies of outside sources (git repositories, docs sites, web articles) in mirrors/.
 
 The manifest mirrors/mirrors.json (versioned) says what is fetched, from where and at which commit;
-the copies (mirrors/<name>/, gitignored) have no .git, are read-only and record their commit in
-.mirror-commit. Run anywhere inside the repository:
+the copies (mirrors/<name>/, gitignored) have no .git, are read-only unless the entry has "writable": true,
+and record their commit in .mirror-commit. Run anywhere inside the repository:
 
   fetch_mirrors.py [target ...]              fetch targets (default: all)
   fetch_mirrors.py --check [target ...]      report missing, stale or outdated targets (exit 1 if any)
@@ -15,18 +15,23 @@ the copies (mirrors/<name>/, gitignored) have no .git, are read-only and record 
                                              version's tag) into the manifest, fetch
   fetch_mirrors.py --follow target ...       always fetch the newest commit of the ref (docs that change often)
   fetch_mirrors.py --remove target           delete the copy and the manifest entry
+  fetch_mirrors.py --writable target ...     make copies editable (also with --add): a fetch updates them in
+                                             place and keeps files changed or added there since the last fetch
+  fetch_mirrors.py --read-only target ...    back to read-only copies, replaced on every fetch
   fetch_mirrors.py --add name url --web [--depth N] [--max-pages N]
                                              capture a web article as markdown (Defuddle), and the articles its
                                              text links to on the same site, N levels deep; again adds more
   fetch_mirrors.py --links name              links inside captured articles not captured yet, most cited first
   fetch_mirrors.py --refresh [target ...]    fetch again: web articles (a snapshot otherwise), pages now
   fetch_mirrors.py --max-age H [target ...]  like a plain fetch, but pages checked less than H hours ago wait
+                                             (overrides the entry's "max_age"; with --add, sets it)
   fetch_mirrors.py --stale name [folder]     markdown files citing pages of a "pages" or "web" mirror changed
                                              since the file's last commit (default folder: the repository)
 
 A target is a mirror (`zed`; a set = all its members) or one member of a set (`cm6/view`). A url with
 `{member}` makes a set; a url ending in llms.txt makes a "pages" mirror: the .md pages that index links,
-always following (fetch_pages.py). --web makes a "web" mirror of articles (fetch_web.py). --pin or --follow on a member it does not list yet adds it. A ref is `main`,
+always following (fetch_pages.py); a plain fetch skips it when checked less than its "max_age" hours ago
+(24 unless --add got --max-age). --web makes a "web" mirror of articles (fetch_web.py). --pin or --follow on a member it does not list yet adds it. A ref is `main`,
 `v1.2`, a full `refs/...` name or HEAD; with --pin, the last argument is the ref when it is not a target.
 `@1.2.3` pins the tag of a published version (`1.2.3` or `v1.2.3`); `@package` takes the version from
 package.json at the tip of the default branch. --check also notes pinned copies whose package.json
@@ -35,14 +40,16 @@ version has a tag at another commit (pinned after the release). "include" fetche
 crates whose Cargo.toml license is not in "license". The manifest and the .gitignore lines are created
 when missing, with or without .git (without it, other .gitignore rules are not checked).
 """
-import argparse, json, os, pathlib, re, shutil, stat, subprocess, sys, tempfile
+import argparse, hashlib, json, os, pathlib, re, shutil, stat, subprocess, sys, tempfile
 import fetch_pages, fetch_web
 
 GITIGNORE = ['/mirrors/*', '!/mirrors/mirrors.json']
+FILES = '.mirror-files.json'   # writable copies: sha256 of each file as fetched
+MAX_AGE = 24
 WHAT = ('Read-only copies of outside repositories, fetched into mirrors/<name>/ (gitignored) by the mirrors '
         'skill (fetch_mirrors.py). Entries with "commit" are pinned; entries with "follow": true take the '
         'newest commit of "ref" on every fetch; "kind": "pages" entries copy the .md pages a site\'s llms.txt links, '
-        'always current. Cite files as mirrors/<name>/<path> or mirrors/<set>/<member>/<path>.')
+        'always current (checked at most every "max_age" hours); "writable": true copies can be edited. Cite files as mirrors/<name>/<path> or mirrors/<set>/<member>/<path>.')
 
 
 def run(*a, cwd=None, check=True):
@@ -243,6 +250,75 @@ def delete(tree):
         shutil.rmtree(tree)
 
 
+def writable_of(entry, mirror):
+    return entry.get('writable', mirror.get('writable', False))
+
+
+def digest(p):
+    return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def tree_files(tree):
+    """Regular files under tree, relative paths, without the mirror's own .mirror-* files at the top."""
+    for dirpath, dirs, files in os.walk(tree):
+        for n in files:
+            p = pathlib.Path(dirpath, n)
+            rel = str(p.relative_to(tree))
+            if not p.is_symlink() and not rel.startswith('.mirror-'):
+                yield rel, p
+
+
+def record(tree):
+    """What a writable copy holds now counts as fetched: later changes there are the user's."""
+    (tree / FILES).write_text(json.dumps({r: digest(p) for r, p in tree_files(tree)}, indent=1, sort_keys=True) + '\n')
+
+
+def place(src, dst, writable):
+    """Put a fetched tree at dst. Read-only: replace the copy. Writable: update it in place; a file changed
+    there since the last fetch (a note, a highlight) or added there is kept, and so is the fetched version's
+    absence: nothing the user touched is overwritten or deleted."""
+    if not writable:
+        delete(dst)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(src, dst, symlinks=True)
+        os.chmod(dst, 0o755)   # the temp dir was 0700
+        return
+    dst.mkdir(parents=True, exist_ok=True)
+    set_writable(dst, True)
+    old = json.loads((dst / FILES).read_text()) if (dst / FILES).exists() else {}
+    kept, new = [], {}
+    for dirpath, dirs, files in os.walk(src):
+        for n in dirs + files:
+            s = pathlib.Path(dirpath, n)
+            rel = str(s.relative_to(src))
+            d = dst / rel
+            if s.is_symlink():
+                if not d.exists() and not d.is_symlink():
+                    d.symlink_to(os.readlink(s))
+                continue
+            if s.is_dir():
+                d.mkdir(exist_ok=True)
+                continue
+            new[rel] = h = digest(s)
+            mine = d.is_symlink() or d.exists() and digest(d) not in (h, old.get(rel))
+            if mine and not rel.startswith('.mirror-'):
+                if h != old.get(rel):   # silent when the source did not change either
+                    kept.append(rel)
+            elif d.is_symlink() or not d.exists() or digest(d) != h:
+                d.unlink(missing_ok=True)
+                shutil.copy2(s, d)
+    for rel, h in old.items():
+        d = dst / rel
+        if rel not in new and d.is_file() and not d.is_symlink():
+            if digest(d) == h:
+                d.unlink()
+            else:
+                kept.append(rel)
+    (dst / FILES).write_text(json.dumps(new, indent=1, sort_keys=True) + '\n')
+    for rel in sorted(kept):
+        print(f'  kept     {rel} (changed here; the fetched version was not written)')
+
+
 def fetch(label, entry, url, dst, mirror, commit):
     include = entry.get('include', mirror.get('include'))
     with tempfile.TemporaryDirectory() as tmp:
@@ -261,12 +337,9 @@ def fetch(label, entry, url, dst, mirror, commit):
             sys.exit(f'refused  {label}: license not in {mirror["license"]}: ' + '; '.join(bad))
         shutil.rmtree(t / '.git')
         dropped = drop_outside_links(t)
-        delete(dst)
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(t, dst, symlinks=True)
-        os.chmod(dst, 0o755)   # the temp dir was 0700
+        place(t, dst, writable_of(entry, mirror))
     (dst / '.mirror-commit').write_text(commit + '\n')
-    set_writable(dst, False)
+    set_writable(dst, writable_of(entry, mirror))
     print(f'fetched  {label} {commit[:7]}{" (following " + entry["ref"] + ")" if following(entry, mirror) else ""}')
     for d in dropped:
         print(f'  dropped link pointing outside the mirror: {d}')
@@ -275,12 +348,14 @@ def fetch(label, entry, url, dst, mirror, commit):
 def sync(data, names, check, refresh=False, max_age=None):
     problems = 0
     for label, entry, url, dst, mirror in targets(data, names):
+        writable = writable_of(entry, mirror)
+        lock = lambda tree, w: set_writable(tree, w or writable)
         if mirror['kind'] == 'pages':
-            problems += fetch_pages.sync(label, entry, dst, check, set_writable, delete,
-                                         None if refresh or check else max_age)
+            age = None if refresh or check else max_age if max_age is not None else entry.get('max_age')
+            problems += fetch_pages.sync(label, entry, dst, check, lock, lambda src: place(src, dst, writable), age)
             continue
         if mirror['kind'] == 'web':
-            problems += fetch_web.sync(label, entry, dst, check, refresh, set_writable)
+            problems += fetch_web.sync(label, entry, dst, check, refresh, lock)
             continue
         stamp = dst / '.mirror-commit'
         have = stamp.read_text().strip() if stamp.exists() else None
@@ -315,7 +390,10 @@ def main():
     act.add_argument('--stale', action='store_true', help='targets: NAME [FOLDER]')
     act.add_argument('--links', action='store_true', help='target: NAME of a web mirror')
     act.add_argument('--refresh', action='store_true', help='fetch web articles again too')
-    p.add_argument('--max-age', type=float, metavar='HOURS', help='pages mirrors: skip if checked this recently')
+    act.add_argument('--read-only', action='store_true', help='TARGET ...: read-only copies again')
+    p.add_argument('--max-age', type=float, metavar='HOURS', help='pages mirrors: skip if checked this recently '
+                   '(default: the entry\'s "max_age"; with --add, sets it, default 24)')
+    p.add_argument('--writable', action='store_true', help='TARGET ...: editable copies; with --add: add it editable')
     p.add_argument('--web', action='store_true', help='with --add: capture a web article (and add more to it)')
     p.add_argument('--depth', type=int, default=0, help='with --web: levels of in-text links to follow (default 0)')
     p.add_argument('--max-pages', type=int, default=20, help='with --web: new pages per run at most (default 20)')
@@ -342,8 +420,11 @@ def main():
             e = data['mirrors'].setdefault(name, {'kind': 'web', 'urls': [], 'license': a.license})
             if e['kind'] != 'web':
                 sys.exit(f'{name} already exists and is not a web mirror')
+            if a.writable:
+                e['writable'] = True
+            lock = lambda tree, w: set_writable(tree, w or e.get('writable', False))
             try:
-                fetch_web.crawl(name, e, MIRRORS / name, [url], a.depth, a.max_pages, set_writable)
+                fetch_web.crawl(name, e, MIRRORS / name, [url], a.depth, a.max_pages, lock)
             finally:
                 save(data)
             print('  (commit mirrors/mirrors.json)')
@@ -354,13 +435,17 @@ def main():
             sys.exit(f'{name} already exists')
         if '{member}' in url:
             data['mirrors'][name] = {'kind': 'set', 'url': url, 'license': a.license, 'members': {}}
+            if a.writable:
+                data['mirrors'][name]['writable'] = True
             save(data)
             print(f'added    set {name}; add members with --pin {name}/<member> <ref>')
             return 0
         if url.endswith('llms.txt'):
-            e = {'kind': 'pages', 'url': url, 'license': a.license}
+            e = {'kind': 'pages', 'url': url, 'license': a.license, 'max_age': a.max_age if a.max_age is not None else MAX_AGE}
             if a.include:
                 e['include'] = a.include
+            if a.writable:
+                e['writable'] = True
             data['mirrors'][name] = e
             save(data)
             print(f'added    {name} pages of {url} (following) (commit mirrors/mirrors.json)')
@@ -378,6 +463,8 @@ def main():
         e.update({'follow': True} if a.follow else {'commit': commit})
         if a.include:
             e['include'] = a.include
+        if a.writable:
+            e['writable'] = True
         e['license'] = a.license
         data['mirrors'][name] = e
         save(data)
@@ -386,8 +473,32 @@ def main():
             print('  no license recorded: check it and add "license" to the entry')
         return sync(data, [name], False)
 
-    if a.follow and (a.check or a.list or a.pin or a.remove):
+    if a.follow and (a.check or a.list or a.pin or a.remove or a.read_only or a.writable):
         sys.exit('--follow goes alone with a target, or with --add')
+
+    if a.writable or a.read_only:
+        if a.writable and (a.check or a.list or a.pin or a.remove or a.stale or a.links or a.refresh):
+            sys.exit('--writable goes alone with a target, or with --add')
+        if not a.targets:
+            sys.exit('name a target')
+        for label, entry, url, dst, mirror in targets(data, a.targets):
+            if a.writable:
+                entry['writable'] = True
+            else:
+                entry.pop('writable', None)
+                if mirror['kind'] == 'set':
+                    mirror.pop('writable', None)
+            if dst.exists():
+                if a.read_only:
+                    (dst / FILES).unlink(missing_ok=True)   # the folder is still writable here
+                set_writable(dst, a.writable)
+                if a.writable and mirror['kind'] != 'web':
+                    record(dst)
+            print(f'{"writable" if a.writable else "read-only"} {label}'
+                  + ('' if a.writable else ' (changes made in the copy are replaced on the next fetch)'))
+        save(data)
+        print('  (commit mirrors/mirrors.json)')
+        return 0
 
     if a.links:
         if not a.targets:

@@ -3,6 +3,7 @@
 Used by fetch_mirrors.py for entries with "kind": "web" ("urls": the pages captured). A capture is a
 snapshot: a plain fetch only downloads pages still missing; --refresh downloads them again and reports
 which changed (hash of the markdown, not of the HTML, whose ads and tokens change on every request).
+In a "writable" mirror, a page edited since its capture (highlights, notes) is never overwritten.
 
 crawl() follows the links inside the article text (Defuddle drops menus, tags, footers and "related"
 lists) breadth first, on the seed's site only, up to a depth and a number of new pages. Loops are cut by
@@ -156,7 +157,7 @@ def write(dst, rel, text):
     p.write_text(text)
 
 
-def capture(fetcher, url, dst, state, now, label, host=None):
+def capture(fetcher, url, dst, state, now, label, host=None, writable=False):
     """Fetch and store one page. Returns (normalized final url, links) or None when skipped."""
     try:
         final, html = fetcher.get(url)
@@ -175,7 +176,10 @@ def capture(fetcher, url, dst, state, now, label, host=None):
     state[rel] = {'url': final, 'sha256': h, 'title': fm.get('title'), 'modified': fm.get('modified'),
                   'changed': prev['changed'] if prev and prev['sha256'] == h else (now if prev else None),
                   'links': sorted({norm(u): t for u, t in reversed(links)}.items())}
-    if not prev or prev['sha256'] != h or not (dst / rel).exists():
+    p = dst / rel
+    if writable and prev and p.exists() and hashlib.sha256(p.read_bytes()).hexdigest() not in (prev['sha256'], h):
+        print(f'  kept     {rel} (changed here; the fetched version was not written)')
+    elif not prev or prev['sha256'] != h or not p.exists():
         write(dst, rel, md)
         tag = 'new' if not prev else 'changed' if prev['sha256'] != h else 'restored'
         print(f'  {tag:8} {rel}  {fm.get("title") or ""}')
@@ -221,7 +225,7 @@ def crawl(label, entry, dst, seeds, depth, max_pages, set_writable):
                 print(f'  stopped  at --max-pages {max_pages}; {len(queue)} link(s) left (see --links {label})')
                 break
             url, level, host = queue.pop(0)
-            got = capture(fetcher, url, dst, state, now, label, host)
+            got = capture(fetcher, url, dst, state, now, label, host, entry.get('writable', False))
             if not got:
                 continue
             final, links = got
@@ -253,7 +257,7 @@ def sync(label, entry, dst, check, refresh, set_writable):
     fetcher, now = Fetcher(), datetime.now(timezone.utc).isoformat(timespec='seconds')
     try:
         for u in todo:
-            capture(fetcher, u, dst, state, now, label)
+            capture(fetcher, u, dst, state, now, label, writable=entry.get('writable', False))
     finally:
         save_state(dst, state, set_writable)
     print(f'fetched  {label} ({len(todo)} page(s){" refreshed" if refresh else ""})')

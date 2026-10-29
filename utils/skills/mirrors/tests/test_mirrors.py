@@ -179,6 +179,24 @@ class GitMirrors(Base):
         self.assertTrue(all('commit' in m and 'follow' not in m for m in members.values()))
         self.assertIn('ok       s/two', self.run_cli('--check'))
 
+    def test_writable_keeps_edits(self):
+        self.run_cli('--add', 'lib', self.lib, '--writable')
+        copy = self.proj / 'mirrors' / 'lib'
+        self.assertTrue(os.access(copy / 'src' / 'a.txt', os.W_OK))
+        (copy / 'src' / 'a.txt').write_text('my note')       # changed here, same in the source
+        (copy / 'package.json').write_text('{"mine": 1}')    # changed here and in the source
+        (copy / 'notes.md').write_text('added here')
+        out = self.run_cli('--pin', 'lib', '@1.0.0')
+        self.assertIn('kept     package.json', out)
+        self.assertNotIn('src/a.txt', out)
+        self.assertEqual((copy / 'src' / 'a.txt').read_text(), 'my note')
+        self.assertEqual((copy / 'notes.md').read_text(), 'added here')
+        self.assertFalse((copy / 'src' / 'b.txt').exists(), 'untouched files leave with the source')
+        self.assertEqual((copy / '.mirror-commit').read_text().strip(), self.c1)
+        self.run_cli('--read-only', 'lib')
+        self.assertNotIn('writable', self.manifest()['lib'])
+        self.assertFalse(os.access(copy / 'src' / 'a.txt', os.W_OK))
+
     def test_remove(self):
         self.run_cli('--add', 'lib', self.lib)
         self.run_cli('--remove', 'lib')
@@ -215,18 +233,34 @@ class PagesMirrors(Base):
                           'docs/other.md': 'Base: mirrors/d/en/a.md\n'})
         self.site.page('/docs/en/b.md', '# B, new\n', 'text/markdown')
         self.assertIn('outdated', self.run_cli('--check', ok=False))
-        self.assertIn('changed  en/b.md', self.run_cli())
+        self.assertIn('changed  en/b.md', self.run_cli('--refresh'))
         out = self.run_cli('--stale', 'd', 'docs', ok=False)
         self.assertIn('docs/guide.md: en/b.md', out)
         self.assertNotIn('other.md', out)
 
     def test_max_age_skips_the_download(self):
         self.run_cli('--add', 'd', self.url, '--include', 'en')
+        self.assertEqual(self.manifest()['d']['max_age'], 24)
         before = self.site.total()
-        self.assertIn('fresh', self.run_cli('--max-age', '24'))
+        self.assertIn('fresh', self.run_cli())
         self.assertEqual(self.site.total(), before)
+        self.assertNotIn('fresh', self.run_cli('--max-age', '0'))
+        self.assertGreater(self.site.total(), before)
+        before = self.site.total()
         self.run_cli('--refresh')
         self.assertGreater(self.site.total(), before)
+        self.run_cli('--add', 'e', self.url, '--max-age', '0')
+        self.assertEqual(self.manifest()['e']['max_age'], 0)
+
+    def test_writable_keeps_edits(self):
+        self.run_cli('--add', 'd', self.url, '--include', 'en', '--writable')
+        a = self.proj / 'mirrors' / 'd' / 'en' / 'a.md'
+        a.write_text('# A, highlighted\n')
+        self.site.page('/docs/en/a.md', '# A, new\n', 'text/markdown')
+        self.site.page('/docs/en/b.md', '# B, new\n', 'text/markdown')
+        self.assertIn('kept     en/a.md', self.run_cli('--refresh'))
+        self.assertEqual(a.read_text(), '# A, highlighted\n')
+        self.assertEqual((a.parent / 'b.md').read_text(), '# B, new\n')
 
     def test_pin_refused(self):
         self.run_cli('--add', 'd', self.url, '--include', 'en')
@@ -327,6 +361,14 @@ class WebMirrors(Base):
         self.assertIn('notes/n.md', out)
         self.assertIn('blog/b.md', out)
         self.assertNotIn('blog/c.md', out)
+
+    def test_writable_keeps_edits(self):
+        self.run_cli('--add', 'w', self.site.base + '/blog/b', '--web', '--writable')
+        b = next((self.proj / 'mirrors' / 'w').rglob('b.md'))
+        b.write_text(b.read_text() + '\n==my highlight==\n')
+        self.site.page(*article('/blog/b', 'Article B', [('/blog/a', 'back to a')], extra=' (updated)'))
+        self.assertIn('kept', self.run_cli('--refresh'))
+        self.assertIn('==my highlight==', b.read_text())
 
 
 if __name__ == '__main__':
