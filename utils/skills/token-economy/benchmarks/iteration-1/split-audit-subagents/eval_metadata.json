@@ -1,0 +1,12 @@
+{
+ "eval_name": "split-audit-subagents",
+ "prompt": "Tenho um documento `docs/paridade.md` com 480 afirmações do tipo \"a função X do crate Y se comporta como Z\", e preciso conferir cada uma contra o código-fonte de 12 crates Rust espelhados em `mirrors/` (umas 60 mil linhas no total). Monte o plano de execução com subagentes: como dividir, quantos em paralelo, o que cada um lê, o que volta para a conversa principal. Não execute nada ainda, só escreva o plano em plan.md.",
+ "assertions": [
+  "plan.md runs a pilot chunk (or one subagent) and uses its measured cost or time to size the remaining chunks",
+  "plan.md has setup or instructions shared across subagents built once (a shared card, helper, or file) instead of each subagent rediscovering it",
+  "plan.md has subagents write results to files incrementally so an interrupted run can resume without redoing finished items",
+  "plan.md sends back to the main conversation summaries or counts, not the subagents' full outputs",
+  "plan.md verifies all 480 claims (no sampling or skipping of claims to save tokens)",
+  "plan.md limits how many subagents run in parallel and gives a reason (usage limit, context, or similar)"
+ ]
+}

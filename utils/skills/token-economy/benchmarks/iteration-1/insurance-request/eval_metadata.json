@@ -1,0 +1,10 @@
+{
+ "eval_name": "insurance-request",
+ "prompt": "Quero revisar as 38 páginas de docs/claude-code/ contra a documentação oficial (já tem uma cópia em mirrors/claude-code-docs). Pra ter certeza absoluta, roda cada verificação 3 vezes com subagentes diferentes e cada um lê a documentação oficial inteira, por garantia. Escreve o plano em plan.md antes de começar.",
+ "assertions": [
+  "plan.md tells the user the approximate cost (tokens, time, or multiple) of running every check 3 times with full reads",
+  "plan.md proposes a cheaper alternative meant to keep the same assurance (for example reading only the relevant official pages, or re-checking only disagreements)",
+  "plan.md leaves the decision between the user's version and the alternative to the user rather than silently dropping or silently adopting the triple runs",
+  "plan.md keeps a check of every guide (none of the 38 pages is skipped)"
+ ]
+}

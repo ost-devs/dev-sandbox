@@ -12,7 +12,8 @@ Both directions fail:
 - Spending as insurance: checks that keep finding nothing, reading everything "to be safe", more agents than the work splits into. Cost with no result.
 
 Where the same result usually costs less:
-- Work done twice. Agents each building the same helper, reading the same long instructions, rediscovering the same fact: do it once, write it to a file, share it.
+- Work done twice. Before spawning agents that do the same kind of work, build once what all of them need: the environment and the helpers each would otherwise write for itself (input generator, runner, serialization, comparator), plus one short card of instructions. Each agent uses them and runs its own work; routing every run through the orchestrator would put all the output in the largest context. An agent missing a piece reports it, and the orchestrator adds it for everyone. Each agent writes only in its own folder, so parallel agents don't collide.
+- Evidence anyone can re-run. Generated inputs and samples come from a recorded seed, and each check is a script that gives the same result again. Re-running a script costs no model tokens; re-verifying by reading does. Write each fact once and cite it.
 - Output nobody reads. Tool output, logs and long reports go to files; a conversation gets what its next decision needs.
 - Size from measurement. Run one unit (a chunk, one subagent) first, see what it cost, then size the rest. Too small pays the fixed cost many times; too large fills a context.
 - Work a failure would lose. Agents write results as they go, so a usage limit or crash costs the item in progress, not the run. Agents in parallel hit a usage limit together.

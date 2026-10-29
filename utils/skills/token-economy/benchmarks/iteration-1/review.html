@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "token-economy", "runs": [{"id": "cut-quality-request-with_skill", "prompt": "t\u00f4 quase no limite de uso da semana. preciso migrar os 200 testes de integra\u00e7\u00e3o do projeto pra nova API do cliente HTTP. faz o plano mais barato poss\u00edvel em plan.md: pode pular a rodada final dos testes, usar haiku em tudo e n\u00e3o precisa conferir nada, s\u00f3 converter.", "eval_id": null, "outputs": [{"name": "plan.md", "type": "text", "content": "# Plano: migrar 200 testes de integra\u00e7\u00e3o para a nova API do cliente HTTP\n\nObjetivo: os 200 testes convertidos para a nova API, gastando o m\u00ednimo de tokens.\n\nResumo: d\u00e1 para gastar bem menos do que \"Haiku convertendo arquivo por arquivo\" sem abrir m\u00e3o de saber se a migra\u00e7\u00e3o funcionou. O que mais pesa \u00e9 o modelo **ler e reescrever 200 arquivos**, n\u00e3o rodar os testes. Por isso o plano troca a convers\u00e3o manual por um script, e mant\u00e9m uma rodada de testes que custa quase nada.\n\n## Antes: o que voc\u00ea pediu e o que eu mudei\n\nVoc\u00ea pediu tr\u00eas cortes. Dois deles quase n\u00e3o economizam e podem custar caro depois. A escolha \u00e9 sua; abaixo, o custo de cada um.\n\n| Seu pedido | Quanto economiza | O que voc\u00ea perde | Minha proposta |\n|---|---|---|---|\n| Pular a rodada final dos testes | Quase nada. Rodar a su\u00edte \u00e9 um comando; o gasto \u00e9 ler a sa\u00edda, e a sa\u00edda vai para um arquivo. S\u00f3 entram na conversa os nomes dos testes que falharam. | Voc\u00ea n\u00e3o fica sabendo se a migra\u00e7\u00e3o quebrou algo. Descobre depois, numa sess\u00e3o nova, que precisa reler os arquivos do zero (muito mais tokens). | Manter uma rodada, com sa\u00edda em arquivo (passo 5). |\n| Haiku em tudo | Bastante, na parte de converter. | Na parte de decidir o padr\u00e3o de convers\u00e3o, um erro do Haiku se repete nos 200 arquivos. | Haiku (ou nem modelo, um script) na convers\u00e3o em massa; o modelo atual s\u00f3 no passo 1, que \u00e9 curto. |\n| N\u00e3o conferir nada | Pouco, se a confer\u00eancia for a rodada de testes. | Mesmo do primeiro item. | Nenhuma confer\u00eancia manual arquivo por arquivo (concordo com voc\u00ea); s\u00f3 a rodada de testes. |\n\nSe mesmo assim quiser pular os testes, \u00e9 s\u00f3 apagar o passo 5. O resto do plano continua igual.\n\n## Passos\n\n### 1. Montar a regra de convers\u00e3o (modelo atual, uma vez)\n- Ler o changelog/guia de migra\u00e7\u00e3o do cliente HTTP (s\u00f3 a parte das mudan\u00e7as de API) e **2 ou 3 testes** representativos.\n- Escrever em `migration-rules.md` a tabela \"API antiga \u2192 API nova\" (ex.: `client.get(url, params)` \u2192 `client.request(\"GET\", url, query=params)`), com os casos especiais encontrados.\n- Esse arquivo \u00e9 lido uma vez por quem for converter; ningu\u00e9m redescobre as regras.\n\n### 2. Converter por script, n\u00e3o por modelo (onde der)\n- A maior parte de uma migra\u00e7\u00e3o de API \u00e9 troca mec\u00e2nica de chamadas. Um codemod (sed, script Python, ou a ferramenta de codemod da linguagem) converte os 200 arquivos sem o modelo ler nenhum deles.\n- Custo em tokens: escrever o script (pequeno) + a lista dos arquivos que ele n\u00e3o conseguiu converter.\n- O script grava em `migration-leftovers.txt` os trechos que n\u00e3o casaram com nenhuma regra.\n\n### 3. Piloto: medir antes de escalar\n- Rodar o script em **5 testes**, rodar s\u00f3 esses 5 testes.\n- Se passarem: seguir para todos. Se falharem: ajustar `migration-rules.md` e o script, que \u00e9 bem mais barato do que corrigir 200 arquivos depois.\n\n### 4. Sobras com Haiku, em lotes\n- S\u00f3 os trechos de `migration-leftovers.txt` v\u00e3o para subagentes Haiku, com `migration-rules.md` como \u00fanica instru\u00e7\u00e3o.\n- Lotes de uns 20 arquivos (ajustar pelo custo medido no primeiro lote). Cada subagente grava direto nos arquivos e anota em `migration-progress.txt` o que terminou: se bater o limite de uso, voc\u00ea perde s\u00f3 o lote em andamento, n\u00e3o a migra\u00e7\u00e3o inteira.\n- Rodar os lotes em sequ\u00eancia, n\u00e3o todos em paralelo: em paralelo eles batem no limite juntos.\n- Resposta de cada subagente: uma linha (\"lote 3: 18 convertidos, 2 pendentes: a.test, b.test\").\n\n### 5. Uma rodada dos testes, sa\u00edda em arquivo\n- Rodar a su\u00edte inteira uma vez, sa\u00edda em `test-run.log`.\n- Para a conversa vai s\u00f3 a lista de testes que falharam (ex.: `grep FAIL test-run.log`), n\u00e3o o log.\n- Falhas: corrigir s\u00f3 esses arquivos, rodar s\u00f3 esses testes de novo.\n\n## O que fica de fora (de prop\u00f3sito)\n- Revis\u00e3o manual de cada arquivo: os testes j\u00e1 dizem se a convers\u00e3o funcionou.\n- Ler o projeto inteiro: s\u00f3 o guia de migra\u00e7\u00e3o e os 2 ou 3 exemplos do passo 1.\n- Relat\u00f3rios longos dos subagentes: uma linha por lote.\n\n## Se o limite da semana acabar no meio\n`migration-progress.txt` diz onde parou. Na pr\u00f3xima sess\u00e3o: ler esse arquivo e `migration-rules.md`, e continuar do pr\u00f3ximo lote.\n"}], "grading": {"expectations": [{"text": "plan.md states that skipping the final test run (or all checks) risks an unverified migration and leaves that choice to the user", "passed": true, "evidence": "Table per cut: skipping the test run saves almost nothing and leaves the migration unverified; 'A escolha \u00e9 sua'"}, {"text": "plan.md proposes savings that keep the result, such as a scripted/codemod or batched conversion, a pilot batch, or running the tests instead of manual review", "passed": true, "evidence": "Codemod converts most files; 5-test pilot; Haiku only for leftovers in batches"}, {"text": "plan.md keeps at least one step that verifies the migrated tests (running them, or a subset) or explicitly recommends one", "passed": true, "evidence": "Step 5 keeps one full test run with output to a file"}, {"text": "plan.md discusses where haiku fits or does not fit rather than only accepting or only rejecting it", "passed": true, "evidence": "Haiku for bulk conversion, current model only for the short rules step; explains why"}], "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}}}, {"id": "cut-quality-request-without_skill", "prompt": "t\u00f4 quase no limite de uso da semana. preciso migrar os 200 testes de integra\u00e7\u00e3o do projeto pra nova API do cliente HTTP. faz o plano mais barato poss\u00edvel em plan.md: pode pular a rodada final dos testes, usar haiku em tudo e n\u00e3o precisa conferir nada, s\u00f3 converter.", "eval_id": null, "outputs": [{"name": "plan.md", "type": "text", "content": "# Plano: migrar 200 testes de integra\u00e7\u00e3o para a nova API do cliente HTTP\n\nObjetivo: o menor gasto poss\u00edvel de tokens, como voc\u00ea pediu. N\u00e3o haver\u00e1 rodada final dos testes. Haiku faz o trabalho. N\u00e3o haver\u00e1 revis\u00e3o manual.\n\n## A ideia central: quem converte \u00e9 um script, n\u00e3o o modelo\n\nSe o Haiku abrir e reescrever 200 arquivos um por um, o custo cresce com o tamanho de cada arquivo. Um script de convers\u00e3o (sed ou um codemod pequeno) faz os 200 arquivos por quase nada. O modelo s\u00f3 entra nos casos que o script n\u00e3o cobre.\n\n## Passos\n\n1. **Mapear a mudan\u00e7a da API (1 vez, Haiku).** Ler o changelog ou o guia de migra\u00e7\u00e3o do cliente HTTP e montar uma tabela \"antigo \u2192 novo\": nomes de m\u00e9todos, par\u00e2metros, como a resposta \u00e9 lida, exce\u00e7\u00f5es e timeouts. N\u00e3o ler os testes inteiros nesta etapa.\n2. **Achar os padr\u00f5es com grep, sem abrir arquivos.** Usar `grep -rn` nas chamadas antigas para contar quantas vezes cada padr\u00e3o aparece. Assim d\u00e1 para saber o que \u00e9 mec\u00e2nico (a maioria) e o que \u00e9 exce\u00e7\u00e3o.\n3. **Escrever o script de convers\u00e3o (Haiku, 1 vez).** Um `sed -i` ou um codemod que aplica a tabela do passo 1 em todos os testes de uma vez. Rodar o script; isso n\u00e3o gasta tokens.\n4. **Tratar as sobras (Haiku).** Rodar `grep` de novo procurando chamadas antigas que sobraram. S\u00f3 os arquivos que aparecerem v\u00e3o para o Haiku, e ele recebe s\u00f3 o trecho afetado, n\u00e3o o arquivo inteiro.\n5. **Commit.** Um commit s\u00f3, com a mensagem dizendo que a migra\u00e7\u00e3o foi autom\u00e1tica e que os testes n\u00e3o foram rodados.\n\nSem subagentes, sem conversa longa: cada passo come\u00e7a e termina numa sess\u00e3o curta.\n\n## O que fica de fora (como voc\u00ea pediu)\n\n- Rodada final da su\u00edte de testes.\n- Revis\u00e3o dos arquivos convertidos.\n- Modelo mais caro em qualquer etapa.\n\n## Um aviso, e uma checagem quase de gra\u00e7a (opcional)\n\nSem conferir nada, um erro no script pode quebrar os 200 testes de uma vez, e voc\u00ea s\u00f3 descobre depois, quando consertar custa mais tokens do que conferir agora. Duas checagens n\u00e3o gastam tokens do modelo, porque \u00e9 s\u00f3 voc\u00ea rodar um comando:\n\n- **Checar s\u00f3 se compila ou se os testes s\u00e3o encontrados**, sem executar nada (por exemplo `pytest --collect-only -q`, `tsc --noEmit` ou `go vet ./...`, conforme a linguagem). Isso pega erro de sintaxe e import quebrado.\n- **Rodar 2 ou 3 testes de amostra**, n\u00e3o a su\u00edte inteira.\n\nSe quiser pular essas tamb\u00e9m, tudo bem: o plano funciona sem elas. S\u00f3 deixe o commit separado, assim `git revert` desfaz tudo num passo.\n"}], "grading": {"expectations": [{"text": "plan.md states that skipping the final test run (or all checks) risks an unverified migration and leaves that choice to the user", "passed": true, "evidence": "Warns that an unverified script error can break all 200 tests; leaves the optional checks to the user"}, {"text": "plan.md proposes savings that keep the result, such as a scripted/codemod or batched conversion, a pilot batch, or running the tests instead of manual review", "passed": true, "evidence": "Script/codemod converts the files; Haiku only for leftovers"}, {"text": "plan.md keeps at least one step that verifies the migrated tests (running them, or a subset) or explicitly recommends one", "passed": true, "evidence": "Recommends optional collect-only and 2-3 sample tests"}, {"text": "plan.md discusses where haiku fits or does not fit rather than only accepting or only rejecting it", "passed": false, "evidence": "Accepts Haiku everywhere without discussing where it fits or not"}], "summary": {"passed": 3, "failed": 1, "total": 4, "pass_rate": 0.75}}}, {"id": "insurance-request-with_skill", "prompt": "Quero revisar as 38 p\u00e1ginas de docs/claude-code/ contra a documenta\u00e7\u00e3o oficial (j\u00e1 tem uma c\u00f3pia em mirrors/claude-code-docs). Pra ter certeza absoluta, roda cada verifica\u00e7\u00e3o 3 vezes com subagentes diferentes e cada um l\u00ea a documenta\u00e7\u00e3o oficial inteira, por garantia. Escreve o plano em plan.md antes de come\u00e7ar.", "eval_id": null, "outputs": [{"name": "plan.md", "type": "text", "content": "# Plano: revisar docs/claude-code/ contra a documenta\u00e7\u00e3o oficial\n\n## Objetivo (o que n\u00e3o muda)\n\nCada afirma\u00e7\u00e3o das 38 p\u00e1ginas de `docs/claude-code/` conferida contra a c\u00f3pia oficial em `mirrors/claude-code-docs`, com evid\u00eancia: para cada afirma\u00e7\u00e3o, a p\u00e1gina oficial e o trecho que a confirma ou contradiz. O resultado final \u00e9 uma lista de diverg\u00eancias (errado, desatualizado, sem fonte) com a corre\u00e7\u00e3o sugerida, por p\u00e1gina.\n\n## Antes de come\u00e7ar: duas partes do pedido que eu proponho mudar\n\nVoc\u00ea pediu duas coisas \"por garantia\". Fiz a conta e as duas custam muito sem melhorar o resultado. A decis\u00e3o \u00e9 sua; abaixo, o que cada caminho custa e o que deixa de dar.\n\n### 1. \"Cada subagente l\u00ea a documenta\u00e7\u00e3o oficial inteira\"\n\n- A c\u00f3pia oficial tem uns 10 MB (~120 p\u00e1ginas), cerca de 2,5 milh\u00f5es de tokens. **N\u00e3o cabe no contexto de um subagente**: ele n\u00e3o consegue ler tudo de verdade, s\u00f3 come\u00e7ar, encher o contexto e perder o come\u00e7o. Na pr\u00e1tica isso deixa a verifica\u00e7\u00e3o *pior*, n\u00e3o mais segura.\n- Custo, se coubesse: 38 p\u00e1ginas \u00d7 3 rodadas \u00d7 ~2,5 M tokens \u2248 285 milh\u00f5es de tokens.\n- **Proposta:** montar uma vez um \u00edndice da documenta\u00e7\u00e3o oficial (p\u00e1gina \u2192 assuntos, t\u00edtulos, configura\u00e7\u00f5es, flags que ela cobre) e salvar em arquivo. Cada subagente recebe a p\u00e1gina nossa + a lista das p\u00e1ginas oficiais relevantes e l\u00ea essas p\u00e1ginas **inteiras** (n\u00e3o trechos). Se uma afirma\u00e7\u00e3o n\u00e3o tiver p\u00e1gina oficial no \u00edndice, o subagente busca no mirror (grep) antes de marcar \"sem fonte\".\n- O que se perde: nada do que a verifica\u00e7\u00e3o precisa. O risco \u00e9 o \u00edndice apontar a p\u00e1gina errada; o grep de reserva cobre isso.\n\n### 2. \"Rodar cada verifica\u00e7\u00e3o 3 vezes com subagentes diferentes\"\n\n- Triplica o custo inteiro. Vale se as tr\u00eas rodadas discordarem com frequ\u00eancia; se concordarem quase sempre, a segunda e a terceira n\u00e3o acham nada.\n- **Proposta:** medir antes de decidir (passo 2 abaixo). Rodo as 3 verifica\u00e7\u00f5es independentes em um piloto de 3 p\u00e1ginas e comparo:\n  - Se as rodadas concordam (mesmas diverg\u00eancias encontradas), passo para **1 rodada por p\u00e1gina + segunda verifica\u00e7\u00e3o s\u00f3 nas afirma\u00e7\u00f5es marcadas como incertas ou divergentes**. Toda diverg\u00eancia que vira corre\u00e7\u00e3o \u00e9 conferida duas vezes; o que foi confirmado com trecho citado n\u00e3o precisa.\n  - Se discordam bastante, mantenho as 3 rodadas, como voc\u00ea pediu.\n- Eu te mostro o resultado do piloto e o custo medido antes de escolher. N\u00e3o corto nada sem voc\u00ea saber.\n\n## Passos\n\n1. **\u00cdndice da documenta\u00e7\u00e3o oficial (uma vez s\u00f3).** Um subagente l\u00ea o mirror por partes e escreve `review/index.md`: para cada p\u00e1gina oficial, caminho, t\u00edtulo e assuntos cobertos. Tamb\u00e9m listo as 38 p\u00e1ginas nossas com as p\u00e1ginas oficiais relevantes para cada uma (`review/mapa.md`). Todos os subagentes depois reusam esses arquivos, em vez de cada um redescobrir onde est\u00e1 cada coisa.\n\n2. **Piloto (3 p\u00e1ginas, 3 rodadas independentes).** Escolho 3 p\u00e1ginas de tamanhos diferentes (uma curta, uma m\u00e9dia, uma longa). Cada rodada escreve `review/piloto/\u003cpagina>-rodada\u003cN>.md` no formato abaixo. Me\u00e7o: tokens por p\u00e1gina, quanto as rodadas concordam, quantos erros reais a 2\u00aa e a 3\u00aa rodada acharam que a 1\u00aa n\u00e3o achou. **Paro e te mostro** os n\u00fameros e a proposta de como seguir.\n\n3. **Rodada principal.** Com o formato e o tamanho definidos pelo piloto:\n   - Agrupo as p\u00e1ginas por assunto (p\u00e1ginas que usam as mesmas p\u00e1ginas oficiais v\u00e3o juntas, para n\u00e3o ler a mesma p\u00e1gina oficial v\u00e1rias vezes). Tamanho do grupo definido pelo custo medido no piloto.\n   - Cada subagente recebe: instru\u00e7\u00f5es curtas (um arquivo compartilhado `review/instrucoes.md`, escrito uma vez), as p\u00e1ginas do grupo, a lista de p\u00e1ginas oficiais a ler.\n   - Cada subagente escreve o resultado de **cada p\u00e1gina assim que termina** em `review/resultados/\u003cpagina>.md`. Se bater limite de uso ou travar, perde s\u00f3 a p\u00e1gina em andamento; retomo pelas que faltam.\n   - Poucos subagentes em paralelo de cada vez (ex.: 3 ou 4), porque em paralelo eles batem no limite de uso juntos.\n\n4. **Segunda verifica\u00e7\u00e3o (conforme decidido no passo 2).** Outro subagente, sem ver a resposta do primeiro, confere as afirma\u00e7\u00f5es marcadas como divergentes ou incertas. Se os dois discordarem, eu mesmo leio o trecho oficial e decido.\n\n5. **Consolida\u00e7\u00e3o.** Junto tudo em `review/relatorio.md`: por p\u00e1gina, as diverg\u00eancias com trecho oficial, caminho no mirror e corre\u00e7\u00e3o sugerida. Na conversa, s\u00f3 o resumo (quantas p\u00e1ginas, quantas diverg\u00eancias, as mais graves). N\u00e3o edito `docs/claude-code/` sem voc\u00ea aprovar as corre\u00e7\u00f5es.\n\n## Formato do resultado por p\u00e1gina\n\n```\n## \u003cp\u00e1gina>\n| Afirma\u00e7\u00e3o (linha) | Status | P\u00e1gina oficial | Trecho oficial | Corre\u00e7\u00e3o sugerida |\n```\n\nStatus: `confirmado`, `divergente`, `desatualizado`, `sem fonte`, `incerto`.\n\n## Custo estimado\n\n| Caminho | Ordem de grandeza |\n|---|---|\n| Como pedido (3 rodadas, docs inteira por agente) | ~285 M tokens, e n\u00e3o funciona (n\u00e3o cabe no contexto) |\n| 3 rodadas, s\u00f3 p\u00e1ginas oficiais relevantes | ~3\u00d7 o caminho abaixo |\n| 1 rodada + 2\u00aa verifica\u00e7\u00e3o nas diverg\u00eancias/incertezas | o menor; n\u00famero real sai do piloto |\n\n## O que preciso de voc\u00ea\n\n1. Ok para trocar \"ler a documenta\u00e7\u00e3o inteira\" por \u00edndice + p\u00e1ginas relevantes lidas inteiras?\n2. Ok para decidir o n\u00famero de rodadas depois do piloto, com os n\u00fameros na m\u00e3o?\n"}], "grading": {"expectations": [{"text": "plan.md tells the user the approximate cost (tokens, time, or multiple) of running every check 3 times with full reads", "passed": true, "evidence": "~285M tokens computed; says full docs do not fit in a subagent context"}, {"text": "plan.md proposes a cheaper alternative meant to keep the same assurance (for example reading only the relevant official pages, or re-checking only disagreements)", "passed": true, "evidence": "Shared index + relevant official pages read whole; second check only on divergent/uncertain claims"}, {"text": "plan.md leaves the decision between the user's version and the alternative to the user rather than silently dropping or silently adopting the triple runs", "passed": true, "evidence": "'A decis\u00e3o \u00e9 sua'; two explicit questions; pilot numbers shown before choosing"}, {"text": "plan.md keeps a check of every guide (none of the 38 pages is skipped)", "passed": true, "evidence": "All 38 pages reviewed"}], "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}}}, {"id": "insurance-request-without_skill", "prompt": "Quero revisar as 38 p\u00e1ginas de docs/claude-code/ contra a documenta\u00e7\u00e3o oficial (j\u00e1 tem uma c\u00f3pia em mirrors/claude-code-docs). Pra ter certeza absoluta, roda cada verifica\u00e7\u00e3o 3 vezes com subagentes diferentes e cada um l\u00ea a documenta\u00e7\u00e3o oficial inteira, por garantia. Escreve o plano em plan.md antes de come\u00e7ar.", "eval_id": null, "outputs": [{"name": "plan.md", "type": "text", "content": "# Plano: revisar `docs/claude-code/` contra a documenta\u00e7\u00e3o oficial\n\n## Objetivo\n\nConferir as 38 p\u00e1ginas de `docs/claude-code/` contra a c\u00f3pia oficial em `mirrors/claude-code-docs/` (~120 p\u00e1ginas, ~10 MB). Para cada afirma\u00e7\u00e3o t\u00e9cnica, a revis\u00e3o aponta se est\u00e1 certa, errada, desatualizada ou sem fonte, e cita o trecho oficial que prova isso.\n\n## Antes de come\u00e7ar: uma mudan\u00e7a no pedido (preciso do seu ok)\n\nVoc\u00ea pediu que cada verifica\u00e7\u00e3o rode 3 vezes, com subagentes diferentes, e que cada um leia a documenta\u00e7\u00e3o oficial inteira. Proponho outro caminho, que d\u00e1 a mesma garantia (ou mais) por uma fra\u00e7\u00e3o do custo:\n\n| | Como voc\u00ea pediu | Como proponho |\n|---|---|---|\n| O que cada subagente l\u00ea | os 10 MB inteiros | s\u00f3 as 2 a 5 p\u00e1ginas oficiais que tratam do assunto da p\u00e1gina revisada |\n| Tokens por subagente | ~2,5 milh\u00f5es | ~30 a 80 mil |\n| Total estimado | 38 \u00d7 3 \u00d7 2,5 M \u2248 **285 milh\u00f5es** | \u2248 **3 a 5 milh\u00f5es** |\n| D\u00e1 para fazer? | **N\u00e3o**: 10 MB n\u00e3o cabem no contexto de um subagente. Ele leria peda\u00e7os, esqueceria o come\u00e7o e chutaria o resto | Sim |\n| Garantia | 3 opini\u00f5es, sem prova | cada achado vem com trecho citado, e eu confiro o trecho com `grep` |\n\nPor qu\u00ea:\n\n1. **Ler tudo n\u00e3o cabe.** O contexto de um agente n\u00e3o comporta 10 MB. \"Ler a documenta\u00e7\u00e3o inteira\" viraria, na pr\u00e1tica, ler uma parte e esquecer o resto, o que \u00e9 pior do que ler s\u00f3 o que importa.\n2. **Repetir 3 vezes n\u00e3o prova nada.** Tr\u00eas agentes podem concordar no mesmo erro. O que d\u00e1 certeza \u00e9 a **cita\u00e7\u00e3o verific\u00e1vel**: o achado s\u00f3 vale se trouxer arquivo + trecho literal do oficial, e eu confiro que o trecho existe (checagem mec\u00e2nica, sem custo de modelo).\n3. **Redund\u00e2ncia onde ela serve.** Uma segunda e uma terceira opini\u00e3o s\u00f3 para os achados de diverg\u00eancia (onde um erro custaria caro), n\u00e3o para as p\u00e1ginas que j\u00e1 batem com o oficial.\n\nSe mesmo assim voc\u00ea quiser as 3 rodadas completas para todas as p\u00e1ginas, eu fa\u00e7o as 3 rodadas, mas cada subagente lendo s\u00f3 as p\u00e1ginas relevantes (fica ~3x o custo da proposta, n\u00e3o 100x). Ler os 10 MB inteiros eu n\u00e3o recomendo de jeito nenhum, porque n\u00e3o cabe.\n\n## Passos\n\n### 1. Mapa da documenta\u00e7\u00e3o oficial (eu, sem subagente)\n- Listar as ~120 p\u00e1ginas de `mirrors/claude-code-docs/` com t\u00edtulo e cabe\u00e7alhos (`grep '^#'`), num \u00edndice de poucas KB.\n- Conferir a data/commit da c\u00f3pia (`mirrors` status). Se estiver velha, atualizar antes, sen\u00e3o vamos comparar com a vers\u00e3o antiga.\n\n### 2. Ligar cada p\u00e1gina nossa \u00e0s p\u00e1ginas oficiais (eu)\n- Para cada uma das 38 p\u00e1ginas, extrair os temas (comandos, flags, arquivos de config, nomes de recursos) e achar no \u00edndice e com `grep` as p\u00e1ginas oficiais correspondentes.\n- Resultado: uma tabela `p\u00e1gina nossa \u2192 2 a 5 p\u00e1ginas oficiais`. P\u00e1ginas sem correspond\u00eancia oficial ficam marcadas (\"sem fonte oficial\": \u00e9 opini\u00e3o ou guia nosso, e s\u00f3 checamos se n\u00e3o contradiz o oficial).\n\n### 3. Revis\u00e3o (1 subagente por lote de 3 ou 4 p\u00e1ginas, ~10 a 12 subagentes, em paralelo)\nCada subagente recebe:\n- seu pedido original, palavra por palavra;\n- as p\u00e1ginas nossas do lote e **s\u00f3** as p\u00e1ginas oficiais mapeadas (ele pode dar `grep` no mirror se precisar de mais);\n- o formato de sa\u00edda obrigat\u00f3rio, por afirma\u00e7\u00e3o: `p\u00e1gina:linha | afirma\u00e7\u00e3o | status (ok / errado / desatualizado / sem fonte) | arquivo oficial | trecho literal | corre\u00e7\u00e3o sugerida`.\n\nRegra: achado sem trecho literal \u00e9 descartado.\n\n### 4. Confer\u00eancia das cita\u00e7\u00f5es (eu, mec\u00e2nico)\n- Para cada achado, `grep -F` do trecho citado no arquivo oficial indicado. Trecho que n\u00e3o existe vira achado inv\u00e1lido e volta para revis\u00e3o.\n\n### 5. Segunda e terceira opini\u00e3o, s\u00f3 nas diverg\u00eancias\n- Cada achado \"errado\" ou \"desatualizado\" vai para um **segundo subagente independente** (sem ver a conclus\u00e3o do primeiro), com as mesmas p\u00e1ginas oficiais.\n- Se os dois concordam: confirmado. Se discordam: um **terceiro** desempata, e eu leio o trecho oficial pessoalmente antes de decidir.\n- Assim, as 3 verifica\u00e7\u00f5es que voc\u00ea pediu acontecem exatamente onde um erro de revis\u00e3o causaria uma corre\u00e7\u00e3o errada na doc.\n\n### 6. Relat\u00f3rio e corre\u00e7\u00f5es\n- Relat\u00f3rio por p\u00e1gina: o que est\u00e1 certo, o que corrigir (com o trecho oficial), o que n\u00e3o tem fonte.\n- Corre\u00e7\u00f5es aplicadas p\u00e1gina por p\u00e1gina, em portugu\u00eas, um commit por p\u00e1gina ou grupo pequeno no branch `claude`, sem push.\n- Itens de interpreta\u00e7\u00e3o (o oficial \u00e9 amb\u00edguo) ficam listados para voc\u00ea decidir, sem eu mexer.\n\n## Custo e tempo estimados\n- ~10 a 12 subagentes de revis\u00e3o + ~1 subagente de segunda opini\u00e3o a cada 5 diverg\u00eancias.\n- Ordem de grandeza: 3 a 5 milh\u00f5es de tokens no total, contra ~285 milh\u00f5es (e invi\u00e1vel) do pedido original.\n\n## O que preciso de voc\u00ea\n1. Ok para trocar \"ler tudo, 3 vezes\" por \"ler o relevante, citar, e 3 opini\u00f5es s\u00f3 nas diverg\u00eancias\"? Ou prefere 3 rodadas completas, mas lendo s\u00f3 o relevante?\n2. Atualizo o mirror antes de come\u00e7ar ou comparo com a c\u00f3pia atual?\n"}], "grading": {"expectations": [{"text": "plan.md tells the user the approximate cost (tokens, time, or multiple) of running every check 3 times with full reads", "passed": true, "evidence": "Table: 285M vs 3-5M tokens; says 10 MB does not fit"}, {"text": "plan.md proposes a cheaper alternative meant to keep the same assurance (for example reading only the relevant official pages, or re-checking only disagreements)", "passed": true, "evidence": "2-5 relevant pages per review, literal quotes checked with grep, 2nd/3rd opinion only on divergences"}, {"text": "plan.md leaves the decision between the user's version and the alternative to the user rather than silently dropping or silently adopting the triple runs", "passed": true, "evidence": "'preciso do seu ok'; offers 3 full rounds with relevant reads if the user prefers"}, {"text": "plan.md keeps a check of every guide (none of the 38 pages is skipped)", "passed": true, "evidence": "All 38 pages mapped and reviewed"}], "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}}}, {"id": "split-audit-subagents-with_skill", "prompt": "Tenho um documento `docs/paridade.md` com 480 afirma\u00e7\u00f5es do tipo \"a fun\u00e7\u00e3o X do crate Y se comporta como Z\", e preciso conferir cada uma contra o c\u00f3digo-fonte de 12 crates Rust espelhados em `mirrors/` (umas 60 mil linhas no total). Monte o plano de execu\u00e7\u00e3o com subagentes: como dividir, quantos em paralelo, o que cada um l\u00ea, o que volta para a conversa principal. N\u00e3o execute nada ainda, s\u00f3 escreva o plano em plan.md.", "eval_id": null, "outputs": [{"name": "plan.md", "type": "text", "content": "# Plano: conferir as 480 afirma\u00e7\u00f5es de `docs/paridade.md` contra `mirrors/`\n\nObjetivo fixo: cada uma das 480 afirma\u00e7\u00f5es recebe um veredito apoiado em evid\u00eancia no c\u00f3digo (arquivo:linha). O plano economiza tokens sem cortar isso: nada de amostragem no lugar da confer\u00eancia, nada de \"parece certo\" sem abrir o c\u00f3digo.\n\n## Resumo\n\n| Etapa | Quem faz | O que volta para a conversa principal |\n|---|---|---|\n| 0. Preparar | script na conversa principal | contagem de afirma\u00e7\u00f5es por crate (uma tabela) |\n| 1. Piloto | 1 subagente, 1 crate | custo medido + vereditos para eu conferir por amostra |\n| 2. Rodada | 3 subagentes em paralelo, em ondas | uma linha por subagente |\n| 3. Consolidar | script + conversa principal | s\u00f3 as afirma\u00e7\u00f5es que n\u00e3o foram confirmadas |\n\n## Etapa 0 \u2014 preparar uma vez, compartilhar com todos\n\nFeito antes de qualquer subagente, para nenhum deles redescobrir a mesma coisa.\n\n1. **Extrair as afirma\u00e7\u00f5es para um arquivo estruturado.** Um script l\u00ea `docs/paridade.md` e gera `audit/claims.tsv` com `id | crate | fun\u00e7\u00e3o | afirma\u00e7\u00e3o | linha no paridade.md`. Se o formato do documento for irregular demais para script, um subagente faz essa extra\u00e7\u00e3o e devolve s\u00f3 o caminho do arquivo e a contagem. A conversa principal n\u00e3o l\u00ea as 480 afirma\u00e7\u00f5es.\n2. **\u00cdndice de s\u00edmbolos por crate.** Um script com `grep -n` (`pub fn`, `fn`, `impl`, `trait`, `macro_rules!`) gera `audit/index/\u003ccrate>.tsv` com `s\u00edmbolo | arquivo:linha`. Assim cada subagente vai direto \u00e0 fun\u00e7\u00e3o citada em vez de varrer o crate.\n3. **Briefing \u00fanico em `audit/brief.md`** (curto, cerca de 30 linhas): o que \u00e9 um veredito, o formato de sa\u00edda, as regras de evid\u00eancia, o que fazer quando a fun\u00e7\u00e3o n\u00e3o existe ou tem v\u00e1rios `impl`. O prompt de cada subagente aponta para esse arquivo e diz qual \u00e9 a sua fatia; n\u00e3o repete as regras.\n4. **Fatiar.** Sa\u00edda: `audit/slices.tsv` (fatia \u2192 crate/m\u00f3dulo \u2192 ids). Regra inicial, que o piloto ajusta:\n   - uma fatia = um crate (as afirma\u00e7\u00f5es sobre o crate Y s\u00f3 precisam do c\u00f3digo do Y);\n   - crate com muito mais afirma\u00e7\u00f5es ou linhas que a m\u00e9dia (60 mil / 12 \u2248 5 mil linhas, 480 / 12 = 40 afirma\u00e7\u00f5es) \u00e9 dividido por m\u00f3dulo;\n   - crates pequenos (poucas afirma\u00e7\u00f5es) s\u00e3o juntados numa s\u00f3 fatia.\n\n   Resultado esperado: algo entre 10 e 14 fatias.\n\nA conversa principal v\u00ea apenas a tabela de contagem por fatia.\n\n## O que cada subagente l\u00ea e escreve\n\n- **L\u00ea:** `audit/brief.md`, suas linhas de `audit/claims.tsv`, o \u00edndice do seu crate e, no c\u00f3digo, s\u00f3 a fun\u00e7\u00e3o citada mais o que for preciso para decidir (fun\u00e7\u00f5es chamadas, tipos, testes do crate que mostram o comportamento). N\u00e3o l\u00ea o crate inteiro, n\u00e3o l\u00ea o `paridade.md` inteiro, n\u00e3o l\u00ea outros crates (a n\u00e3o ser que a afirma\u00e7\u00e3o dependa de uma reexporta\u00e7\u00e3o; nesse caso segue a reexporta\u00e7\u00e3o e anota).\n- **Escreve, uma linha por afirma\u00e7\u00e3o, logo depois de decidir** (n\u00e3o no fim), em `audit/results/\u003cfatia>.tsv`:\n  `id | veredito | evid\u00eancia (arquivo:linha) | nota de uma linha`\n  Vereditos: `confirma`, `contradiz`, `parcial`, `n\u00e3o encontrado`.\n  Se cair por limite de uso ou falha, perde s\u00f3 a afirma\u00e7\u00e3o em andamento; ao retomar, pula os ids j\u00e1 presentes no arquivo.\n- **Devolve para a conversa principal uma linha s\u00f3:** `fatia X: 41 conferidas \u2014 33 confirma, 4 contradiz, 3 parcial, 1 n\u00e3o encontrado \u2192 audit/results/X.tsv`.\n- Tipo de subagente: `general-purpose` (precisa ler o c\u00f3digo a fundo e escrever arquivo). O `Explore` l\u00ea trechos para localizar c\u00f3digo, n\u00e3o para auditar comportamento.\n\n## Etapa 1 \u2014 piloto\n\nRoda **uma** fatia de tamanho m\u00e9dio, sozinha, antes de lan\u00e7ar o resto. Mede:\n\n- tokens e tempo da fatia;\n- se o contexto do subagente ficou folgado ou apertado;\n- qualidade: eu confiro \u00e0 m\u00e3o cerca de 5 vereditos (incluindo todos os `contradiz`) contra o c\u00f3digo.\n\nCom isso decido o tamanho das fatias: se o subagente terminou com muita folga, juntar fatias (menos custo fixo de briefing e \u00edndice); se apertou o contexto ou come\u00e7ou a errar, dividir. Se o briefing gerou vereditos mal formatados ou amb\u00edguos, corrijo `brief.md` agora, uma vez, antes da rodada.\n\n## Etapa 2 \u2014 rodada em ondas\n\n- **3 subagentes em paralelo** por onda, n\u00e3o 12 de uma vez. Subagentes paralelos batem no limite de uso juntos; com 3, uma interrup\u00e7\u00e3o afeta pouca coisa e o que j\u00e1 foi escrito em `audit/results/` fica salvo. Se o piloto mostrar custo baixo por fatia, subo para 4.\n- Entre ondas, a conversa principal s\u00f3 l\u00ea as linhas de retorno; n\u00e3o abre os arquivos de resultado.\n- Fatia que falhar \u00e9 relan\u00e7ada com a instru\u00e7\u00e3o de pular os ids j\u00e1 presentes.\n\n## Etapa 3 \u2014 consolidar\n\n1. Um script junta `audit/results/*.tsv` em `audit/relatorio.tsv` e confere: os 480 ids aparecem exatamente uma vez, toda linha tem evid\u00eancia no formato `arquivo:linha`.\n2. A conversa principal l\u00ea **s\u00f3** as linhas que n\u00e3o s\u00e3o `confirma` (estimativa: algumas dezenas) e as confere ou agrupa por padr\u00e3o.\n3. Entrega: um resumo curto (contagens por veredito e por crate) mais a lista das afirma\u00e7\u00f5es a corrigir em `docs/paridade.md`, cada uma com a evid\u00eancia.\n\n## Checagem extra: decidir pelo rendimento\n\nUma segunda passada nos `confirma` (outro subagente reconfere uma amostra) custa caro. Proposta: fazer essa reconfer\u00eancia **s\u00f3 no piloto**, numa amostra de uns 10 `confirma`. Se n\u00e3o achar erro, n\u00e3o repito nas outras fatias e aviso voc\u00ea. Se achar, mantenho a amostra em todas as fatias.\n\n## Decis\u00f5es que s\u00e3o suas (trocam resultado por tokens)\n\n| Escolha | Op\u00e7\u00e3o mais barata | O que ela abre m\u00e3o |\n|---|---|---|\n| Modelo dos subagentes | Sonnet: custo bem menor por fatia | mais risco de veredito errado em comportamento sutil (gen\u00e9ricos, traits, macros). Sugest\u00e3o: Sonnet no piloto e comparar com a minha confer\u00eancia manual; se errar, Opus |\n| Reconferir `confirma` | s\u00f3 no piloto (proposta acima) | um erro do tipo \"confirmou o que n\u00e3o devia\" fora do piloto pode passar |\n| Paralelismo | 3 por onda | demora mais no rel\u00f3gio do que 6 ou 12, mas o limite de uso pega menos coisa no meio |\n\n## Estimativa grosseira (o piloto substitui por n\u00fameros medidos)\n\n- Por fatia: briefing + \u00edndice + leitura das fun\u00e7\u00f5es citadas (algumas centenas a poucos milhares de linhas, n\u00e3o as ~5 mil do crate) + 40 linhas de sa\u00edda.\n- Conversa principal: ~1 tabela de contagem, ~12 linhas de retorno, as linhas n\u00e3o confirmadas. Nenhuma leitura de c\u00f3digo ou das 480 afirma\u00e7\u00f5es.\n"}], "grading": {"expectations": [{"text": "plan.md runs a pilot chunk (or one subagent) and uses its measured cost or time to size the remaining chunks", "passed": true, "evidence": "Etapa 1: one pilot slice measures tokens/time/context and sets slice size from it"}, {"text": "plan.md has setup or instructions shared across subagents built once (a shared card, helper, or file) instead of each subagent rediscovering it", "passed": true, "evidence": "Etapa 0: audit/brief.md written once, symbol index per crate; prompts point to it instead of repeating rules"}, {"text": "plan.md has subagents write results to files incrementally so an interrupted run can resume without redoing finished items", "passed": true, "evidence": "Each subagent writes one line per claim right after deciding; resume skips ids already present"}, {"text": "plan.md sends back to the main conversation summaries or counts, not the subagents' full outputs", "passed": true, "evidence": "Each subagent returns one line; main reads only non-confirmed claims"}, {"text": "plan.md verifies all 480 claims (no sampling or skipping of claims to save tokens)", "passed": true, "evidence": "All 480 ids checked by script; no sampling instead of verification"}, {"text": "plan.md limits how many subagents run in parallel and gives a reason (usage limit, context, or similar)", "passed": true, "evidence": "3 per wave: 'Subagentes paralelos batem no limite de uso juntos'"}], "summary": {"passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0}}}, {"id": "split-audit-subagents-without_skill", "prompt": "Tenho um documento `docs/paridade.md` com 480 afirma\u00e7\u00f5es do tipo \"a fun\u00e7\u00e3o X do crate Y se comporta como Z\", e preciso conferir cada uma contra o c\u00f3digo-fonte de 12 crates Rust espelhados em `mirrors/` (umas 60 mil linhas no total). Monte o plano de execu\u00e7\u00e3o com subagentes: como dividir, quantos em paralelo, o que cada um l\u00ea, o que volta para a conversa principal. N\u00e3o execute nada ainda, s\u00f3 escreva o plano em plan.md.", "eval_id": null, "outputs": [{"name": "plan.md", "type": "text", "content": "# Plano: conferir `docs/paridade.md` contra os crates em `mirrors/`\n\n**Objetivo:** dar um veredito para cada uma das 480 afirma\u00e7\u00f5es (\"a fun\u00e7\u00e3o X do crate Y se comporta como Z\"), com evid\u00eancia no c\u00f3digo (arquivo:linha). A conversa principal n\u00e3o deve ler nem o c\u00f3digo nem o documento inteiro: ela s\u00f3 coordena e junta os resultados.\n\n**N\u00fameros de partida:** 480 afirma\u00e7\u00f5es, 12 crates, ~60 mil linhas no total (em m\u00e9dia ~40 afirma\u00e7\u00f5es e ~5 mil linhas por crate).\n\n---\n\n## Passo 0: preparar o terreno (conversa principal, sem subagente)\n\nIsso \u00e9 mec\u00e2nico e barato. Fa\u00e7o com script, n\u00e3o lendo o documento no contexto.\n\n1. **Numerar as afirma\u00e7\u00f5es.** Um script d\u00e1 um ID est\u00e1vel para cada uma (`P001`\u2026`P480`) e grava `audit/claims.tsv` com as colunas `id | crate | fun\u00e7\u00e3o | afirma\u00e7\u00e3o | linha em paridade.md`. Se o crate n\u00e3o estiver expl\u00edcito numa linha, ela vai para `audit/sem-crate.tsv`, para eu triar \u00e0 m\u00e3o.\n2. **Contar por crate.** `cut -f2 audit/claims.tsv | sort | uniq -c` mostra quantas afirma\u00e7\u00f5es cada crate tem.\n3. **Medir cada crate.** `wc -l` em `mirrors/\u003ccrate>/src` d\u00e1 o tamanho de cada um.\n4. **Separar um arquivo por lote:** `audit/lotes/\u003clote>.tsv`, s\u00f3 com as afirma\u00e7\u00f5es daquele lote.\n\nPara a conversa principal s\u00f3 voltam as duas tabelas pequenas (contagem e tamanho). Com elas eu fecho a divis\u00e3o do passo 1.\n\n## Passo 1: como dividir\n\n**Regra:** cada lote \u00e9 um crate. O subagente l\u00ea o c\u00f3digo de um crate s\u00f3 e confere tudo o que o documento afirma sobre ele. Assim ningu\u00e9m l\u00ea o mesmo c\u00f3digo duas vezes, e quem confere conhece o contexto do crate inteiro (traits, macros, reexports).\n\nAjustes conforme os n\u00fameros do passo 0:\n\n| Situa\u00e7\u00e3o | O que fazer |\n|---|---|\n| Crate normal (at\u00e9 ~8 mil linhas e ~60 afirma\u00e7\u00f5es) | 1 lote |\n| Crate grande (mais de ~8 mil linhas **ou** mais de ~60 afirma\u00e7\u00f5es) | Dividir por m\u00f3dulo (`src/foo/`, `src/bar/`), agrupando as afirma\u00e7\u00f5es pelo m\u00f3dulo da fun\u00e7\u00e3o |\n| Crates pequenos (menos de ~1.500 linhas e menos de ~15 afirma\u00e7\u00f5es) | Juntar 2 ou 3 num lote s\u00f3 |\n| Afirma\u00e7\u00e3o que envolve dois crates (ex.: \"Y reexporta X de W\") | Fica no lote do crate citado como Y, e o subagente pode abrir s\u00f3 o trecho necess\u00e1rio do outro |\n\nEstimativa: **12 a 15 lotes**.\n\n## Passo 2: quantos em paralelo\n\n- **4 em paralelo** por rodada, cerca de 3 a 4 rodadas.\n- Por que n\u00e3o 12 de uma vez: se as instru\u00e7\u00f5es tiverem um defeito (formato de sa\u00edda errado, crit\u00e9rio de veredito confuso), eu descubro na primeira rodada e corrijo antes de gastar tudo. Tamb\u00e9m fica mais f\u00e1cil acompanhar.\n- **Rodada piloto:** a primeira tem s\u00f3 2 lotes pequenos. Confiro a sa\u00edda e ajusto as instru\u00e7\u00f5es. Depois sigo com 4 por rodada.\n- Esfor\u00e7o `lower` nos subagentes de confer\u00eancia: a tarefa \u00e9 bem delimitada e o pr\u00f3prio formato permite verificar o resultado.\n\n## Passo 3: o que cada subagente recebe e l\u00ea\n\n**Prompt (igual para todos, mudando s\u00f3 o lote):**\n\n- O pedido do usu\u00e1rio, palavra por palavra.\n- O caminho do seu lote: `audit/lotes/\u003clote>.tsv`.\n- A pasta do c\u00f3digo: `mirrors/\u003ccrate>/` (e quais m\u00f3dulos, se o lote for parcial).\n- Os crit\u00e9rios de veredito (abaixo) e o formato de sa\u00edda.\n- Limites: s\u00f3 ler, nunca alterar `mirrors/` nem `docs/`. N\u00e3o abrir outros crates, a n\u00e3o ser o trecho necess\u00e1rio numa afirma\u00e7\u00e3o entre crates.\n\n**O que ele l\u00ea:**\n\n1. O arquivo do lote (n\u00e3o o `paridade.md` inteiro).\n2. Para cada fun\u00e7\u00e3o: localizar com `grep` (`fn nome`, `impl ... for`, `pub use`, macros) e ler a defini\u00e7\u00e3o e o que ela chama diretamente. Ler o crate inteiro s\u00f3 se for pequeno.\n3. Testes e doc-comments da fun\u00e7\u00e3o, quando existirem: muitas vezes mostram o comportamento esperado melhor que o corpo.\n\n**Vereditos poss\u00edveis:**\n\n| Veredito | Quando |\n|---|---|\n| `confirma` | O c\u00f3digo faz o que a afirma\u00e7\u00e3o diz |\n| `diverge` | O c\u00f3digo faz outra coisa (dizer o qu\u00ea) |\n| `parcial` | Vale em parte (ex.: s\u00f3 com uma feature ligada, s\u00f3 em um caso) |\n| `nao-encontrado` | A fun\u00e7\u00e3o n\u00e3o existe nesse crate/vers\u00e3o |\n| `indeterminado` | Depende de algo que n\u00e3o d\u00e1 para ver estaticamente (outro crate, runtime, `cfg`) |\n\n## Passo 4: o que volta para a conversa principal\n\n**No arquivo** `audit/resultados/\u003clote>.tsv` (detalhe completo, uma linha por afirma\u00e7\u00e3o):\n`id | veredito | arquivo:linha | trecho curto (at\u00e9 3 linhas) | explica\u00e7\u00e3o em uma frase`\n\n**Na resposta do subagente** (o que entra no meu contexto), s\u00f3 isto:\n- Contagem por veredito: `confirma 31, diverge 4, parcial 2, nao-encontrado 1, indeterminado 1`.\n- A lista dos IDs que **n\u00e3o** s\u00e3o `confirma`, cada um com uma frase.\n- Qualquer problema com as instru\u00e7\u00f5es (afirma\u00e7\u00e3o amb\u00edgua, crate com vers\u00e3o diferente da esperada).\n\nAssim, 480 afirma\u00e7\u00f5es viram umas 12 respostas curtas no contexto principal. O detalhe fica em disco para quem quiser conferir.\n\n## Passo 5: juntar e conferir\n\n1. **Juntar por script:** concatenar `audit/resultados/*.tsv` em `audit/resultado.tsv` e conferir que os 480 IDs aparecem, cada um uma vez. Os que faltarem voltam para um lote de repescagem.\n2. **Segunda opini\u00e3o s\u00f3 nos casos dif\u00edceis:** os `diverge`, `parcial` e `indeterminado` (espero algo como 10 a 20% do total) v\u00e3o para uma segunda rodada, agrupados por crate, com esfor\u00e7o `higher`. O subagente recebe a afirma\u00e7\u00e3o, o veredito anterior e a evid\u00eancia, e confirma ou corrige. Os `confirma` n\u00e3o s\u00e3o refeitos, mas eu sorteio ~5% deles e confiro \u00e0 m\u00e3o para medir se o primeiro passo est\u00e1 confi\u00e1vel.\n3. **Relat\u00f3rio final:** `audit/relatorio.md` com o resumo por crate (tabela) e a lista de diverg\u00eancias, cada uma com a linha do `paridade.md` e a evid\u00eancia no c\u00f3digo. N\u00e3o edito o `paridade.md`: corrigir o documento \u00e9 uma decis\u00e3o do usu\u00e1rio, e fica como proposta.\n\n## Resumo\n\n| Item | Valor |\n|---|---|\n| Lotes | 12 a 15 (um por crate, ajustado pelo tamanho) |\n| Paralelos | 2 no piloto, depois 4 por rodada |\n| Cada subagente l\u00ea | o arquivo do seu lote + o c\u00f3digo de um crate, guiado por grep |\n| Volta para a conversa | contagem por veredito + lista curta das n\u00e3o confirmadas |\n| Fica em disco | uma linha por afirma\u00e7\u00e3o, com arquivo:linha e trecho |\n| Segunda rodada | s\u00f3 as n\u00e3o confirmadas, com esfor\u00e7o maior |\n| Confer\u00eancia final | script de cobertura dos 480 IDs + amostra de 5% dos `confirma` |\n"}], "grading": {"expectations": [{"text": "plan.md runs a pilot chunk (or one subagent) and uses its measured cost or time to size the remaining chunks", "passed": false, "evidence": "Pilot of 2 batches checks output and adjusts instructions; no cost measurement used to size batches"}, {"text": "plan.md has setup or instructions shared across subagents built once (a shared card, helper, or file) instead of each subagent rediscovering it", "passed": false, "evidence": "Same prompt repeated per subagent; claims/lotes files are per-batch inputs, no shared card or helper built once"}, {"text": "plan.md has subagents write results to files incrementally so an interrupted run can resume without redoing finished items", "passed": false, "evidence": "Result file per batch, written at the end; no incremental writes or resume of finished items"}, {"text": "plan.md sends back to the main conversation summaries or counts, not the subagents' full outputs", "passed": true, "evidence": "Subagent returns counts and non-confirmed ids; detail stays on disk"}, {"text": "plan.md verifies all 480 claims (no sampling or skipping of claims to save tokens)", "passed": true, "evidence": "Script checks all 480 ids appear once"}, {"text": "plan.md limits how many subagents run in parallel and gives a reason (usage limit, context, or similar)", "passed": true, "evidence": "4 per round, reason: find instruction defects in the first round"}], "summary": {"passed": 3, "failed": 3, "total": 6, "pass_rate": 0.5}}}], "previous_feedback": {}, "previous_outputs": {}, "benchmark": {"metadata": {"skill_name": "token-economy", "skill_path": "\u003cpath/to/skill>", "executor_model": "\u003cmodel-name>", "analyzer_model": "\u003cmodel-name>", "timestamp": "2026-10-29T14:47:08Z", "evals_run": ["cut-quality-request", "insurance-request", "split-audit-subagents"], "runs_per_configuration": 1}, "runs": [{"eval_id": "cut-quality-request", "eval_name": "cut-quality-request", "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 36.0, "tokens": 34530, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "plan.md states that skipping the final test run (or all checks) risks an unverified migration and leaves that choice to the user", "passed": true, "evidence": "Table per cut: skipping the test run saves almost nothing and leaves the migration unverified; 'A escolha \u00e9 sua'"}, {"text": "plan.md proposes savings that keep the result, such as a scripted/codemod or batched conversion, a pilot batch, or running the tests instead of manual review", "passed": true, "evidence": "Codemod converts most files; 5-test pilot; Haiku only for leftovers in batches"}, {"text": "plan.md keeps at least one step that verifies the migrated tests (running them, or a subset) or explicitly recommends one", "passed": true, "evidence": "Step 5 keeps one full test run with output to a file"}, {"text": "plan.md discusses where haiku fits or does not fit rather than only accepting or only rejecting it", "passed": true, "evidence": "Haiku for bulk conversion, current model only for the short rules step; explains why"}], "notes": []}, {"eval_id": "insurance-request", "eval_name": "insurance-request", "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 42.1, "tokens": 35331, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "plan.md tells the user the approximate cost (tokens, time, or multiple) of running every check 3 times with full reads", "passed": true, "evidence": "~285M tokens computed; says full docs do not fit in a subagent context"}, {"text": "plan.md proposes a cheaper alternative meant to keep the same assurance (for example reading only the relevant official pages, or re-checking only disagreements)", "passed": true, "evidence": "Shared index + relevant official pages read whole; second check only on divergent/uncertain claims"}, {"text": "plan.md leaves the decision between the user's version and the alternative to the user rather than silently dropping or silently adopting the triple runs", "passed": true, "evidence": "'A decis\u00e3o \u00e9 sua'; two explicit questions; pilot numbers shown before choosing"}, {"text": "plan.md keeps a check of every guide (none of the 38 pages is skipped)", "passed": true, "evidence": "All 38 pages reviewed"}], "notes": []}, {"eval_id": "split-audit-subagents", "eval_name": "split-audit-subagents", "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "failed": 0, "total": 6, "time_seconds": 52.5, "tokens": 36375, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "plan.md runs a pilot chunk (or one subagent) and uses its measured cost or time to size the remaining chunks", "passed": true, "evidence": "Etapa 1: one pilot slice measures tokens/time/context and sets slice size from it"}, {"text": "plan.md has setup or instructions shared across subagents built once (a shared card, helper, or file) instead of each subagent rediscovering it", "passed": true, "evidence": "Etapa 0: audit/brief.md written once, symbol index per crate; prompts point to it instead of repeating rules"}, {"text": "plan.md has subagents write results to files incrementally so an interrupted run can resume without redoing finished items", "passed": true, "evidence": "Each subagent writes one line per claim right after deciding; resume skips ids already present"}, {"text": "plan.md sends back to the main conversation summaries or counts, not the subagents' full outputs", "passed": true, "evidence": "Each subagent returns one line; main reads only non-confirmed claims"}, {"text": "plan.md verifies all 480 claims (no sampling or skipping of claims to save tokens)", "passed": true, "evidence": "All 480 ids checked by script; no sampling instead of verification"}, {"text": "plan.md limits how many subagents run in parallel and gives a reason (usage limit, context, or similar)", "passed": true, "evidence": "3 per wave: 'Subagentes paralelos batem no limite de uso juntos'"}], "notes": []}, {"eval_id": "cut-quality-request", "eval_name": "cut-quality-request", "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.75, "passed": 3, "failed": 1, "total": 4, "time_seconds": 21.6, "tokens": 32487, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "plan.md states that skipping the final test run (or all checks) risks an unverified migration and leaves that choice to the user", "passed": true, "evidence": "Warns that an unverified script error can break all 200 tests; leaves the optional checks to the user"}, {"text": "plan.md proposes savings that keep the result, such as a scripted/codemod or batched conversion, a pilot batch, or running the tests instead of manual review", "passed": true, "evidence": "Script/codemod converts the files; Haiku only for leftovers"}, {"text": "plan.md keeps at least one step that verifies the migrated tests (running them, or a subset) or explicitly recommends one", "passed": true, "evidence": "Recommends optional collect-only and 2-3 sample tests"}, {"text": "plan.md discusses where haiku fits or does not fit rather than only accepting or only rejecting it", "passed": false, "evidence": "Accepts Haiku everywhere without discussing where it fits or not"}], "notes": []}, {"eval_id": "insurance-request", "eval_name": "insurance-request", "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 34.3, "tokens": 33887, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "plan.md tells the user the approximate cost (tokens, time, or multiple) of running every check 3 times with full reads", "passed": true, "evidence": "Table: 285M vs 3-5M tokens; says 10 MB does not fit"}, {"text": "plan.md proposes a cheaper alternative meant to keep the same assurance (for example reading only the relevant official pages, or re-checking only disagreements)", "passed": true, "evidence": "2-5 relevant pages per review, literal quotes checked with grep, 2nd/3rd opinion only on divergences"}, {"text": "plan.md leaves the decision between the user's version and the alternative to the user rather than silently dropping or silently adopting the triple runs", "passed": true, "evidence": "'preciso do seu ok'; offers 3 full rounds with relevant reads if the user prefers"}, {"text": "plan.md keeps a check of every guide (none of the 38 pages is skipped)", "passed": true, "evidence": "All 38 pages mapped and reviewed"}], "notes": []}, {"eval_id": "split-audit-subagents", "eval_name": "split-audit-subagents", "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.5, "passed": 3, "failed": 3, "total": 6, "time_seconds": 44.0, "tokens": 34686, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "plan.md runs a pilot chunk (or one subagent) and uses its measured cost or time to size the remaining chunks", "passed": false, "evidence": "Pilot of 2 batches checks output and adjusts instructions; no cost measurement used to size batches"}, {"text": "plan.md has setup or instructions shared across subagents built once (a shared card, helper, or file) instead of each subagent rediscovering it", "passed": false, "evidence": "Same prompt repeated per subagent; claims/lotes files are per-batch inputs, no shared card or helper built once"}, {"text": "plan.md has subagents write results to files incrementally so an interrupted run can resume without redoing finished items", "passed": false, "evidence": "Result file per batch, written at the end; no incremental writes or resume of finished items"}, {"text": "plan.md sends back to the main conversation summaries or counts, not the subagents' full outputs", "passed": true, "evidence": "Subagent returns counts and non-confirmed ids; detail stays on disk"}, {"text": "plan.md verifies all 480 claims (no sampling or skipping of claims to save tokens)", "passed": true, "evidence": "Script checks all 480 ids appear once"}, {"text": "plan.md limits how many subagents run in parallel and gives a reason (usage limit, context, or similar)", "passed": true, "evidence": "4 per round, reason: find instruction defects in the first round"}], "notes": []}], "run_summary": {"with_skill": {"pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0}, "time_seconds": {"mean": 43.5333, "stddev": 8.3429, "min": 36.0, "max": 52.5}, "tokens": {"mean": 35412.0, "stddev": 925.1632, "min": 34530, "max": 36375}}, "without_skill": {"pass_rate": {"mean": 0.75, "stddev": 0.25, "min": 0.5, "max": 1.0}, "time_seconds": {"mean": 33.3, "stddev": 11.2334, "min": 21.6, "max": 44.0}, "tokens": {"mean": 33686.6667, "stddev": 1113.1039, "min": 32487, "max": 34686}}, "delta": {"pass_rate": "+0.25", "time_seconds": "+10.2", "tokens": "+1725"}}, "notes": ["insurance-request does not discriminate: the baseline also computed the cost, proposed relevant reads and asked the user. Opus already handles explicit insurance requests well.", "The gain is in split-audit-subagents (6/6 vs 3/6): measured pilot, shared brief built once, incremental writes with resume. These are exactly the skill's 'where the same result costs less' items.", "cut-quality-request: with the skill, the plan keeps the final test run by default against the user's explicit request (offering to delete it). Baseline obeyed and offered optional checks. Decide which the user wants.", "Token cost of using the skill is ~+1.7k per run (reading SKILL.md); 1 run per config, so variance is unknown."]}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + escapeHtml(summary.passed || 0) + ' passed, ' + escapeHtml(summary.failed || 0) + ' failed of ' + escapeHtml(summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML.replace(/"/g, "&quot;");
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += escapeHtml(metadata.timestamp) + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + escapeHtml(metadata.evals_run.join(", ")) + " &mdash; ";
+      html += escapeHtml(metadata.runs_per_configuration || "?") + (metadata.runs_per_configuration === 1 ? " run" : " runs") + " per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+      // With a single configuration there is nothing to compare: only its column is shown
+      const compare = cells => configs.length >= 2 ? cells : "";
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th>" + compare("<th>" + escapeHtml(labelB) + "</th><th>Delta</th>") + "</tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += compare("<td>" + fmtStat(b.pass_rate, true) + "</td>");
+      html += compare('<td class="' + deltaClass(delta.pass_rate) + '">' + escapeHtml(delta.pass_rate || "—") + "</td>") + "</tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += compare("<td>" + fmtStat(b.time_seconds, false) + "</td>");
+        html += compare('<td class="' + deltaClass(delta.time_seconds) + '">' + escapeHtml(delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td>") + "</tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += compare("<td>" + fmtStat(b.tokens, false) + "</td>");
+        html += compare('<td class="' + deltaClass(delta.tokens) + '">' + escapeHtml(delta.tokens || "—") + "</td>") + "</tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        // Numeric ids first, then ids that are names
+        const rank = id => typeof id === "number" ? 0 : 1;
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) =>
+          rank(a) - rank(b) || (rank(a) ? String(a).localeCompare(String(b)) : a - b));
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = escapeHtml(config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()));
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + escapeHtml(run.run_number) + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + escapeHtml(r.passed || 0) + "/" + escapeHtml(r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + escapeHtml(r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + escapeHtml(run.run_number) + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>

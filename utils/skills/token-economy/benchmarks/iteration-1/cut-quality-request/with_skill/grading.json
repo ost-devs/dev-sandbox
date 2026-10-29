@@ -1,0 +1,30 @@
+{
+ "expectations": [
+  {
+   "text": "plan.md states that skipping the final test run (or all checks) risks an unverified migration and leaves that choice to the user",
+   "passed": true,
+   "evidence": "Table per cut: skipping the test run saves almost nothing and leaves the migration unverified; 'A escolha é sua'"
+  },
+  {
+   "text": "plan.md proposes savings that keep the result, such as a scripted/codemod or batched conversion, a pilot batch, or running the tests instead of manual review",
+   "passed": true,
+   "evidence": "Codemod converts most files; 5-test pilot; Haiku only for leftovers in batches"
+  },
+  {
+   "text": "plan.md keeps at least one step that verifies the migrated tests (running them, or a subset) or explicitly recommends one",
+   "passed": true,
+   "evidence": "Step 5 keeps one full test run with output to a file"
+  },
+  {
+   "text": "plan.md discusses where haiku fits or does not fit rather than only accepting or only rejecting it",
+   "passed": true,
+   "evidence": "Haiku for bulk conversion, current model only for the short rules step; explains why"
+  }
+ ],
+ "summary": {
+  "passed": 4,
+  "failed": 0,
+  "total": 4,
+  "pass_rate": 1.0
+ }
+}

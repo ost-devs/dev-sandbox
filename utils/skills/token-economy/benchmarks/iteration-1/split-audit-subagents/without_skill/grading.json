@@ -1,0 +1,40 @@
+{
+ "expectations": [
+  {
+   "text": "plan.md runs a pilot chunk (or one subagent) and uses its measured cost or time to size the remaining chunks",
+   "passed": false,
+   "evidence": "Pilot of 2 batches checks output and adjusts instructions; no cost measurement used to size batches"
+  },
+  {
+   "text": "plan.md has setup or instructions shared across subagents built once (a shared card, helper, or file) instead of each subagent rediscovering it",
+   "passed": false,
+   "evidence": "Same prompt repeated per subagent; claims/lotes files are per-batch inputs, no shared card or helper built once"
+  },
+  {
+   "text": "plan.md has subagents write results to files incrementally so an interrupted run can resume without redoing finished items",
+   "passed": false,
+   "evidence": "Result file per batch, written at the end; no incremental writes or resume of finished items"
+  },
+  {
+   "text": "plan.md sends back to the main conversation summaries or counts, not the subagents' full outputs",
+   "passed": true,
+   "evidence": "Subagent returns counts and non-confirmed ids; detail stays on disk"
+  },
+  {
+   "text": "plan.md verifies all 480 claims (no sampling or skipping of claims to save tokens)",
+   "passed": true,
+   "evidence": "Script checks all 480 ids appear once"
+  },
+  {
+   "text": "plan.md limits how many subagents run in parallel and gives a reason (usage limit, context, or similar)",
+   "passed": true,
+   "evidence": "4 per round, reason: find instruction defects in the first round"
+  }
+ ],
+ "summary": {
+  "passed": 3,
+  "failed": 3,
+  "total": 6,
+  "pass_rate": 0.5
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "expectations": [
+  {
+   "text": "plan.md runs a pilot chunk (or one subagent) and uses its measured cost or time to size the remaining chunks",
+   "passed": true,
+   "evidence": "Etapa 1: one pilot slice measures tokens/time/context and sets slice size from it"
+  },
+  {
+   "text": "plan.md has setup or instructions shared across subagents built once (a shared card, helper, or file) instead of each subagent rediscovering it",
+   "passed": true,
+   "evidence": "Etapa 0: audit/brief.md written once, symbol index per crate; prompts point to it instead of repeating rules"
+  },
+  {
+   "text": "plan.md has subagents write results to files incrementally so an interrupted run can resume without redoing finished items",
+   "passed": true,
+   "evidence": "Each subagent writes one line per claim right after deciding; resume skips ids already present"
+  },
+  {
+   "text": "plan.md sends back to the main conversation summaries or counts, not the subagents' full outputs",
+   "passed": true,
+   "evidence": "Each subagent returns one line; main reads only non-confirmed claims"
+  },
+  {
+   "text": "plan.md verifies all 480 claims (no sampling or skipping of claims to save tokens)",
+   "passed": true,
+   "evidence": "All 480 ids checked by script; no sampling instead of verification"
+  },
+  {
+   "text": "plan.md limits how many subagents run in parallel and gives a reason (usage limit, context, or similar)",
+   "passed": true,
+   "evidence": "3 per wave: 'Subagentes paralelos batem no limite de uso juntos'"
+  }
+ ],
+ "summary": {
+  "passed": 6,
+  "failed": 0,
+  "total": 6,
+  "pass_rate": 1.0
+ }
+}

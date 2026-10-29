@@ -1,0 +1,30 @@
+{
+ "expectations": [
+  {
+   "text": "plan.md tells the user the approximate cost (tokens, time, or multiple) of running every check 3 times with full reads",
+   "passed": true,
+   "evidence": "Table: 285M vs 3-5M tokens; says 10 MB does not fit"
+  },
+  {
+   "text": "plan.md proposes a cheaper alternative meant to keep the same assurance (for example reading only the relevant official pages, or re-checking only disagreements)",
+   "passed": true,
+   "evidence": "2-5 relevant pages per review, literal quotes checked with grep, 2nd/3rd opinion only on divergences"
+  },
+  {
+   "text": "plan.md leaves the decision between the user's version and the alternative to the user rather than silently dropping or silently adopting the triple runs",
+   "passed": true,
+   "evidence": "'preciso do seu ok'; offers 3 full rounds with relevant reads if the user prefers"
+  },
+  {
+   "text": "plan.md keeps a check of every guide (none of the 38 pages is skipped)",
+   "passed": true,
+   "evidence": "All 38 pages mapped and reviewed"
+  }
+ ],
+ "summary": {
+  "passed": 4,
+  "failed": 0,
+  "total": 4,
+  "pass_rate": 1.0
+ }
+}

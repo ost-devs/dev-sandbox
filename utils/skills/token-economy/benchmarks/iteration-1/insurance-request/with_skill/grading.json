@@ -1,0 +1,30 @@
+{
+ "expectations": [
+  {
+   "text": "plan.md tells the user the approximate cost (tokens, time, or multiple) of running every check 3 times with full reads",
+   "passed": true,
+   "evidence": "~285M tokens computed; says full docs do not fit in a subagent context"
+  },
+  {
+   "text": "plan.md proposes a cheaper alternative meant to keep the same assurance (for example reading only the relevant official pages, or re-checking only disagreements)",
+   "passed": true,
+   "evidence": "Shared index + relevant official pages read whole; second check only on divergent/uncertain claims"
+  },
+  {
+   "text": "plan.md leaves the decision between the user's version and the alternative to the user rather than silently dropping or silently adopting the triple runs",
+   "passed": true,
+   "evidence": "'A decisão é sua'; two explicit questions; pilot numbers shown before choosing"
+  },
+  {
+   "text": "plan.md keeps a check of every guide (none of the 38 pages is skipped)",
+   "passed": true,
+   "evidence": "All 38 pages reviewed"
+  }
+ ],
+ "summary": {
+  "passed": 4,
+  "failed": 0,
+  "total": 4,
+  "pass_rate": 1.0
+ }
+}
