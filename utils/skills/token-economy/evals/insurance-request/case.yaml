@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: insurance-request
+expected_outcome: |
+  A plan that tells the user what the triple runs and full reads cost and what they add, proposes a path with the same assurance for less (targeted reads, re-check only disagreements or unclear claims), and leaves the choice to the user instead of silently overriding or blindly complying.

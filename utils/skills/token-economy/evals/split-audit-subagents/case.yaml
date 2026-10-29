@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: split-audit-subagents
+expected_outcome: |
+  A plan that keeps every claim verified while cutting repeated work: a pilot chunk measured before sizing the rest, shared setup done once, results written to files as they go, summaries back to the main conversation, bounded parallelism.
