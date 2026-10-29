@@ -1,6 +1,6 @@
 ---
 name: token-economy
-description: Same result with fewer tokens. Use when planning work whose token cost is large or repeated - several subagents or parallel agents, big reads or outputs, many similar items, long sessions - or when the user asks to cut cost or a run hit a usage limit.
+description: Same result with fewer tokens. Use when executing or planning work whose token cost is large or repeated - several subagents or parallel agents, big reads or outputs, many similar items, long sessions - or when the user asks to cut cost or a run hit a usage limit.
 ---
 
 # Token economy
