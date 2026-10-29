@@ -10,4 +10,6 @@ paths:
 - The reader is Claude Code on Opus or Sonnet: write for it, not for a human (the human docs are `README.md` and `docs/`). Only Claude Code; no other tools or vendors.
 - One step: put the commands and the essential, non-obvious facts in the skill itself, so it acts at once. Don't make it run `--help` or read another file first, and don't explain what a capable model infers.
 - Defaults live in the tool's data (a manifest field, a flag default), not in instructions every caller must repeat.
+- When the subject can go wrong in two opposite directions (doing too little and too much), name both; naming only one pushes the model into the other.
+- A skill that changes how work is done needs an executed eval: an eval that only asks for plans shows quality, not cost.
 - When you finish, if this work taught something about writing skills that this file lacks or gets wrong, suggest the lines to add or revise to the user. Don't edit this file without their approval.
