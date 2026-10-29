@@ -1,0 +1,226 @@
+{
+ "metadata": {
+  "skill_name": "token-economy",
+  "skill_path": "<path/to/skill>",
+  "executor_model": "<model-name>",
+  "analyzer_model": "<model-name>",
+  "timestamp": "2026-10-29T15:14:17Z",
+  "evals_run": [
+   "verify-claims-subagents"
+  ],
+  "runs_per_configuration": 2
+ },
+ "runs": [
+  {
+   "eval_id": "verify-claims-subagents",
+   "eval_name": "verify-claims-subagents",
+   "configuration": "with_skill",
+   "run_number": 1,
+   "result": {
+    "pass_rate": 1.0,
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "time_seconds": 114,
+    "tokens": 705075,
+    "tool_calls": 0,
+    "errors": 0
+   },
+   "expectations": [
+    {
+     "text": "report.md gives the correct verdict for all 24 claims (11 false)",
+     "passed": true,
+     "evidence": "24/24; checks/harness.py built by the orchestrator before spawning; subagents on Sonnet"
+    },
+    {
+     "text": "Every claim report.md marks false has a concrete counterexample that the code confirms",
+     "passed": true,
+     "evidence": "counterexample column filled for every false row; reruns print the same counterexample"
+    },
+    {
+     "text": "Running the reproduce command of every row twice gives the same verdict both times",
+     "passed": true,
+     "evidence": "24/24 commands gave identical output twice"
+    },
+    {
+     "text": "The subagents use helpers built once and shared, instead of each writing its own",
+     "passed": true,
+     "evidence": "checks/harness.py shared by all subagents"
+    }
+   ],
+   "notes": []
+  },
+  {
+   "eval_id": "verify-claims-subagents",
+   "eval_name": "verify-claims-subagents",
+   "configuration": "with_skill",
+   "run_number": 2,
+   "result": {
+    "pass_rate": 1.0,
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "time_seconds": 84,
+    "tokens": 612240,
+    "tool_calls": 0,
+    "errors": 0
+   },
+   "expectations": [
+    {
+     "text": "report.md gives the correct verdict for all 24 claims (11 false)",
+     "passed": true,
+     "evidence": "24/24; checks/harness.py + CARD.md + run_all.py built once; subagents on Sonnet"
+    },
+    {
+     "text": "Every claim report.md marks false has a concrete counterexample that the code confirms",
+     "passed": true,
+     "evidence": "counterexample column filled for every false row; reruns print the same counterexample"
+    },
+    {
+     "text": "Running the reproduce command of every row twice gives the same verdict both times",
+     "passed": true,
+     "evidence": "24/24 commands gave identical output twice"
+    },
+    {
+     "text": "The subagents use helpers built once and shared, instead of each writing its own",
+     "passed": true,
+     "evidence": "checks/harness.py shared by all subagents"
+    }
+   ],
+   "notes": []
+  },
+  {
+   "eval_id": "verify-claims-subagents",
+   "eval_name": "verify-claims-subagents",
+   "configuration": "without_skill",
+   "run_number": 1,
+   "result": {
+    "pass_rate": 0.75,
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "time_seconds": 134,
+    "tokens": 700223,
+    "tool_calls": 0,
+    "errors": 0
+   },
+   "expectations": [
+    {
+     "text": "report.md gives the correct verdict for all 24 claims (11 false)",
+     "passed": true,
+     "evidence": "24/24 by the truth table except C2, marked false for unhashable items: a defensible stricter reading"
+    },
+    {
+     "text": "Every claim report.md marks false has a concrete counterexample that the code confirms",
+     "passed": true,
+     "evidence": "counterexample column filled for every false row; reruns print the same counterexample"
+    },
+    {
+     "text": "Running the reproduce command of every row twice gives the same verdict both times",
+     "passed": true,
+     "evidence": "24/24 commands gave identical output twice"
+    },
+    {
+     "text": "The subagents use helpers built once and shared, instead of each writing its own",
+     "passed": false,
+     "evidence": "each subagent wrote its own check_<module>.py with its own generator and output code; only the seed and format were agreed in the prompt"
+    }
+   ],
+   "notes": []
+  },
+  {
+   "eval_id": "verify-claims-subagents",
+   "eval_name": "verify-claims-subagents",
+   "configuration": "without_skill",
+   "run_number": 2,
+   "result": {
+    "pass_rate": 0.75,
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "time_seconds": 125,
+    "tokens": 555015,
+    "tool_calls": 0,
+    "errors": 0
+   },
+   "expectations": [
+    {
+     "text": "report.md gives the correct verdict for all 24 claims (11 false)",
+     "passed": true,
+     "evidence": "24/24"
+    },
+    {
+     "text": "Every claim report.md marks false has a concrete counterexample that the code confirms",
+     "passed": true,
+     "evidence": "counterexample column filled for every false row; reruns print the same counterexample"
+    },
+    {
+     "text": "Running the reproduce command of every row twice gives the same verdict both times",
+     "passed": true,
+     "evidence": "24/24 commands gave identical output twice"
+    },
+    {
+     "text": "The subagents use helpers built once and shared, instead of each writing its own",
+     "passed": false,
+     "evidence": "each subagent wrote its own check_<module>.py with its own generator and output code; only the seed and format were agreed in the prompt"
+    }
+   ],
+   "notes": []
+  }
+ ],
+ "run_summary": {
+  "with_skill": {
+   "pass_rate": {
+    "mean": 1.0,
+    "stddev": 0.0,
+    "min": 1.0,
+    "max": 1.0
+   },
+   "time_seconds": {
+    "mean": 99.0,
+    "stddev": 21.2132,
+    "min": 84,
+    "max": 114
+   },
+   "tokens": {
+    "mean": 658657.5,
+    "stddev": 65644.258,
+    "min": 612240,
+    "max": 705075
+   }
+  },
+  "without_skill": {
+   "pass_rate": {
+    "mean": 0.75,
+    "stddev": 0.0,
+    "min": 0.75,
+    "max": 0.75
+   },
+   "time_seconds": {
+    "mean": 129.5,
+    "stddev": 6.364,
+    "min": 125,
+    "max": 134
+   },
+   "tokens": {
+    "mean": 627619.0,
+    "stddev": 102677.5615,
+    "min": 555015,
+    "max": 700223
+   }
+  },
+  "delta": {
+   "pass_rate": "+0.25",
+   "time_seconds": "-30.5",
+   "tokens": "+31038"
+  }
+ },
+ "notes": [
+  "Executed runs (claude -p, Opus 5.5 main session, real subagents), 2 per configuration. Cost: with skill $0.75 / $0.67, without $1.22 / $1.09 (-39%). Output tokens: 17.4k / 15.5k vs 27.3k / 25.0k (-38%). Wall time: 114 / 84 s vs 134 / 125 s.",
+  "Quality held: all four reports have the right 24 verdicts (one baseline run marked C2 false for unhashable items, a stricter but defensible reading). All 24 reproduce commands gave identical output twice in every run.",
+  "The skill triggered on its own in both runs. Its orchestrator built checks/harness.py (seeded generator, runner, output format) before spawning; the baseline only agreed a seed and a format in the prompt, so each subagent wrote its own.",
+  "With the skill, the orchestrator also chose Sonnet for the subagents (the skill says nothing about models). Part of the saving is that choice; output tokens, which do not depend on price, still fell 38%.",
+  "The only failing assertion for the baseline is the process one (shared helpers); outcome assertions pass in both configurations.",
+  "All four final chat messages miscounted the false claims (12, 13, 14) although report.md tables were right."
+ ]
+}

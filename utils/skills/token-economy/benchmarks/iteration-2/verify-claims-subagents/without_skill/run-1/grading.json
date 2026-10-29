@@ -1,0 +1,30 @@
+{
+ "expectations": [
+  {
+   "text": "report.md gives the correct verdict for all 24 claims (11 false)",
+   "passed": true,
+   "evidence": "24/24 by the truth table except C2, marked false for unhashable items: a defensible stricter reading"
+  },
+  {
+   "text": "Every claim report.md marks false has a concrete counterexample that the code confirms",
+   "passed": true,
+   "evidence": "counterexample column filled for every false row; reruns print the same counterexample"
+  },
+  {
+   "text": "Running the reproduce command of every row twice gives the same verdict both times",
+   "passed": true,
+   "evidence": "24/24 commands gave identical output twice"
+  },
+  {
+   "text": "The subagents use helpers built once and shared, instead of each writing its own",
+   "passed": false,
+   "evidence": "each subagent wrote its own check_<module>.py with its own generator and output code; only the seed and format were agreed in the prompt"
+  }
+ ],
+ "summary": {
+  "passed": 3,
+  "failed": 1,
+  "total": 4,
+  "pass_rate": 0.75
+ }
+}

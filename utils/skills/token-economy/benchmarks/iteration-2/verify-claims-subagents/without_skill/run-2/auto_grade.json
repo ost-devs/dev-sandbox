@@ -1,0 +1,18 @@
+{
+ "run": "without_skill/run-2",
+ "cost_usd": 1.0875836,
+ "tokens": 555015,
+ "turns": 3,
+ "seconds": "125",
+ "verdicts_found": 24,
+ "wrong": [],
+ "commands": 24,
+ "stable_reruns": 24,
+ "unstable": [],
+ "check_files": [
+  "checks/check_collections_util.py",
+  "checks/check_dates.py",
+  "checks/check_mathutil.py",
+  "checks/check_textutil.py"
+ ]
+}

@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: verify-claims-subagents
+expected_outcome: |
+  An executed audit with subagents: all 24 verdicts right (12 false), each backed by a check script under checks/ that re-runs to the same result, with fewer total tokens when the orchestrator builds the shared helpers once and the subagents reuse them.
+context:
+  scaffold_script: place-files.sh

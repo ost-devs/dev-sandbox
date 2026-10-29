@@ -1,0 +1,10 @@
+{
+ "eval_name": "verify-claims-subagents",
+ "prompt": "Em `claims.md` há 24 afirmações sobre as funções do pacote `calc/` (4 módulos). Confira todas rodando o código, não só lendo: cada veredito precisa de uma checagem reproduzível (entradas fixas, ou geradas com semente registrada) gravada em `checks/`, que qualquer pessoa possa rodar de novo e obter o mesmo resultado. Use subagentes, um por módulo, em paralelo. No fim, escreva `report.md` com uma tabela: id, veredito (verdadeira/falsa), contraexemplo quando falsa, e o comando que reproduz a checagem.",
+ "assertions": [
+  "report.md gives the correct verdict for all 24 claims (11 false)",
+  "Every claim report.md marks false has a concrete counterexample that the code confirms",
+  "Running the reproduce command of every row twice gives the same verdict both times",
+  "The subagents use helpers built once and shared, instead of each writing its own"
+ ]
+}

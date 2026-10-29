@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "token-economy", "runs": [{"id": "verify-claims-subagents-with_skill-run-1", "prompt": "Em `claims.md` h\u00e1 24 afirma\u00e7\u00f5es sobre as fun\u00e7\u00f5es do pacote `calc/` (4 m\u00f3dulos). Confira todas rodando o c\u00f3digo, n\u00e3o s\u00f3 lendo: cada veredito precisa de uma checagem reproduz\u00edvel (entradas fixas, ou geradas com semente registrada) gravada em `checks/`, que qualquer pessoa possa rodar de novo e obter o mesmo resultado. Use subagentes, um por m\u00f3dulo, em paralelo. No fim, escreva `report.md` com uma tabela: id, veredito (verdadeira/falsa), contraexemplo quando falsa, e o comando que reproduz a checagem.", "eval_id": null, "outputs": [{"name": "calc/__init__.py", "type": "text", "content": ""}, {"name": "calc/collections_util.py", "type": "text", "content": "def chunk(xs, n):\n    return [xs[i:i + n] for i in range(0, len(xs), n)]\n\n\ndef dedupe(xs):\n    return list(dict.fromkeys(xs))\n\n\ndef flatten(xs):\n    return [y for x in xs for y in x]\n\n\ndef top_n(xs, n):\n    return sorted(xs, reverse=True)[:n]\n\n\ndef merge_dicts(a, b):\n    return {**a, **b}\n\n\ndef rotate(xs, k):\n    return xs[k:] + xs[:k]\n"}, {"name": "calc/dates.py", "type": "text", "content": "import calendar\nfrom datetime import date\n\nNAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']\n\n\ndef add_months(d, k):\n    m = d.month - 1 + k\n    y, m = d.year + m // 12, m % 12 + 1\n    return date(y, m, min(d.day, calendar.monthrange(y, m)[1]))\n\n\ndef weekday_name(d):\n    return NAMES[d.weekday()]\n\n\ndef days_between(a, b):\n    return (b - a).days\n\n\ndef is_leap(y):\n    return y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)\n\n\ndef quarter(d):\n    return (d.month - 1) // 3 + 1\n\n\ndef parse_iso(s):\n    return date.fromisoformat(s)\n"}, {"name": "calc/mathutil.py", "type": "text", "content": "def clamp(x, lo, hi):\n    return max(lo, min(x, hi))\n\n\ndef mean(xs):\n    return sum(xs) / len(xs)\n\n\ndef round_half(x):\n    return round(x)\n\n\ndef gcd(a, b):\n    a, b = abs(a), abs(b)\n    while b:\n        a, b = b, a % b\n    return a\n\n\ndef is_prime(n):\n    if n \u003c 2:\n        return False\n    for d in range(2, int(n ** 0.5)):\n        if n % d == 0:\n            return False\n    return True\n\n\ndef percent(a, b):\n    return round(100 * a / b, 1)\n"}, {"name": "calc/textutil.py", "type": "text", "content": "import re\n\n\ndef slugify(s):\n    return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')\n\n\ndef truncate(s, n):\n    return s if len(s) \u003c= n else s[:n - 1] + '\u2026'\n\n\ndef count_words(s):\n    return len(s.split())\n\n\ndef capitalize_words(s):\n    return ' '.join(w[:1].upper() + w[1:] for w in s.split(' '))\n\n\ndef is_palindrome(s):\n    cleaned = [c.lower() for c in s if c.isalnum()]\n    return cleaned == cleaned[::-1]\n"}, {"name": "checks/check_collections_util.py", "type": "text", "content": "from harness import claim, example, forall, run, rand_list, rand_int\nfrom calc.collections_util import chunk, dedupe, flatten, top_n, merge_dicts, rotate\n\n\n@claim('C1')\ndef _():\n    def prop(xs, n):\n        xs0 = list(xs)\n        out = chunk(list(xs), n)\n        return [y for c in out for y in c] == xs0\n    return forall(lambda r: (rand_list(r), r.randint(1, 20)), prop, seed=1, n=3000,\n                  cases=[([], 1), ([1], 1), ([1, 2, 3], 5), ([1, 2, 3, 4], 2), ([1, 1, 1], 2)])\n\n\n@claim('C2')\ndef _():\n    def prop(xs):\n        exp, seen = [], set()\n        for x in xs:\n            if x not in seen:\n                seen.add(x)\n                exp.append(x)\n        return dedupe(list(xs)) == exp\n    return forall(lambda r: (rand_list(r),), prop, seed=2, n=3000,\n                  cases=[([],), ([1, 1],), ([2, 1, 2, 3, 1],)])\n\n\n@claim('C3')\ndef _():\n    return example(lambda: flatten([[1, [2]], [3]]), [1, 2, 3])\n\n\n@claim('C4')\ndef _():\n    def prop(xs, n):\n        return len(top_n(list(xs), n)) == min(n, len(xs))\n    return forall(lambda r: (rand_list(r), r.randint(-20, 20)), prop, seed=4, n=3000,\n                  cases=[([], 0), ([1, 2, 3], -1), ([1, 2, 3], 0), ([1, 2, 3], 5), ([], -1), ([1, 1], 1)])\n\n\n@claim('C5')\ndef _():\n    def prop(a, b):\n        a0, b0 = dict(a), dict(b)\n        m = merge_dicts(dict(a), dict(b))\n        return all(m[k] == a0[k] for k in a0 if k in b0)\n    def gen(r):\n        mk = lambda: {r.randint(0, 5): r.randint(0, 9) for _ in range(r.randint(0, 5))}\n        return (mk(), mk())\n    return forall(gen, prop, seed=5, n=3000,\n                  cases=[({'k': 1}, {'k': 2}), ({}, {}), ({'a': 1}, {'b': 2})])\n\n\n@claim('C6')\ndef _():\n    def prop(xs):\n        return rotate(list(xs), len(xs)) == xs\n    return forall(lambda r: (rand_list(r),), prop, seed=6, n=3000,\n                  cases=[([],), ([1],), ([1, 2, 3],), ([1, 1, 2],)])\n\n\nif __name__ == '__main__':\n    run()\n"}, {"name": "checks/check_dates.py", "type": "text", "content": "from datetime import date\nfrom harness import claim, example, forall, run\nfrom calc.dates import *\n\ndef rand_date(r):\n    return date.fromordinal(r.randint(date.min.toordinal(), date.max.toordinal()))\n\nEDGE = [date(2024, 2, 29), date(2023, 12, 31), date(2024, 1, 31), date(1, 1, 1), date(9999, 12, 31), date(9999, 1, 1), date(2000, 2, 29)]\n\n@claim('D1')\ndef _():\n    return example(lambda: add_months(date(2024, 1, 31), 1), date(2024, 2, 29))\n\n@claim('D2')\ndef _():\n    return forall(lambda r: (rand_date(r),),\n                  lambda d: (lambda e: (e.year, e.month, e.day) == (d.year + 1, d.month, d.day))(add_months(d, 12)),\n                  seed=2, n=3000, cases=[(d,) for d in EDGE])\n\n@claim('D3')\ndef _():\n    return forall(lambda r: (rand_date(r), rand_date(r)), lambda a, b: days_between(a, b) >= 0,\n                  seed=3, n=3000, cases=[(date(2024, 1, 2), date(2024, 1, 1)), (date(9999, 12, 31), date(1, 1, 1))])\n\n@claim('D4')\ndef _():\n    return example(lambda: is_leap(1900), False)\n\n@claim('D5')\ndef _():\n    return forall(lambda r: (rand_date(r),), lambda d: quarter(d) in (1, 2, 3, 4),\n                  seed=5, n=3000, cases=[(d,) for d in EDGE] + [(date(2024, m, 1),) for m in range(1, 13)])\n\n@claim('D6')\ndef _():\n    return example(lambda: parse_iso('2026-02-30'), date(2026, 3, 2))\n\nif __name__ == '__main__':\n    run()\n"}, {"name": "checks/check_mathutil.py", "type": "text", "content": "from harness import claim, example, forall, run, rand_int\nfrom calc.mathutil import clamp, mean, round_half, gcd, is_prime, percent\n\n@claim('M1')\ndef _():\n    def gen(r):\n        lo = rand_int(r); hi = lo + r.randint(0, 500)\n        return (rand_int(r, -2000, 2000), lo, hi)\n    cases = [(5, 0, 0), (-1, 0, 0), (0, -3, -3), (1.5, 1, 2), (float('inf'), 0, 1), (float('-inf'), 0, 1), (0.5, 0.5, 0.5), (float('nan'), 0, 1)]\n    return forall(gen, lambda x, lo, hi: lo \u003c= clamp(x, lo, hi) \u003c= hi, seed=1, n=3000, cases=cases)\n\n@claim('M2')\ndef _():\n    return example(lambda: mean([]), 0)\n\n@claim('M3')\ndef _():\n    return example(lambda: round_half(2.5), 3)\n\n@claim('M4')\ndef _():\n    cases = [(0, 0), (0, 5), (5, 0), (-4, 6), (6, -4), (-4, -6), (1, 0)]\n    return forall(lambda r: (rand_int(r), rand_int(r)), lambda a, b: gcd(a, b) == gcd(b, a), seed=4, n=3000, cases=cases)\n\n@claim('M5')\ndef _():\n    def ref(n):\n        return n >= 2 and all(n % d for d in range(2, n))\n    bad = []\n    for n in range(0, 1001):\n        try:\n            got = is_prime(n)\n        except Exception as e:\n            got = f'raised {type(e).__name__}'\n        if got is not ref(n):\n            bad.append(n)\n    if bad:\n        return False, f'{len(bad)} wrong of 1001; first: {bad[:8]}'\n    return True, 'all 0..1000 correct'\n\n@claim('M6')\ndef _():\n    return example(lambda: percent(1, 3), 33.3)\n\nif __name__ == '__main__':\n    run()\n"}, {"name": "checks/check_textutil.py", "type": "text", "content": "from harness import claim, example, forall, run, rand_text, rand_int\nfrom calc.textutil import *\n\n@claim('T1')\ndef _():\n    return forall(lambda r: (rand_text(r),), lambda s: not slugify(s).startswith('-') and not slugify(s).endswith('-'),\n                  seed=1, n=5000, cases=[('',), ('-',), ('  a  ',), ('!!!',), ('\u00e9',), ('-a-',), ('Caf\u00e9',)])\n\n@claim('T2')\ndef _():\n    return example(lambda: slugify('Caf\u00e9 Noir'), 'cafe-noir')\n\n@claim('T3')\ndef _():\n    return forall(lambda r: (rand_text(r), r.randint(0, 25)), lambda s, n: len(truncate(s, n)) \u003c= n,\n                  seed=3, n=5000, cases=[('', 0), ('a', 0), ('ab', 0), ('abc', 1), ('abc', 2), ('abc', 3)])\n\n@claim('T4')\ndef _():\n    return example(lambda: count_words('a  b\\tc\\n'), 3)\n\n@claim('T5')\ndef _():\n    return example(lambda: capitalize_words('a  b'), 'A  B')\n\n@claim('T6')\ndef _():\n    return example(lambda: is_palindrome(''), True)\n\nif __name__ == '__main__':\n    run()\n"}, {"name": "checks/harness.py", "type": "text", "content": "\"\"\"Shared harness for claim checks. Deterministic: every random input comes from a recorded seed.\n\nUsage in a check module (checks/check_\u003cmodule>.py):\n\n    from harness import claim, example, forall, run\n    import random\n\n    @claim('T3')\n    def _():\n        # fixed-example claim: return (holds: bool, detail: str)\n        return example(slugify('Caf\u00e9 Noir'), 'cafe-noir')\n\n    @claim('T1')\n    def _():\n        # universal claim: generator(rng) -> input tuple, prop(*input) -> bool\n        return forall(lambda r: (rand_text(r),), lambda s: not s.startswith('-'), seed=1, n=5000)\n\n    if __name__ == '__main__':\n        run()\n\nOutput: one line per claim, tab-separated: ID, TRUE|FALSE, detail (counterexample when FALSE).\nExit code is 0 regardless of verdicts (a FALSE verdict is a result, not an error).\n\"\"\"\nimport random\nimport string\nimport sys\nimport os\n\nsys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # make `calc` importable\n\n_CLAIMS = []\n\ndef claim(cid):\n    def deco(fn):\n        _CLAIMS.append((cid, fn))\n        return fn\n    return deco\n\ndef _call(f, args):\n    try:\n        return ('ok', f(*args))\n    except Exception as e:\n        return ('exc', f'{type(e).__name__}: {e}')\n\ndef example(actual_thunk, expected):\n    \"\"\"Compare a zero-arg thunk's result (or raised exception) with the expected value.\"\"\"\n    kind, val = _call(actual_thunk, ())\n    if kind == 'exc':\n        return False, f'raised {val}; expected {expected!r}'\n    # Python `==` semantics, as the claims are written (e.g. 3.0 == 3 holds); `is True` claims: pass expected=True\n    if (val is expected) if isinstance(expected, bool) else (val == expected):\n        return True, f'got {val!r}'\n    return False, f'got {val!r}; expected {expected!r}'\n\ndef forall(gen, prop, seed, n, cases=()):\n    \"\"\"Check prop on fixed `cases` (tuples) first, then on n inputs from gen(random.Random(seed)).\n    prop raising an exception counts as a counterexample. Returns (holds, detail).\"\"\"\n    def test(args):\n        kind, val = _call(prop, args)\n        if kind == 'exc':\n            return f'input={args!r} -> raised {val}'\n        if not val:\n            return f'input={args!r}'\n        return None\n    for args in cases:\n        bad = test(args)\n        if bad:\n            return False, f'fixed case {bad}'\n    rng = random.Random(seed)\n    for i in range(n):\n        args = gen(rng)\n        bad = test(args)\n        if bad:\n            return False, f'seed={seed} i={i} {bad}'\n    return True, f'{len(cases)} fixed + {n} random cases (seed={seed}) passed'\n\n# --- common generators -------------------------------------------------------\nALPHABET = string.ascii_letters + string.digits + ' -_\\t\\n.,!?' + '\u00e1\u00e9\u00ed\u00f3\u00fa\u00e7\u00e3\u00f5\u00f1\u00fc\u00c7\u00c9' + '\u00a0'\n\ndef rand_text(r, maxlen=20, alphabet=ALPHABET):\n    return ''.join(r.choice(alphabet) for _ in range(r.randint(0, maxlen)))\n\ndef rand_int(r, lo=-1000, hi=1000):\n    return r.randint(lo, hi)\n\ndef rand_list(r, maxlen=15, elem=lambda r: r.randint(-5, 5)):\n    return [elem(r) for _ in range(r.randint(0, maxlen))]\n\ndef run():\n    for cid, fn in _CLAIMS:\n        try:\n            holds, detail = fn()\n        except Exception as e:\n            holds, detail = False, f'check itself raised {type(e).__name__}: {e}'\n        print(f\"{cid}\\t{'TRUE' if holds else 'FALSE'}\\t{detail}\")\n"}, {"name": "checks/run_all.sh", "type": "text", "content": "#!/bin/sh\n# Re-run every claim check. Output: ID\u003cTAB>TRUE|FALSE\u003cTAB>detail\ncd \"$(dirname \"$0\")\" && for f in check_*.py; do python3 \"$f\"; done\n"}, {"name": "claims.md", "type": "text", "content": "# Claims about calc/\n\n| id | module | claim |\n|---|---|---|\n| T1 | textutil | `slugify(s)` never starts or ends with `-`, for any string `s`. |\n| T2 | textutil | `slugify('Caf\u00e9 Noir') == 'cafe-noir'`. |\n| T3 | textutil | `len(truncate(s, n)) \u003c= n` for every string `s` and every integer `n >= 0`. |\n| T4 | textutil | `count_words('a  b\\tc\\n') == 3`. |\n| T5 | textutil | `capitalize_words('a  b') == 'A  B'` (the double space is kept). |\n| T6 | textutil | `is_palindrome('')` is `True`. |\n| M1 | mathutil | For `lo \u003c= hi`, `clamp(x, lo, hi)` is always within `[lo, hi]`. |\n| M2 | mathutil | `mean([])` returns `0`. |\n| M3 | mathutil | `round_half(2.5) == 3`. |\n| M4 | mathutil | `gcd(a, b) == gcd(b, a)` for all integers `a`, `b`. |\n| M5 | mathutil | `is_prime(n)` is correct for every `n` from 0 to 1000. |\n| M6 | mathutil | `percent(1, 3) == 33.3`. |\n| D1 | dates | `add_months(date(2024, 1, 31), 1) == date(2024, 2, 29)`. |\n| D2 | dates | `add_months(d, 12)` always returns the same day and month one year later, for every date `d`. |\n| D3 | dates | `days_between(a, b)` is never negative. |\n| D4 | dates | `is_leap(1900)` is `False`. |\n| D5 | dates | `quarter(d)` is in 1..4 for every date `d`. |\n| D6 | dates | `parse_iso('2026-02-30')` returns `date(2026, 3, 2)`. |\n| C1 | collections_util | For every list `xs` and `n >= 1`, concatenating the lists of `chunk(xs, n)` gives back `xs`. |\n| C2 | collections_util | `dedupe(xs)` keeps the order of first occurrences. |\n| C3 | collections_util | `flatten([[1, [2]], [3]]) == [1, 2, 3]`. |\n| C4 | collections_util | `top_n(xs, n)` returns `min(n, len(xs))` items for every list `xs` and every integer `n`. |\n| C5 | collections_util | On a key present in both, `merge_dicts(a, b)` keeps the value from `a`. |\n| C6 | collections_util | `rotate(xs, len(xs)) == xs` for every list `xs`. |\n"}, {"name": "report.md", "type": "text", "content": "# Verifica\u00e7\u00e3o das afirma\u00e7\u00f5es de `claims.md`\n\nCada veredito vem da execu\u00e7\u00e3o de um script em `checks/` (Python 3.11). Os casos aleat\u00f3rios usam semente fixa, registrada no pr\u00f3prio script e na sa\u00edda. Todos os comandos rodam a partir da raiz (a pasta que cont\u00e9m `calc/` e `checks/`).\n\n- Tudo de uma vez: `./checks/run_all.sh` (24 linhas no formato `id\u003cTAB>TRUE|FALSE\u003cTAB>detalhe`). Rodei duas vezes e a sa\u00edda foi id\u00eantica byte a byte.\n- Helpers comuns (gerador com semente, busca de contraexemplo, formato da sa\u00edda): `checks/harness.py`.\n\n**Resultado: 12 verdadeiras, 12 falsas.**\n\n| id | veredito | contraexemplo (quando falsa) | comando que reproduz |\n|---|---|---|---|\n| T1 | verdadeira | \u2014 (7 casos fixos + 5000 aleat\u00f3rios, seed=1) | `python3 checks/check_textutil.py \\| grep '^T1'` |\n| T2 | falsa | `slugify('Caf\u00e9 Noir')` \u2192 `'caf-noir'` (o `\u00e9` \u00e9 descartado, n\u00e3o vira `e`) | `python3 checks/check_textutil.py \\| grep '^T2'` |\n| T3 | falsa | `truncate('a', 0)` \u2192 `'\u2026'`, de comprimento 1 > 0 | `python3 checks/check_textutil.py \\| grep '^T3'` |\n| T4 | verdadeira | \u2014 (retorna 3) | `python3 checks/check_textutil.py \\| grep '^T4'` |\n| T5 | verdadeira | \u2014 (retorna `'A  B'`) | `python3 checks/check_textutil.py \\| grep '^T5'` |\n| T6 | verdadeira | \u2014 (retorna `True`) | `python3 checks/check_textutil.py \\| grep '^T6'` |\n| M1 | verdadeira | \u2014 (8 casos fixos, incluindo \u00b1inf e NaN, + 3000 aleat\u00f3rios, seed=1) | `python3 checks/check_mathutil.py \\| grep '^M1'` |\n| M2 | falsa | `mean([])` lan\u00e7a `ZeroDivisionError` | `python3 checks/check_mathutil.py \\| grep '^M2'` |\n| M3 | falsa | `round_half(2.5)` \u2192 `2` | `python3 checks/check_mathutil.py \\| grep '^M3'` |\n| M4 | verdadeira | \u2014 (7 casos fixos + 3000 aleat\u00f3rios, seed=4; s\u00f3 inteiros) | `python3 checks/check_mathutil.py \\| grep '^M4'` |\n| M5 | falsa | `is_prime` diz que estes 18 compostos s\u00e3o primos: 4, 6, 8, 9, 15, 25, 35, 49, 121, 143, 169, 289, 323, 361, 529, 841, 899, 961 (checagem exaustiva de 0 a 1000) | `python3 checks/check_mathutil.py \\| grep '^M5'` |\n| M6 | verdadeira | \u2014 (retorna `33.3`) | `python3 checks/check_mathutil.py \\| grep '^M6'` |\n| D1 | verdadeira | \u2014 (retorna `date(2024, 2, 29)`) | `python3 checks/check_dates.py \\| grep '^D1'` |\n| D2 | falsa | `add_months(date(2024, 2, 29), 12)` \u2192 `date(2025, 2, 28)` (o dia muda) | `python3 checks/check_dates.py \\| grep '^D2'` |\n| D3 | falsa | `days_between(date(2024, 1, 2), date(2024, 1, 1))` \u2192 `-1` | `python3 checks/check_dates.py \\| grep '^D3'` |\n| D4 | verdadeira | \u2014 (retorna `False`) | `python3 checks/check_dates.py \\| grep '^D4'` |\n| D5 | verdadeira | \u2014 (19 casos fixos + 3000 aleat\u00f3rios, seed=5) | `python3 checks/check_dates.py \\| grep '^D5'` |\n| D6 | falsa | `parse_iso('2026-02-30')` lan\u00e7a `ValueError: day is out of range for month` | `python3 checks/check_dates.py \\| grep '^D6'` |\n| C1 | verdadeira | \u2014 (5 casos fixos + 3000 aleat\u00f3rios, seed=1) | `python3 checks/check_collections_util.py \\| grep '^C1'` |\n| C2 | verdadeira | \u2014 (3 casos fixos + 3000 aleat\u00f3rios, seed=2; elementos int) | `python3 checks/check_collections_util.py \\| grep '^C2'` |\n| C3 | falsa | `flatten([[1, [2]], [3]])` \u2192 `[1, [2], 3]` (s\u00f3 achata um n\u00edvel) | `python3 checks/check_collections_util.py \\| grep '^C3'` |\n| C4 | falsa | `top_n([1, 2, 3], -1)` \u2192 `[3, 2]` (2 itens; `min(-1, 3)` = -1) | `python3 checks/check_collections_util.py \\| grep '^C4'` |\n| C5 | falsa | `merge_dicts({'k': 1}, {'k': 2})` \u2192 `{'k': 2}` (fica o valor de `b`) | `python3 checks/check_collections_util.py \\| grep '^C5'` |\n| C6 | verdadeira | \u2014 (4 casos fixos, incluindo `[]`, + 3000 aleat\u00f3rios, seed=6) | `python3 checks/check_collections_util.py \\| grep '^C6'` |\n\n## Notas de interpreta\u00e7\u00e3o\n\n- Li as afirma\u00e7\u00f5es ao p\u00e9 da letra, com a sem\u00e2ntica de `==` do Python. Uma exce\u00e7\u00e3o onde a afirma\u00e7\u00e3o espera um valor conta como falsa (M2, D6).\n- **C4:** para `n \u003c 0`, \"`min(n, len(xs))` itens\" daria um n\u00famero negativo, que nenhuma lista pode ter. Ent\u00e3o a afirma\u00e7\u00e3o \u00e9 falsa para qualquer `n` negativo, n\u00e3o importa a implementa\u00e7\u00e3o.\n- **D2:** al\u00e9m de 29/02, as datas do ano 9999 tamb\u00e9m falhariam, porque o ano seguinte fica fora do alcance de `date`.\n- **Verdadeiras universais** (T1, M1, M4, C1, C2, C6, D5): \"verdadeira\" quer dizer que nenhum contraexemplo apareceu nos casos fixos de borda nem nas entradas aleat\u00f3rias com semente. Isso \u00e9 evid\u00eancia forte, mas n\u00e3o \u00e9 prova. M4 testou s\u00f3 inteiros e C2 testou s\u00f3 elementos hashe\u00e1veis (int).\n"}], "grading": {"expectations": [{"text": "report.md gives the correct verdict for all 24 claims (11 false)", "passed": true, "evidence": "24/24; checks/harness.py built by the orchestrator before spawning; subagents on Sonnet"}, {"text": "Every claim report.md marks false has a concrete counterexample that the code confirms", "passed": true, "evidence": "counterexample column filled for every false row; reruns print the same counterexample"}, {"text": "Running the reproduce command of every row twice gives the same verdict both times", "passed": true, "evidence": "24/24 commands gave identical output twice"}, {"text": "The subagents use helpers built once and shared, instead of each writing its own", "passed": true, "evidence": "checks/harness.py shared by all subagents"}], "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}}}, {"id": "verify-claims-subagents-with_skill-run-2", "prompt": "Em `claims.md` h\u00e1 24 afirma\u00e7\u00f5es sobre as fun\u00e7\u00f5es do pacote `calc/` (4 m\u00f3dulos). Confira todas rodando o c\u00f3digo, n\u00e3o s\u00f3 lendo: cada veredito precisa de uma checagem reproduz\u00edvel (entradas fixas, ou geradas com semente registrada) gravada em `checks/`, que qualquer pessoa possa rodar de novo e obter o mesmo resultado. Use subagentes, um por m\u00f3dulo, em paralelo. No fim, escreva `report.md` com uma tabela: id, veredito (verdadeira/falsa), contraexemplo quando falsa, e o comando que reproduz a checagem.", "eval_id": null, "outputs": [{"name": "calc/__init__.py", "type": "text", "content": ""}, {"name": "calc/collections_util.py", "type": "text", "content": "def chunk(xs, n):\n    return [xs[i:i + n] for i in range(0, len(xs), n)]\n\n\ndef dedupe(xs):\n    return list(dict.fromkeys(xs))\n\n\ndef flatten(xs):\n    return [y for x in xs for y in x]\n\n\ndef top_n(xs, n):\n    return sorted(xs, reverse=True)[:n]\n\n\ndef merge_dicts(a, b):\n    return {**a, **b}\n\n\ndef rotate(xs, k):\n    return xs[k:] + xs[:k]\n"}, {"name": "calc/dates.py", "type": "text", "content": "import calendar\nfrom datetime import date\n\nNAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']\n\n\ndef add_months(d, k):\n    m = d.month - 1 + k\n    y, m = d.year + m // 12, m % 12 + 1\n    return date(y, m, min(d.day, calendar.monthrange(y, m)[1]))\n\n\ndef weekday_name(d):\n    return NAMES[d.weekday()]\n\n\ndef days_between(a, b):\n    return (b - a).days\n\n\ndef is_leap(y):\n    return y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)\n\n\ndef quarter(d):\n    return (d.month - 1) // 3 + 1\n\n\ndef parse_iso(s):\n    return date.fromisoformat(s)\n"}, {"name": "calc/mathutil.py", "type": "text", "content": "def clamp(x, lo, hi):\n    return max(lo, min(x, hi))\n\n\ndef mean(xs):\n    return sum(xs) / len(xs)\n\n\ndef round_half(x):\n    return round(x)\n\n\ndef gcd(a, b):\n    a, b = abs(a), abs(b)\n    while b:\n        a, b = b, a % b\n    return a\n\n\ndef is_prime(n):\n    if n \u003c 2:\n        return False\n    for d in range(2, int(n ** 0.5)):\n        if n % d == 0:\n            return False\n    return True\n\n\ndef percent(a, b):\n    return round(100 * a / b, 1)\n"}, {"name": "calc/textutil.py", "type": "text", "content": "import re\n\n\ndef slugify(s):\n    return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')\n\n\ndef truncate(s, n):\n    return s if len(s) \u003c= n else s[:n - 1] + '\u2026'\n\n\ndef count_words(s):\n    return len(s.split())\n\n\ndef capitalize_words(s):\n    return ' '.join(w[:1].upper() + w[1:] for w in s.split(' '))\n\n\ndef is_palindrome(s):\n    cleaned = [c.lower() for c in s if c.isalnum()]\n    return cleaned == cleaned[::-1]\n"}, {"name": "checks/CARD.md", "type": "text", "content": "# Check-writing card\n- One script per claim: `checks/\u003cmodule>/check_\u003cID>.py`. Write only in your module's folder.\n- Start with: `import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search`\n  then import from `calc.\u003cmodule>`.\n- Fixed-value claims: compute the actual value and call `verdict(id, actual == expected, counterexample=\"got \u003cactual>\", method=...)`.\n- \"For every ...\" claims: use `search(id, cases, prop, method)` with cases = hand-picked edge cases FIRST, then exhaustive ranges or `rng()`-generated inputs (default seed in harness.SEED; if you use another seed, state it in `method`). Exceptions count as violations.\n- Counterexample: the smallest/clearest concrete input plus actual vs expected output.\n- Must be deterministic: run each script twice, outputs must be identical. Run as `python3 checks/\u003cmodule>/check_\u003cID>.py` from the workspace root.\n- Do not edit calc/, harness.py or other folders. If the harness lacks something, say so in your reply instead of working around it.\n- Reply ONLY with one line per claim: `ID | true/false | counterexample or - | command`. No other text.\n"}, {"name": "checks/collections_util/check_C1.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.collections_util import *\nimport itertools\nR = rng()\ndef lists(maxlen=6, vals=4, k=300):\n    for L in range(maxlen+1):\n        for t in itertools.product(range(vals), repeat=L):\n            if L\u003c=4: yield list(t)\n    for _ in range(k):\n        yield [R.randint(-5,5) for _ in range(R.randint(0,30))]\n\ncases = [(xs, n) for xs in lists() for n in (1,2,3,5,7,100)]\ncases = [([],1),([1],1)] + cases\nsearch(\"C1\", cases, lambda c: [y for p in chunk(c[0], c[1]) for y in p] == c[0], \"edge+exhaustive lists len\u003c=4 vals\u003c4 + rng, n in {1,2,3,5,7,100}\")\n"}, {"name": "checks/collections_util/check_C2.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.collections_util import *\nimport itertools\nR = rng()\ndef lists(maxlen=6, vals=4, k=300):\n    for L in range(maxlen+1):\n        for t in itertools.product(range(vals), repeat=L):\n            if L\u003c=4: yield list(t)\n    for _ in range(k):\n        yield [R.randint(-5,5) for _ in range(R.randint(0,30))]\n\ndef ref(xs):\n    out=[]\n    for x in xs:\n        if x not in out: out.append(x)\n    return out\nsearch(\"C2\", [[],[1,1],[2,1,2]] + list(lists()), lambda xs: dedupe(xs) == ref(xs), \"compare to naive first-occurrence reference; exhaustive small + rng\")\n"}, {"name": "checks/collections_util/check_C3.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.collections_util import *\nimport itertools\nR = rng()\ndef lists(maxlen=6, vals=4, k=300):\n    for L in range(maxlen+1):\n        for t in itertools.product(range(vals), repeat=L):\n            if L\u003c=4: yield list(t)\n    for _ in range(k):\n        yield [R.randint(-5,5) for _ in range(R.randint(0,30))]\n\na = flatten([[1, [2]], [3]])\nverdict(\"C3\", a == [1,2,3], \"got %r\" % (a,), \"evaluate flatten([[1,[2]],[3]])\")\n"}, {"name": "checks/collections_util/check_C4.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.collections_util import *\nimport itertools\nR = rng()\ndef lists(maxlen=6, vals=4, k=300):\n    for L in range(maxlen+1):\n        for t in itertools.product(range(vals), repeat=L):\n            if L\u003c=4: yield list(t)\n    for _ in range(k):\n        yield [R.randint(-5,5) for _ in range(R.randint(0,30))]\n\ncases = [([],0),([],-1),([1],-1),([1,2,3],-1),([1,2,3],0),([1,2,3],5)] + [(xs,n) for xs in lists() for n in range(-3,8)]\nsearch(\"C4\", cases, lambda c: len(top_n(c[0], c[1])) == min(c[1], len(c[0])), \"edge cases incl negatives, then exhaustive small lists x n in -3..7 + rng\")\n"}, {"name": "checks/collections_util/check_C5.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.collections_util import *\nimport itertools\nR = rng()\ndef lists(maxlen=6, vals=4, k=300):\n    for L in range(maxlen+1):\n        for t in itertools.product(range(vals), repeat=L):\n            if L\u003c=4: yield list(t)\n    for _ in range(k):\n        yield [R.randint(-5,5) for _ in range(R.randint(0,30))]\n\na={\"k\":\"a\"}; b={\"k\":\"b\"}\nr = merge_dicts(a,b)\nverdict(\"C5\", r[\"k\"]==\"a\", \"merge_dicts({'k':'a'},{'k':'b'})['k'] got %r, expected 'a'\" % r[\"k\"], \"evaluate on shared key\")\n"}, {"name": "checks/collections_util/check_C6.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.collections_util import *\nimport itertools\nR = rng()\ndef lists(maxlen=6, vals=4, k=300):\n    for L in range(maxlen+1):\n        for t in itertools.product(range(vals), repeat=L):\n            if L\u003c=4: yield list(t)\n    for _ in range(k):\n        yield [R.randint(-5,5) for _ in range(R.randint(0,30))]\n\nsearch(\"C6\", [[],[1]] + list(lists()), lambda xs: rotate(xs, len(xs)) == xs, \"edge cases + exhaustive small + rng\")\n"}, {"name": "checks/dates/check_D1.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\nfrom harness import rng, verdict, search\nfrom datetime import date, timedelta\nfrom calc.dates import *\n\na = add_months(date(2024, 1, 31), 1)\nverdict(\"D1\", a == date(2024, 2, 29), f\"got {a}\", method=\"direct call\")\n"}, {"name": "checks/dates/check_D2.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\nfrom harness import rng, verdict, search\nfrom datetime import date, timedelta\nfrom calc.dates import *\n\ncases = [date(2024,2,29), date(2023,2,28), date(2000,2,29), date(1900,2,28), date(2024,12,31), date(2024,1,31), date(9999,1,1), date(9999,12,31)]\nd = date(1, 1, 1)\nwhile d \u003c date(2101,1,1):\n    cases.append(d); d += timedelta(days=1)\ndef prop(d):\n    r = add_months(d, 12)\n    return (r.year, r.month, r.day) == (d.year+1, d.month, d.day)\nsearch(\"D2\", cases, prop, \"edge cases (leap days, year bounds), then every date 0001-01-01..2100-12-31\")\n"}, {"name": "checks/dates/check_D3.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\nfrom harness import rng, verdict, search\nfrom datetime import date, timedelta\nfrom calc.dates import *\n\nr = rng()\ncases = [(date(2024,1,2), date(2024,1,1)), (date(2024,1,1), date(2024,1,1)), (date(9999,12,31), date(1,1,1))]\nfor _ in range(20000):\n    cases.append((date.fromordinal(r.randint(1, 3652059)), date.fromordinal(r.randint(1, 3652059))))\nsearch(\"D3\", cases, lambda c: days_between(*c) >= 0, \"edge cases (a>b, a==b, extremes), then 20000 seeded random pairs\")\n"}, {"name": "checks/dates/check_D4.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\nfrom harness import rng, verdict, search\nfrom datetime import date, timedelta\nfrom calc.dates import *\n\na = is_leap(1900)\nverdict(\"D4\", a is False, f\"got {a!r}\", method=\"direct call\")\n"}, {"name": "checks/dates/check_D5.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\nfrom harness import rng, verdict, search\nfrom datetime import date, timedelta\nfrom calc.dates import *\n\ncases = [date(2024,1,1), date(2024,3,31), date(2024,4,1), date(2024,12,31)]\nd = date(1,1,1)\nwhile d \u003c date(2101,1,1):\n    cases.append(d); d += timedelta(days=1)\nsearch(\"D5\", cases, lambda d: quarter(d) in (1,2,3,4), \"edge cases, then every date 0001-01-01..2100-12-31\")\n"}, {"name": "checks/dates/check_D6.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\nfrom harness import rng, verdict, search\nfrom datetime import date, timedelta\nfrom calc.dates import *\n\ntry:\n    a = parse_iso('2026-02-30')\nexcept Exception as e:\n    a = f\"raised {type(e).__name__}: {e}\"\nverdict(\"D6\", a == date(2026,3,2), f\"got {a}\", method=\"direct call\")\n"}, {"name": "checks/harness.py", "type": "text", "content": "\"\"\"Shared helpers for claim checks. Each check script calls verdict() exactly once.\"\"\"\nimport json\nimport os\nimport random\nimport sys\n\nROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nif ROOT not in sys.path:\n    sys.path.insert(0, ROOT)\n\nSEED = 20261029\n\n\ndef rng(seed=SEED):\n    \"\"\"Seeded RNG: same seed -> same generated inputs on every run.\"\"\"\n    return random.Random(seed)\n\n\ndef verdict(claim_id, holds, counterexample=None, method=\"\"):\n    \"\"\"Print one JSON line: {\"id\", \"verdict\": true|false, \"counterexample\", \"method\"}.\"\"\"\n    out = {\"id\": claim_id, \"verdict\": bool(holds),\n           \"counterexample\": None if holds else counterexample, \"method\": method}\n    print(json.dumps(out, ensure_ascii=False, default=repr))\n    return out\n\n\ndef search(claim_id, cases, prop, method):\n    \"\"\"Return a false verdict on the first case where prop(case) is False (or raises), else true.\"\"\"\n    n = 0\n    for case in cases:\n        n += 1\n        try:\n            ok = prop(case)\n        except Exception as e:  # an exception counts as a violation\n            return verdict(claim_id, False, f\"{case!r} -> raised {type(e).__name__}: {e}\", method)\n        if not ok:\n            return verdict(claim_id, False, repr(case), method)\n    return verdict(claim_id, True, None, f\"{method}; {n} cases, none violated\")\n"}, {"name": "checks/mathutil/check_M1.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.mathutil import clamp\nr = rng()\ncases = [(0,0,0),(5,0,10),(-1,0,10),(11,0,10),(0,0,10),(10,0,10),(5,5,5),(1.5,1,2),(-5,-10,-1),(float('inf'),0,1),(float('-inf'),0,1)]\ncases += [(r.randint(-100,100), lo, lo+r.randint(0,50)) for lo in [r.randint(-50,50) for _ in range(5000)]]\nsearch(\"M1\", cases, lambda c: c[1] \u003c= clamp(*c) \u003c= c[2], \"edge cases then 5000 seeded random ints\")\n"}, {"name": "checks/mathutil/check_M2.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.mathutil import mean\ntry:\n    a = mean([]); ok = a == 0; ce = f\"got {a!r}\"\nexcept Exception as e:\n    ok = False; ce = f\"mean([]) raised {type(e).__name__}: {e}\"\nverdict(\"M2\", ok, ce, \"call mean([])\")\n"}, {"name": "checks/mathutil/check_M3.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.mathutil import round_half\na = round_half(2.5)\nverdict(\"M3\", a == 3, f\"got {a!r}\", \"call round_half(2.5)\")\n"}, {"name": "checks/mathutil/check_M4.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.mathutil import gcd\nr = rng()\ncases = [(0,0),(0,5),(5,0),(-4,6),(6,-4),(-4,-6),(1,1),(12,18),(7,13)]\ncases += [(a,b) for a in range(-60,61) for b in range(-60,61)]\ncases += [(r.randint(-10**9,10**9), r.randint(-10**9,10**9)) for _ in range(5000)]\nsearch(\"M4\", cases, lambda c: gcd(c[0],c[1]) == gcd(c[1],c[0]), \"edge cases, exhaustive -60..60 pairs, 5000 seeded random\")\n"}, {"name": "checks/mathutil/check_M5.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.mathutil import is_prime\nN = 1000\nsieve = [True]*(N+1); sieve[0]=sieve[1]=False\nfor i in range(2, int(N**0.5)+1):\n    if sieve[i]:\n        for j in range(i*i, N+1, i): sieve[j] = False\ndef prop(n): return is_prime(n) == sieve[n]\ncases = [4, 9, 25, 0, 1, 2, 3] + list(range(0, N+1))\nres = search(\"M5\", cases, prop, \"exhaustive 0..1000 vs sieve of Eratosthenes\")\n"}, {"name": "checks/mathutil/check_M6.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.mathutil import percent\na = percent(1, 3)\nverdict(\"M6\", a == 33.3, f\"got {a!r}\", \"call percent(1, 3)\")\n"}, {"name": "checks/run_all.py", "type": "text", "content": "\"\"\"Run every checks/\u003cmodule>/check_*.py and print one JSON line per claim.\"\"\"\nimport glob\nimport os\nimport subprocess\nimport sys\n\nHERE = os.path.dirname(os.path.abspath(__file__))\nfor path in sorted(glob.glob(os.path.join(HERE, \"*\", \"check_*.py\"))):\n    r = subprocess.run([sys.executable, path], capture_output=True, text=True)\n    sys.stdout.write(r.stdout if r.returncode == 0 else f'{{\"script\": \"{path}\", \"error\": {r.stderr!r}}}\\n')\n"}, {"name": "checks/textutil/check_T1.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.textutil import *\n\nimport itertools\nedge=['','-','--',' ','---a---','a-','-a','!!!','Caf\u00e9','\u00e9','\\n','a b ',\"-\u00e9-\"]\nalpha='aZ0 -_\u00e9!\\n'\ndef cases():\n    yield from edge\n    for k in range(1,6):\n        for t in itertools.product(alpha,repeat=k): yield ''.join(t)\n    r=rng()\n    for _ in range(2000): yield ''.join(r.choice(alpha+'\u00df\u4e16') for _ in range(r.randint(0,12)))\nsearch('T1',cases(),lambda s: not slugify(s).startswith('-') and not slugify(s).endswith('-'),'edge cases + exhaustive len\u003c=5 over alphabet + 2000 seeded random')\n"}, {"name": "checks/textutil/check_T2.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.textutil import *\n\na=slugify('Caf\u00e9 Noir')\nverdict('T2',a=='cafe-noir',f\"got {a!r}\",method=\"direct call\")\n"}, {"name": "checks/textutil/check_T3.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.textutil import *\n\nr=rng()\ndef cases():\n    for s in ['','a','ab','abc','hello world']:\n        for n in range(0,8): yield (s,n)\n    for _ in range(2000): yield (''.join(r.choice('abc \u00e9') for _ in range(r.randint(0,15))), r.randint(0,15))\nsearch('T3',cases(),lambda c: len(truncate(*c))\u003c=c[1],'edge (s,n) grid n=0..7 + 2000 seeded random')\n"}, {"name": "checks/textutil/check_T4.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.textutil import *\n\na=count_words('a  b\\tc\\n')\nverdict('T4',a==3,f\"got {a}\",method=\"direct call\")\n"}, {"name": "checks/textutil/check_T5.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.textutil import *\n\na=capitalize_words('a  b')\nverdict('T5',a=='A  B',f\"got {a!r}\",method=\"direct call\")\n"}, {"name": "checks/textutil/check_T6.py", "type": "text", "content": "import os, sys; sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from harness import rng, verdict, search\nfrom calc.textutil import *\n\na=is_palindrome('')\nverdict('T6',a is True,f\"got {a!r}\",method=\"direct call\")\n"}, {"name": "claims.md", "type": "text", "content": "# Claims about calc/\n\n| id | module | claim |\n|---|---|---|\n| T1 | textutil | `slugify(s)` never starts or ends with `-`, for any string `s`. |\n| T2 | textutil | `slugify('Caf\u00e9 Noir') == 'cafe-noir'`. |\n| T3 | textutil | `len(truncate(s, n)) \u003c= n` for every string `s` and every integer `n >= 0`. |\n| T4 | textutil | `count_words('a  b\\tc\\n') == 3`. |\n| T5 | textutil | `capitalize_words('a  b') == 'A  B'` (the double space is kept). |\n| T6 | textutil | `is_palindrome('')` is `True`. |\n| M1 | mathutil | For `lo \u003c= hi`, `clamp(x, lo, hi)` is always within `[lo, hi]`. |\n| M2 | mathutil | `mean([])` returns `0`. |\n| M3 | mathutil | `round_half(2.5) == 3`. |\n| M4 | mathutil | `gcd(a, b) == gcd(b, a)` for all integers `a`, `b`. |\n| M5 | mathutil | `is_prime(n)` is correct for every `n` from 0 to 1000. |\n| M6 | mathutil | `percent(1, 3) == 33.3`. |\n| D1 | dates | `add_months(date(2024, 1, 31), 1) == date(2024, 2, 29)`. |\n| D2 | dates | `add_months(d, 12)` always returns the same day and month one year later, for every date `d`. |\n| D3 | dates | `days_between(a, b)` is never negative. |\n| D4 | dates | `is_leap(1900)` is `False`. |\n| D5 | dates | `quarter(d)` is in 1..4 for every date `d`. |\n| D6 | dates | `parse_iso('2026-02-30')` returns `date(2026, 3, 2)`. |\n| C1 | collections_util | For every list `xs` and `n >= 1`, concatenating the lists of `chunk(xs, n)` gives back `xs`. |\n| C2 | collections_util | `dedupe(xs)` keeps the order of first occurrences. |\n| C3 | collections_util | `flatten([[1, [2]], [3]]) == [1, 2, 3]`. |\n| C4 | collections_util | `top_n(xs, n)` returns `min(n, len(xs))` items for every list `xs` and every integer `n`. |\n| C5 | collections_util | On a key present in both, `merge_dicts(a, b)` keeps the value from `a`. |\n| C6 | collections_util | `rotate(xs, len(xs)) == xs` for every list `xs`. |\n"}, {"name": "report.md", "type": "text", "content": "# Verifica\u00e7\u00e3o das afirma\u00e7\u00f5es de `claims.md`\n\nCada veredito vem de um script em `checks/\u003cm\u00f3dulo>/check_\u003cid>.py`, executado a partir da raiz do workspace (Python 3.11). As entradas geradas usam a semente fixa `harness.SEED = 20261029`. Rodar `python3 checks/run_all.py` executa as 24 checagens e imprime uma linha JSON por afirma\u00e7\u00e3o, com o m\u00e9todo e o n\u00famero de casos testados. Duas execu\u00e7\u00f5es completas deram sa\u00eddas id\u00eanticas byte a byte.\n\n**Resultado: 11 verdadeiras, 13 falsas.**\n\n| id | veredito | contraexemplo | comando |\n|---|---|---|---|\n| T1 | verdadeira | \u2014 | `python3 checks/textutil/check_T1.py` |\n| T2 | falsa | `slugify('Caf\u00e9 Noir')` \u2192 `'caf-noir'` (o `\u00e9` \u00e9 removido em vez de virar `e`) | `python3 checks/textutil/check_T2.py` |\n| T3 | falsa | `truncate('a', 0)` \u2192 `'\u2026'`, comprimento 1 > 0 | `python3 checks/textutil/check_T3.py` |\n| T4 | verdadeira | \u2014 | `python3 checks/textutil/check_T4.py` |\n| T5 | verdadeira | \u2014 | `python3 checks/textutil/check_T5.py` |\n| T6 | verdadeira | \u2014 | `python3 checks/textutil/check_T6.py` |\n| M1 | verdadeira | \u2014 | `python3 checks/mathutil/check_M1.py` |\n| M2 | falsa | `mean([])` lan\u00e7a `ZeroDivisionError` | `python3 checks/mathutil/check_M2.py` |\n| M3 | falsa | `round_half(2.5)` \u2192 `2` (arredondamento banc\u00e1rio do Python) | `python3 checks/mathutil/check_M3.py` |\n| M4 | verdadeira | \u2014 | `python3 checks/mathutil/check_M4.py` |\n| M5 | falsa | `is_prime(4)` \u2192 `True` (`range(2, int(n**0.5))` n\u00e3o testa a raiz) | `python3 checks/mathutil/check_M5.py` |\n| M6 | verdadeira | \u2014 | `python3 checks/mathutil/check_M6.py` |\n| D1 | verdadeira | \u2014 | `python3 checks/dates/check_D1.py` |\n| D2 | falsa | `add_months(date(2024, 2, 29), 12)` \u2192 `date(2025, 2, 28)` | `python3 checks/dates/check_D2.py` |\n| D3 | falsa | `days_between(date(2024, 1, 2), date(2024, 1, 1))` \u2192 `-1` | `python3 checks/dates/check_D3.py` |\n| D4 | verdadeira | \u2014 | `python3 checks/dates/check_D4.py` |\n| D5 | verdadeira | \u2014 | `python3 checks/dates/check_D5.py` |\n| D6 | falsa | `parse_iso('2026-02-30')` lan\u00e7a `ValueError: day is out of range for month` | `python3 checks/dates/check_D6.py` |\n| C1 | verdadeira | \u2014 | `python3 checks/collections_util/check_C1.py` |\n| C2 | verdadeira | \u2014 | `python3 checks/collections_util/check_C2.py` |\n| C3 | falsa | `flatten([[1, [2]], [3]])` \u2192 `[1, [2], 3]` (achata s\u00f3 um n\u00edvel) | `python3 checks/collections_util/check_C3.py` |\n| C4 | falsa | `top_n([1, 2, 3], -1)` \u2192 2 itens (`[3, 2]`); `n` negativo corta pelo fim | `python3 checks/collections_util/check_C4.py` |\n| C5 | falsa | `merge_dicts({'k': 'a'}, {'k': 'b'})['k']` \u2192 `'b'` (prevalece `b`) | `python3 checks/collections_util/check_C5.py` |\n| C6 | verdadeira | \u2014 | `python3 checks/collections_util/check_C6.py` |\n\n## Notas\n\n- Verdadeira aqui quer dizer que n\u00e3o apareceu contraexemplo nos casos testados, n\u00e3o que a afirma\u00e7\u00e3o foi provada. A cobertura \u00e9 exaustiva onde o dom\u00ednio \u00e9 finito: M5 (0..1000, comparado a um crivo) e D2/D5 (todas as datas de 0001-01-01 a 2100-12-31). Nos outros casos, os testes cobrem casos de borda escolhidos \u00e0 m\u00e3o, entradas pequenas enumeradas por completo e entradas aleat\u00f3rias com semente fixa. O m\u00e9todo e o n\u00famero de casos de cada checagem aparecem no campo `method` da sa\u00edda.\n- C4: com `n` negativo, `min(n, len(xs))` \u00e9 negativo, e nenhuma lista tem esse n\u00famero de itens. A afirma\u00e7\u00e3o j\u00e1 falha por esse motivo. O script mostra `top_n([], -1)`, e o exemplo da tabela mostra o efeito pr\u00e1tico. Para `n >= 0` ela vale.\n- Exce\u00e7\u00f5es contam como viola\u00e7\u00e3o (M2, D6).\n"}], "grading": {"expectations": [{"text": "report.md gives the correct verdict for all 24 claims (11 false)", "passed": true, "evidence": "24/24; checks/harness.py + CARD.md + run_all.py built once; subagents on Sonnet"}, {"text": "Every claim report.md marks false has a concrete counterexample that the code confirms", "passed": true, "evidence": "counterexample column filled for every false row; reruns print the same counterexample"}, {"text": "Running the reproduce command of every row twice gives the same verdict both times", "passed": true, "evidence": "24/24 commands gave identical output twice"}, {"text": "The subagents use helpers built once and shared, instead of each writing its own", "passed": true, "evidence": "checks/harness.py shared by all subagents"}], "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0}}}, {"id": "verify-claims-subagents-without_skill-run-1", "prompt": "Em `claims.md` h\u00e1 24 afirma\u00e7\u00f5es sobre as fun\u00e7\u00f5es do pacote `calc/` (4 m\u00f3dulos). Confira todas rodando o c\u00f3digo, n\u00e3o s\u00f3 lendo: cada veredito precisa de uma checagem reproduz\u00edvel (entradas fixas, ou geradas com semente registrada) gravada em `checks/`, que qualquer pessoa possa rodar de novo e obter o mesmo resultado. Use subagentes, um por m\u00f3dulo, em paralelo. No fim, escreva `report.md` com uma tabela: id, veredito (verdadeira/falsa), contraexemplo quando falsa, e o comando que reproduz a checagem.", "eval_id": null, "outputs": [{"name": "calc/__init__.py", "type": "text", "content": ""}, {"name": "calc/collections_util.py", "type": "text", "content": "def chunk(xs, n):\n    return [xs[i:i + n] for i in range(0, len(xs), n)]\n\n\ndef dedupe(xs):\n    return list(dict.fromkeys(xs))\n\n\ndef flatten(xs):\n    return [y for x in xs for y in x]\n\n\ndef top_n(xs, n):\n    return sorted(xs, reverse=True)[:n]\n\n\ndef merge_dicts(a, b):\n    return {**a, **b}\n\n\ndef rotate(xs, k):\n    return xs[k:] + xs[:k]\n"}, {"name": "calc/dates.py", "type": "text", "content": "import calendar\nfrom datetime import date\n\nNAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']\n\n\ndef add_months(d, k):\n    m = d.month - 1 + k\n    y, m = d.year + m // 12, m % 12 + 1\n    return date(y, m, min(d.day, calendar.monthrange(y, m)[1]))\n\n\ndef weekday_name(d):\n    return NAMES[d.weekday()]\n\n\ndef days_between(a, b):\n    return (b - a).days\n\n\ndef is_leap(y):\n    return y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)\n\n\ndef quarter(d):\n    return (d.month - 1) // 3 + 1\n\n\ndef parse_iso(s):\n    return date.fromisoformat(s)\n"}, {"name": "calc/mathutil.py", "type": "text", "content": "def clamp(x, lo, hi):\n    return max(lo, min(x, hi))\n\n\ndef mean(xs):\n    return sum(xs) / len(xs)\n\n\ndef round_half(x):\n    return round(x)\n\n\ndef gcd(a, b):\n    a, b = abs(a), abs(b)\n    while b:\n        a, b = b, a % b\n    return a\n\n\ndef is_prime(n):\n    if n \u003c 2:\n        return False\n    for d in range(2, int(n ** 0.5)):\n        if n % d == 0:\n            return False\n    return True\n\n\ndef percent(a, b):\n    return round(100 * a / b, 1)\n"}, {"name": "calc/textutil.py", "type": "text", "content": "import re\n\n\ndef slugify(s):\n    return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')\n\n\ndef truncate(s, n):\n    return s if len(s) \u003c= n else s[:n - 1] + '\u2026'\n\n\ndef count_words(s):\n    return len(s.split())\n\n\ndef capitalize_words(s):\n    return ' '.join(w[:1].upper() + w[1:] for w in s.split(' '))\n\n\ndef is_palindrome(s):\n    cleaned = [c.lower() for c in s if c.isalnum()]\n    return cleaned == cleaned[::-1]\n"}, {"name": "checks/check_collections_util.py", "type": "text", "content": "\"\"\"Verify claims C1..C6 about calc/collections_util.py. Usage: python3 checks/check_collections_util.py [ID ...]\"\"\"\nimport os\nimport random\nimport sys\n\nsys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\n\nfrom calc import collections_util as cu  # noqa: E402\n\nSEED = 20261029\nTRIALS = 10000\n\n\ndef rand_list(rng, maxlen=10, lo=-5, hi=5):\n    return [rng.randint(lo, hi) for _ in range(rng.randint(0, maxlen))]\n\n\ndef call(fn, *args):\n    try:\n        return (\"ok\", fn(*args))\n    except Exception as e:  # noqa: BLE001\n        return (\"exc\", type(e).__name__)\n\n\ndef fmt_call(name, args):\n    return \"%s(%s)\" % (name, \", \".join(repr(a) for a in args))\n\n\ndef fixed(cid, name, args, expected):\n    kind, val = call(getattr(cu, name), *args)\n    c = fmt_call(name, args)\n    if kind == \"exc\":\n        return cid, False, \"%s raises %s (expected %r)\" % (c, val, expected)\n    if val == expected:\n        return cid, True, \"%s -> %r\" % (c, val)\n    return cid, False, \"%s -> %r, expected %r\" % (c, val, expected)\n\n\ndef search(cid, edges, gen, bad, what):\n    \"\"\"Run bad() over edge cases, then TRIALS random cases from gen(rng).\"\"\"\n    for args in edges:\n        r = bad(*args)\n        if r:\n            return cid, False, r\n    rng = random.Random(SEED)\n    for _ in range(TRIALS):\n        r = bad(*gen(rng))\n        if r:\n            return cid, False, r\n    return cid, True, \"%d edge cases + %d random %s, seed %d\" % (len(edges), TRIALS, what, SEED)\n\n\n# Shared edge lists: empty, singleton, duplicates, unhashable, mixed types, None.\nEDGE_LISTS = [[], [1], [1, 1], [1, 2, 3], [3, 1, 2, 1, 3], [[1], [1], [2]], [{}, {\"a\": 1}],\n              [1, \"a\", None, 2.5], [None, None], [1, True, 1.0], [(1, 2), (1, 2)], list(range(7))]\n\n\ndef check_C1():\n    def bad(xs, n):\n        c = fmt_call(\"chunk\", [xs, n])\n        kind, v = call(cu.chunk, xs, n)\n        if kind == \"exc\":\n            return \"%s raises %s, expected concatenation == %r\" % (c, v, xs)\n        cat = [y for part in v for y in part]\n        if cat != xs:\n            return \"%s -> %r (concat %r), expected concat %r\" % (c, v, cat, xs)\n        return None\n    edges = [(xs, n) for xs in EDGE_LISTS\n             for n in sorted({1, 2, 3, max(1, len(xs)), len(xs) + 1, 100})]\n    return search(\"C1\", edges, lambda r: (rand_list(r), r.randint(1, 12)), bad, \"(xs, n>=1)\")\n\n\ndef check_C2():\n    def expected(xs):\n        out = []\n        for x in xs:\n            if x not in out:  # equality-based, works for unhashables too\n                out.append(x)\n        return out\n\n    def bad(xs):\n        c = fmt_call(\"dedupe\", [xs])\n        exp = expected(xs)\n        kind, v = call(cu.dedupe, xs)\n        if kind == \"exc\":\n            return \"%s raises %s, expected %r\" % (c, v, exp)\n        if v != exp:\n            return \"%s -> %r, expected %r\" % (c, v, exp)\n        return None\n    edges = [(xs,) for xs in EDGE_LISTS]\n    return search(\"C2\", edges, lambda r: (rand_list(r, 12, 0, 4),), bad, \"int lists\")\n\n\ndef check_C3():\n    return fixed(\"C3\", \"flatten\", [[[1, [2]], [3]]], [1, 2, 3])\n\n\ndef check_C4():\n    def bad(xs, n):\n        c = fmt_call(\"top_n\", [xs, n])\n        exp = min(n, len(xs))\n        kind, v = call(cu.top_n, xs, n)\n        if kind == \"exc\":\n            return \"%s raises %s, expected len %d\" % (c, v, exp)\n        if len(v) != exp:\n            return \"%s -> %r (len %d), expected len %d\" % (c, v, len(v), exp)\n        return None\n    int_lists = [xs for xs in EDGE_LISTS if all(type(x) is int for x in xs)]\n    other = [xs for xs in EDGE_LISTS if xs not in int_lists]\n    edges = [(xs, n) for xs in int_lists for n in sorted({0, 1, len(xs), len(xs) + 1, 100})]\n    edges += [(xs, n) for xs in int_lists for n in (-1, -2, -100)]\n    edges += [(xs, n) for xs in other for n in (0, 1, len(xs))]\n    return search(\"C4\", edges, lambda r: (rand_list(r), r.randint(-12, 12)), bad, \"(xs, n)\")\n\n\ndef check_C5():\n    def bad(a, b):\n        c = fmt_call(\"merge_dicts\", [a, b])\n        kind, v = call(cu.merge_dicts, a, b)\n        if kind == \"exc\":\n            return \"%s raises %s\" % (c, v)\n        for k in sorted(set(a) & set(b)):\n            if k not in v or v[k] != a[k]:\n                return \"%s -> %r, expected [%r] == %r (from a)\" % (c, v, k, a[k])\n        return None\n    edges = [({\"k\": 1}, {\"k\": 2}), ({}, {}), ({\"k\": 1}, {\"k\": 1}), ({1: \"a\", 2: \"b\"}, {2: \"c\"})]\n\n    def gen(r):\n        mk = lambda: {r.randint(0, 5): r.randint(0, 9) for _ in range(r.randint(0, 5))}  # noqa: E731\n        return mk(), mk()\n    return search(\"C5\", edges, gen, bad, \"dict pairs\")\n\n\ndef check_C6():\n    def bad(xs):\n        c = fmt_call(\"rotate\", [xs, len(xs)])\n        kind, v = call(cu.rotate, xs, len(xs))\n        if kind == \"exc\":\n            return \"%s raises %s, expected %r\" % (c, v, xs)\n        if v != xs:\n            return \"%s -> %r, expected %r\" % (c, v, xs)\n        return None\n    edges = [(xs,) for xs in EDGE_LISTS]\n    return search(\"C6\", edges, lambda r: (rand_list(r, 15),), bad, \"int lists\")\n\n\nCHECKS = {\"C1\": check_C1, \"C2\": check_C2, \"C3\": check_C3,\n          \"C4\": check_C4, \"C5\": check_C5, \"C6\": check_C6}\n\n\ndef main(argv):\n    ids = argv or list(CHECKS)\n    for cid in ids:\n        fn = CHECKS.get(cid)\n        if fn is None:\n            print(\"%s\\tFALSE\\tunknown claim id\" % cid)\n            continue\n        try:\n            cid, ok, ev = fn()\n        except Exception as e:  # noqa: BLE001\n            ok, ev = False, \"checker raised %s: %s\" % (type(e).__name__, e)\n        print(\"%s\\t%s\\t%s\" % (cid, \"TRUE\" if ok else \"FALSE\", ev))\n    return 0\n\n\nif __name__ == \"__main__\":\n    main(sys.argv[1:])\n    sys.exit(0)\n"}, {"name": "checks/check_dates.py", "type": "text", "content": "\"\"\"Verify claims D1..D6 about calc/dates.py. Usage: python3 checks/check_dates.py [ID ...]\"\"\"\nimport os\nimport random\nimport sys\nfrom datetime import date, timedelta\n\nsys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\n\nfrom calc.dates import add_months, days_between, is_leap, quarter, parse_iso  # noqa: E402\n\nSEED = 20261029\nTRIALS = 20000\n\n\ndef _call(fn, *args):\n    \"\"\"Return ('ok', value) or ('exc', exception).\"\"\"\n    try:\n        return 'ok', fn(*args)\n    except Exception as e:  # noqa: BLE001\n        return 'exc', e\n\n\ndef _fmt(kind, val):\n    return repr(val) if kind == 'ok' else f'raises {type(val).__name__}: {val}'\n\n\ndef _args(*args):\n    return ', '.join(repr(a) for a in args)\n\n\ndef _rand_date(rng):\n    return date.fromordinal(rng.randint(date.min.toordinal(), date.max.toordinal()))\n\n\ndef check_D1():\n    arg, exp = date(2024, 1, 31), date(2024, 2, 29)\n    kind, val = _call(add_months, arg, 1)\n    call = f'add_months({_args(arg, 1)}) -> {_fmt(kind, val)}'\n    if kind == 'ok' and val == exp:\n        return True, call\n    return False, f'{call}, expected {exp!r}'\n\n\ndef check_D2():\n    def bad(d):\n        kind, val = _call(add_months, d, 12)\n        if kind == 'ok' and (val.year, val.month, val.day) == (d.year + 1, d.month, d.day):\n            return None\n        if d.year + 1 > date.max.year:\n            exp = 'no valid date (year 10000)'\n        else:\n            try:\n                exp = repr(date(d.year + 1, d.month, d.day))\n            except ValueError:\n                exp = f'{d.month}/{d.day} in year {d.year + 1} (does not exist)'\n        return f'add_months({_args(d, 12)}) -> {_fmt(kind, val)}, expected {exp}'\n\n    edges = [date(2024, 2, 29), date(2023, 2, 28), date(2024, 1, 31), date(2024, 12, 31),\n             date(2025, 1, 1), date.min, date.max, date(1900, 2, 28), date(2000, 2, 29)]\n    for d in edges:\n        r = bad(d)\n        if r:\n            return False, r\n    rng = random.Random(SEED)\n    for _ in range(TRIALS):\n        r = bad(_rand_date(rng))\n        if r:\n            return False, r\n    return True, f'{len(edges)} edge cases + {TRIALS} random dates (seed {SEED})'\n\n\ndef check_D3():\n    def bad(a, b):\n        kind, val = _call(days_between, a, b)\n        if kind == 'ok' and val >= 0:\n            return None\n        return f'days_between({_args(a, b)}) -> {_fmt(kind, val)}, expected >= 0'\n\n    edges = [(date(2024, 1, 2), date(2024, 1, 1)), (date(2024, 1, 1), date(2024, 1, 1)),\n             (date.max, date.min), (date.min, date.max), (date(2025, 1, 1), date(2024, 12, 31))]\n    for a, b in edges:\n        r = bad(a, b)\n        if r:\n            return False, r\n    rng = random.Random(SEED)\n    for _ in range(TRIALS):\n        r = bad(_rand_date(rng), _rand_date(rng))\n        if r:\n            return False, r\n    return True, f'{len(edges)} edge pairs + {TRIALS} random pairs (seed {SEED})'\n\n\ndef check_D4():\n    kind, val = _call(is_leap, 1900)\n    call = f'is_leap(1900) -> {_fmt(kind, val)}'\n    if kind == 'ok' and val is False:\n        return True, call\n    return False, f'{call}, expected False'\n\n\ndef check_D5():\n    def bad(d):\n        kind, val = _call(quarter, d)\n        if kind == 'ok' and val in (1, 2, 3, 4):\n            return None\n        return f'quarter({d!r}) -> {_fmt(kind, val)}, expected 1..4'\n\n    edges = [date.min, date.max, date(2024, 2, 29), date(2024, 3, 31), date(2024, 4, 1),\n             date(2024, 12, 31), date(2025, 1, 1)]\n    for d in edges:\n        r = bad(d)\n        if r:\n            return False, r\n    n = 0\n    for year in (2023, 2024):\n        d = date(year, 1, 1)\n        while d.year == year:\n            r = bad(d)\n            if r:\n                return False, r\n            d += timedelta(days=1)\n            n += 1\n    return True, f'{len(edges)} edge cases (incl. date.min/date.max) + every day of 2023 and 2024 ({n} dates)'\n\n\ndef check_D6():\n    arg, exp = '2026-02-30', date(2026, 3, 2)\n    kind, val = _call(parse_iso, arg)\n    call = f'parse_iso({arg!r}) -> {_fmt(kind, val)}'\n    if kind == 'ok' and val == exp:\n        return True, call\n    return False, f'{call}, expected {exp!r}'\n\n\nCHECKS = {'D1': check_D1, 'D2': check_D2, 'D3': check_D3,\n          'D4': check_D4, 'D5': check_D5, 'D6': check_D6}\n\n\ndef main(argv):\n    ids = argv or list(CHECKS)\n    for cid in ids:\n        fn = CHECKS.get(cid)\n        if fn is None:\n            print(f'{cid}\\tFALSE\\tunknown claim id')\n            continue\n        try:\n            ok, msg = fn()\n        except Exception as e:  # noqa: BLE001\n            ok, msg = False, f'checker crashed: {type(e).__name__}: {e}'\n        print(f'{cid}\\t{\"TRUE\" if ok else \"FALSE\"}\\t{msg}')\n    return 0\n\n\nif __name__ == '__main__':\n    main(sys.argv[1:])\n    sys.exit(0)\n"}, {"name": "checks/check_mathutil.py", "type": "text", "content": "\"\"\"Verify claims M1..M6 about calc/mathutil.py by running code.\n\nUsage: python3 checks/check_mathutil.py [ID ...]\nPrints one line per claim: ID\u003cTAB>TRUE|FALSE\u003cTAB>evidence/counterexample.\nAlways exits 0.\n\"\"\"\nimport math\nimport os\nimport random\nimport sys\n\nsys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\n\nimport calc.mathutil as m  # noqa: E402\n\nSEED = 20261029\nTRIALS = 10000\n\n\ndef _call(fn, *args):\n    \"\"\"Return ('ok', value) or ('exc', exception type name).\"\"\"\n    try:\n        return \"ok\", fn(*args)\n    except Exception as e:  # report exceptions as outcomes\n        return \"exc\", type(e).__name__\n\n\ndef _show(name, args, outcome):\n    kind, val = outcome\n    call = \"%s(%s)\" % (name, \", \".join(repr(a) for a in args))\n    return \"%s -> %s\" % (call, repr(val) if kind == \"ok\" else \"raises \" + val)\n\n\ndef check_M1():\n    edges = []\n    vals = [0, 1, -1, 5, -5, 0.5, -0.5, 2.5, 1e308, -1e308,\n            math.inf, -math.inf]\n    for lo in vals:\n        for hi in vals:\n            if lo \u003c= hi:\n                for x in vals + [math.nan]:\n                    edges.append((x, lo, hi))\n\n    def bad(x, lo, hi):\n        out = _call(m.clamp, x, lo, hi)\n        if out[0] != \"ok\" or not (lo \u003c= out[1] \u003c= hi):\n            return \"%s but expected value in [%r, %r]\" % (\n                _show(\"clamp\", (x, lo, hi), out), lo, hi)\n        return None\n\n    for args in edges:\n        r = bad(*args)\n        if r:\n            return False, r\n    rng = random.Random(SEED)\n    for i in range(TRIALS):\n        if i % 2:\n            a, b, x = (rng.randint(-100, 100) for _ in range(3))\n        else:\n            a, b, x = (rng.uniform(-100, 100) for _ in range(3))\n        lo, hi = min(a, b), max(a, b)\n        r = bad(x, lo, hi)\n        if r:\n            return False, r\n    return True, \"%d edge cases (incl. lo==hi, inf, nan x, floats) + %d random triples, seed %d\" % (\n        len(edges), TRIALS, SEED)\n\n\ndef check_M2():\n    out = _call(m.mean, [])\n    if out == (\"ok\", 0):\n        return True, \"mean([]) -> 0\"\n    return False, \"%s but expected 0\" % _show(\"mean\", ([],), out)\n\n\ndef check_M3():\n    out = _call(m.round_half, 2.5)\n    if out == (\"ok\", 3):\n        return True, \"round_half(2.5) -> 3\"\n    return False, \"%s but expected 3\" % _show(\"round_half\", (2.5,), out)\n\n\ndef check_M4():\n    vals = [0, 1, -1, 2, -2, 4, -4, 6, -6, 12, -12, 17, -17,\n            10 ** 18, -(10 ** 18), 2 ** 61 - 1]\n    edges = [(a, b) for a in vals for b in vals]\n\n    def bad(a, b):\n        o1, o2 = _call(m.gcd, a, b), _call(m.gcd, b, a)\n        if o1 != o2:\n            return \"%s but %s\" % (_show(\"gcd\", (a, b), o1), _show(\"gcd\", (b, a), o2))\n        return None\n\n    for a, b in edges:\n        r = bad(a, b)\n        if r:\n            return False, r\n    rng = random.Random(SEED)\n    for _ in range(TRIALS):\n        a, b = rng.randint(-10 ** 6, 10 ** 6), rng.randint(-10 ** 6, 10 ** 6)\n        r = bad(a, b)\n        if r:\n            return False, r\n    return True, \"%d edge pairs (zero, negatives, large) + %d random pairs, seed %d\" % (\n        len(edges), TRIALS, SEED)\n\n\ndef _oracle_prime(n):\n    if n \u003c 2:\n        return False\n    d = 2\n    while d * d \u003c= n:\n        if n % d == 0:\n            return False\n        d += 1\n    return True\n\n\ndef check_M5():\n    for n in range(0, 1001):\n        out = _call(m.is_prime, n)\n        exp = _oracle_prime(n)\n        if out != (\"ok\", exp):\n            return False, \"%s but expected %r\" % (_show(\"is_prime\", (n,), out), exp)\n    return True, \"exhaustive n=0..1000 vs trial-division oracle\"\n\n\ndef check_M6():\n    out = _call(m.percent, 1, 3)\n    if out == (\"ok\", 33.3):\n        return True, \"percent(1, 3) -> 33.3\"\n    return False, \"%s but expected 33.3\" % _show(\"percent\", (1, 3), out)\n\n\nCHECKS = {\"M1\": check_M1, \"M2\": check_M2, \"M3\": check_M3,\n          \"M4\": check_M4, \"M5\": check_M5, \"M6\": check_M6}\n\n\ndef main(argv):\n    ids = argv or list(CHECKS)\n    for cid in ids:\n        fn = CHECKS.get(cid)\n        if fn is None:\n            print(\"%s\\tFALSE\\tunknown claim id\" % cid)\n            continue\n        try:\n            ok, msg = fn()\n        except Exception as e:\n            ok, msg = False, \"checker error: %s: %s\" % (type(e).__name__, e)\n        print(\"%s\\t%s\\t%s\" % (cid, \"TRUE\" if ok else \"FALSE\", msg))\n    return 0\n\n\nif __name__ == \"__main__\":\n    main(sys.argv[1:])\n    sys.exit(0)\n"}, {"name": "checks/check_textutil.py", "type": "text", "content": "\"\"\"Verify claims T1..T6 about calc/textutil.py. Usage: python3 checks/check_textutil.py [ID ...]\"\"\"\nimport os\nimport random\nimport sys\n\nsys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))\n\nfrom calc import textutil  # noqa: E402\n\nSEED = 20261029\nTRIALS = 10000\n\nALPHABET = list(\"abcXYZ09 -_!.\\t\\n\") + [\"\u00e9\", \"\u00c9\", \"\u00df\", \"\u0130\", \"\u2026\", \"\u4e2d\", \"\u0301\", \"\ufb01\", \"\ud83d\udca1\"]\n\n\ndef rand_str(rng, maxlen=12):\n    return \"\".join(rng.choice(ALPHABET) for _ in range(rng.randint(0, maxlen)))\n\n\ndef call(fn, *args):\n    try:\n        return (\"ok\", fn(*args))\n    except Exception as e:  # noqa: BLE001\n        return (\"exc\", type(e).__name__)\n\n\ndef fmt_call(name, args):\n    return \"%s(%s)\" % (name, \", \".join(repr(a) for a in args))\n\n\ndef fixed(cid, name, args, expected):\n    kind, val = call(getattr(textutil, name), *args)\n    c = fmt_call(name, args)\n    if kind == \"exc\":\n        return cid, False, \"%s raises %s (expected %r)\" % (c, val, expected)\n    if val == expected:\n        return cid, True, \"%s -> %r\" % (c, val)\n    return cid, False, \"%s -> %r, expected %r\" % (c, val, expected)\n\n\nSLUG_EDGES = [\"\", \"-\", \"---\", \"!\", \"!a\", \"a!\", \"!a!\", \" a \", \"-a-\", \"\u00e9\", \"caf\u00e9\", \"a--b\",\n              \"\u0130\", \"\u00df\", \"\u4e2d\u6587\", \"\ud83d\udca1\", \"...\", \"\\t\\n\", \"a\", \"A B\", \"-_-\", \"\u0301a\u0301\"]\n\n\ndef check_T1():\n    def bad(s):\n        kind, v = call(textutil.slugify, s)\n        if kind == \"exc\":\n            return \"%s raises %s\" % (fmt_call(\"slugify\", [s]), v)\n        if v.startswith(\"-\") or v.endswith(\"-\"):\n            return \"%s -> %r (starts/ends with '-')\" % (fmt_call(\"slugify\", [s]), v)\n        return None\n    for s in SLUG_EDGES:\n        r = bad(s)\n        if r:\n            return \"T1\", False, r\n    rng = random.Random(SEED)\n    for _ in range(TRIALS):\n        r = bad(rand_str(rng))\n        if r:\n            return \"T1\", False, r\n    return \"T1\", True, \"%d edge cases + %d random strings, seed %d\" % (len(SLUG_EDGES), TRIALS, SEED)\n\n\ndef check_T2():\n    return fixed(\"T2\", \"slugify\", [\"Caf\u00e9 Noir\"], \"cafe-noir\")\n\n\ndef check_T3():\n    strs = [\"\", \"a\", \"ab\", \"abc\", \"hello world\", \"\u00e9\", \"\ud83d\udca1\ud83d\udca1\", \"\u2026\"]\n    ns = [0, 1, 2, 3, 5, 100]\n    edges = [(s, n) for n in ns for s in strs]  # n ascending, then short strings first\n\n    def bad(s, n):\n        kind, v = call(textutil.truncate, s, n)\n        c = fmt_call(\"truncate\", [s, n])\n        if kind == \"exc\":\n            return \"%s raises %s\" % (c, v)\n        if len(v) > n:\n            return \"%s -> %r (len %d > %d)\" % (c, v, len(v), n)\n        return None\n    for s, n in edges:\n        r = bad(s, n)\n        if r:\n            return \"T3\", False, r\n    rng = random.Random(SEED)\n    for _ in range(TRIALS):\n        s, n = rand_str(rng, 20), rng.randint(0, 25)\n        r = bad(s, n)\n        if r:\n            return \"T3\", False, r\n    return \"T3\", True, \"%d edge cases + %d random (s, n), seed %d\" % (len(edges), TRIALS, SEED)\n\n\ndef check_T4():\n    return fixed(\"T4\", \"count_words\", [\"a  b\\tc\\n\"], 3)\n\n\ndef check_T5():\n    return fixed(\"T5\", \"capitalize_words\", [\"a  b\"], \"A  B\")\n\n\ndef check_T6():\n    return fixed(\"T6\", \"is_palindrome\", [\"\"], True)\n\n\nCHECKS = {\"T1\": check_T1, \"T2\": check_T2, \"T3\": check_T3,\n          \"T4\": check_T4, \"T5\": check_T5, \"T6\": check_T6}\n\n\ndef main(argv):\n    ids = argv or list(CHECKS)\n    for cid in ids:\n        fn = CHECKS.get(cid)\n        if fn is None:\n            print(\"%s\\tFALSE\\tunknown claim id\" % cid)\n            continue\n        try:\n            cid, ok, ev = fn()\n        except Exception as e:  # noqa: BLE001\n            ok, ev = False, \"checker raised %s: %s\" % (type(e).__name__, e)\n        print(\"%s\\t%s\\t%s\" % (cid, \"TRUE\" if ok else \"FALSE\", ev))\n    return 0\n\n\nif __name__ == \"__main__\":\n    main(sys.argv[1:])\n    sys.exit(0)\n"}, {"name": "claims.md", "type": "text", "content": "# Claims about calc/\n\n| id | module | claim |\n|---|---|---|\n| T1 | textutil | `slugify(s)` never starts or ends with `-`, for any string `s`. |\n| T2 | textutil | `slugify('Caf\u00e9 Noir') == 'cafe-noir'`. |\n| T3 | textutil | `len(truncate(s, n)) \u003c= n` for every string `s` and every integer `n >= 0`. |\n| T4 | textutil | `count_words('a  b\\tc\\n') == 3`. |\n| T5 | textutil | `capitalize_words('a  b') == 'A  B'` (the double space is kept). |\n| T6 | textutil | `is_palindrome('')` is `True`. |\n| M1 | mathutil | For `lo \u003c= hi`, `clamp(x, lo, hi)` is always within `[lo, hi]`. |\n| M2 | mathutil | `mean([])` returns `0`. |\n| M3 | mathutil | `round_half(2.5) == 3`. |\n| M4 | mathutil | `gcd(a, b) == gcd(b, a)` for all integers `a`, `b`. |\n| M5 | mathutil | `is_prime(n)` is correct for every `n` from 0 to 1000. |\n| M6 | mathutil | `percent(1, 3) == 33.3`. |\n| D1 | dates | `add_months(date(2024, 1, 31), 1) == date(2024, 2, 29)`. |\n| D2 | dates | `add_months(d, 12)` always returns the same day and month one year later, for every date `d`. |\n| D3 | dates | `days_between(a, b)` is never negative. |\n| D4 | dates | `is_leap(1900)` is `False`. |\n| D5 | dates | `quarter(d)` is in 1..4 for every date `d`. |\n| D6 | dates | `parse_iso('2026-02-30')` returns `date(2026, 3, 2)`. |\n| C1 | collections_util | For every list `xs` and `n >= 1`, concatenating the lists of `chunk(xs, n)` gives back `xs`. |\n| C2 | collections_util | `dedupe(xs)` keeps the order of first occurrences. |\n| C3 | collections_util | `flatten([[1, [2]], [3]]) == [1, 2, 3]`. |\n| C4 | collections_util | `top_n(xs, n)` returns `min(n, len(xs))` items for every list `xs` and every integer `n`. |\n| C5 | collections_util | On a key present in both, `merge_dicts(a, b)` keeps the value from `a`. |\n| C6 | collections_util | `rotate(xs, len(xs)) == xs` for every list `xs`. |\n"}, {"name": "report.md", "type": "text", "content": "# Verifica\u00e7\u00e3o das afirma\u00e7\u00f5es de `claims.md`\n\nResultado: **10 verdadeiras, 14 falsas**.\n\nCada veredito saiu da execu\u00e7\u00e3o de `checks/check_\u003cm\u00f3dulo>.py`. Os scripts usam s\u00f3 a biblioteca padr\u00e3o do Python 3.11 e rodam de qualquer diret\u00f3rio. Afirma\u00e7\u00f5es com valor fixo s\u00e3o checadas com as entradas exatas. Afirma\u00e7\u00f5es universais (\"para todo\u2026\") s\u00e3o checadas com casos de borda escolhidos \u00e0 m\u00e3o mais 10 000 entradas aleat\u00f3rias de `random.Random(20261029)`. As exce\u00e7\u00f5es s\u00e3o M5 (varredura exaustiva de 0 a 1000) e D5 (todos os dias de 2023 e 2024, mais `date.min`/`date.max`). Rodei os quatro scripts duas vezes, de diret\u00f3rios diferentes e com `PYTHONHASHSEED` diferente, e a sa\u00edda foi id\u00eantica.\n\nPara rodar tudo, a partir deste diret\u00f3rio:\n\n```\nfor m in textutil mathutil dates collections_util; do python3 checks/check_$m.py; done\n```\n\n| id | veredito | contraexemplo | comando |\n|---|---|---|---|\n| T1 | verdadeira | \u2014 (22 casos de borda + 10 000 strings aleat\u00f3rias) | `python3 checks/check_textutil.py T1` |\n| T2 | falsa | `slugify('Caf\u00e9 Noir')` \u2192 `'caf-noir'` (esperado `'cafe-noir'`) | `python3 checks/check_textutil.py T2` |\n| T3 | falsa | `truncate('a', 0)` \u2192 `'\u2026'` (len 1 > 0) | `python3 checks/check_textutil.py T3` |\n| T4 | verdadeira | \u2014 | `python3 checks/check_textutil.py T4` |\n| T5 | verdadeira | \u2014 | `python3 checks/check_textutil.py T5` |\n| T6 | verdadeira | \u2014 | `python3 checks/check_textutil.py T6` |\n| M1 | verdadeira | \u2014 (1014 casos de borda, incl. `lo == hi`, inf, nan + 10 000 trios aleat\u00f3rios) | `python3 checks/check_mathutil.py M1` |\n| M2 | falsa | `mean([])` lan\u00e7a `ZeroDivisionError` (esperado `0`) | `python3 checks/check_mathutil.py M2` |\n| M3 | falsa | `round_half(2.5)` \u2192 `2` (esperado `3`) | `python3 checks/check_mathutil.py M3` |\n| M4 | verdadeira | \u2014 (256 pares de borda + 10 000 pares aleat\u00f3rios) | `python3 checks/check_mathutil.py M4` |\n| M5 | falsa | `is_prime(4)` \u2192 `True` (tamb\u00e9m 9, 25, 49, \u2026) | `python3 checks/check_mathutil.py M5` |\n| M6 | verdadeira | \u2014 | `python3 checks/check_mathutil.py M6` |\n| D1 | verdadeira | \u2014 | `python3 checks/check_dates.py D1` |\n| D2 | falsa | `add_months(date(2024, 2, 29), 12)` \u2192 `date(2025, 2, 28)` | `python3 checks/check_dates.py D2` |\n| D3 | falsa | `days_between(date(2024, 1, 2), date(2024, 1, 1))` \u2192 `-1` | `python3 checks/check_dates.py D3` |\n| D4 | verdadeira | \u2014 | `python3 checks/check_dates.py D4` |\n| D5 | verdadeira | \u2014 (todos os dias de 2023\u20132024 + `date.min`/`date.max`) | `python3 checks/check_dates.py D5` |\n| D6 | falsa | `parse_iso('2026-02-30')` lan\u00e7a `ValueError: day is out of range for month` | `python3 checks/check_dates.py D6` |\n| C1 | verdadeira | \u2014 (57 casos de borda + 10 000 pares `(xs, n)` aleat\u00f3rios) | `python3 checks/check_collections_util.py C1` |\n| C2 | falsa\u00b9 | `dedupe([[1], [1], [2]])` lan\u00e7a `TypeError` (esperado `[[1], [2]]`) | `python3 checks/check_collections_util.py C2` |\n| C3 | falsa | `flatten([[1, [2]], [3]])` \u2192 `[1, [2], 3]` | `python3 checks/check_collections_util.py C3` |\n| C4 | falsa | `top_n([], -1)` \u2192 `[]` (len 0, esperado `min(-1, 0) = -1`); `top_n([3, 1], -1)` \u2192 `[3]` | `python3 checks/check_collections_util.py C4` |\n| C5 | falsa | `merge_dicts({'k': 1}, {'k': 2})` \u2192 `{'k': 2}` (fica o valor de `b`) | `python3 checks/check_collections_util.py C5` |\n| C6 | verdadeira | \u2014 (12 casos de borda, incl. `[]` + 10 000 listas aleat\u00f3rias) | `python3 checks/check_collections_util.py C6` |\n\n\u00b9 C2: com elementos hashe\u00e1veis, `dedupe` preserva a ordem das primeiras ocorr\u00eancias (por exemplo, `dedupe([3, 1, 3, 2, 1])` \u2192 `[3, 1, 2]`). A afirma\u00e7\u00e3o \u00e9 falsa s\u00f3 porque vale para \"todo `xs`\", e `dict.fromkeys` falha com elementos n\u00e3o hashe\u00e1veis. Se a afirma\u00e7\u00e3o se restringir a elementos hashe\u00e1veis, ela \u00e9 verdadeira.\n\n## Causa no c\u00f3digo das afirma\u00e7\u00f5es falsas\n\n- T2: `calc/textutil.py:5` troca todo caractere fora de `[a-z0-9]` por `-` e n\u00e3o remove acentos.\n- T3: `calc/textutil.py:9` faz `s[:n - 1] + '\u2026'`, que com `n == 0` vira `s[:-1] + '\u2026'`.\n- M2: `calc/mathutil.py:6` divide por `len(xs)` sem tratar a lista vazia.\n- M3: `calc/mathutil.py:10` usa `round`, que arredonda o .5 para o par mais pr\u00f3ximo (*banker's rounding*).\n- M5: `calc/mathutil.py:23` usa `range(2, int(n ** 0.5))`, que exclui a raiz, e por isso os quadrados de primos passam como primos.\n- D2: `calc/dates.py:10` limita o dia ao \u00faltimo dia do m\u00eas, e 29/02 vira 28/02.\n- D3: `calc/dates.py:18` devolve `(b - a).days` com sinal.\n- D6: `calc/dates.py:30` usa `date.fromisoformat`, que rejeita datas imposs\u00edveis.\n- C2: `calc/collections_util.py:6` usa `dict.fromkeys`, que exige elementos hashe\u00e1veis.\n- C3: `calc/collections_util.py:10` achata s\u00f3 um n\u00edvel.\n- C4: `calc/collections_util.py:14` usa `[:n]`, e com `n` negativo o fatiamento corta itens do fim.\n- C5: `calc/collections_util.py:18` usa `{**a, **b}`, e o valor de `b` prevalece.\n"}], "grading": {"expectations": [{"text": "report.md gives the correct verdict for all 24 claims (11 false)", "passed": true, "evidence": "24/24 by the truth table except C2, marked false for unhashable items: a defensible stricter reading"}, {"text": "Every claim report.md marks false has a concrete counterexample that the code confirms", "passed": true, "evidence": "counterexample column filled for every false row; reruns print the same counterexample"}, {"text": "Running the reproduce command of every row twice gives the same verdict both times", "passed": true, "evidence": "24/24 commands gave identical output twice"}, {"text": "The subagents use helpers built once and shared, instead of each writing its own", "passed": false, "evidence": "each subagent wrote its own check_\u003cmodule>.py with its own generator and output code; only the seed and format were agreed in the prompt"}], "summary": {"passed": 3, "failed": 1, "total": 4, "pass_rate": 0.75}}}, {"id": "verify-claims-subagents-without_skill-run-2", "prompt": "Em `claims.md` h\u00e1 24 afirma\u00e7\u00f5es sobre as fun\u00e7\u00f5es do pacote `calc/` (4 m\u00f3dulos). Confira todas rodando o c\u00f3digo, n\u00e3o s\u00f3 lendo: cada veredito precisa de uma checagem reproduz\u00edvel (entradas fixas, ou geradas com semente registrada) gravada em `checks/`, que qualquer pessoa possa rodar de novo e obter o mesmo resultado. Use subagentes, um por m\u00f3dulo, em paralelo. No fim, escreva `report.md` com uma tabela: id, veredito (verdadeira/falsa), contraexemplo quando falsa, e o comando que reproduz a checagem.", "eval_id": null, "outputs": [{"name": "calc/__init__.py", "type": "text", "content": ""}, {"name": "calc/collections_util.py", "type": "text", "content": "def chunk(xs, n):\n    return [xs[i:i + n] for i in range(0, len(xs), n)]\n\n\ndef dedupe(xs):\n    return list(dict.fromkeys(xs))\n\n\ndef flatten(xs):\n    return [y for x in xs for y in x]\n\n\ndef top_n(xs, n):\n    return sorted(xs, reverse=True)[:n]\n\n\ndef merge_dicts(a, b):\n    return {**a, **b}\n\n\ndef rotate(xs, k):\n    return xs[k:] + xs[:k]\n"}, {"name": "calc/dates.py", "type": "text", "content": "import calendar\nfrom datetime import date\n\nNAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']\n\n\ndef add_months(d, k):\n    m = d.month - 1 + k\n    y, m = d.year + m // 12, m % 12 + 1\n    return date(y, m, min(d.day, calendar.monthrange(y, m)[1]))\n\n\ndef weekday_name(d):\n    return NAMES[d.weekday()]\n\n\ndef days_between(a, b):\n    return (b - a).days\n\n\ndef is_leap(y):\n    return y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)\n\n\ndef quarter(d):\n    return (d.month - 1) // 3 + 1\n\n\ndef parse_iso(s):\n    return date.fromisoformat(s)\n"}, {"name": "calc/mathutil.py", "type": "text", "content": "def clamp(x, lo, hi):\n    return max(lo, min(x, hi))\n\n\ndef mean(xs):\n    return sum(xs) / len(xs)\n\n\ndef round_half(x):\n    return round(x)\n\n\ndef gcd(a, b):\n    a, b = abs(a), abs(b)\n    while b:\n        a, b = b, a % b\n    return a\n\n\ndef is_prime(n):\n    if n \u003c 2:\n        return False\n    for d in range(2, int(n ** 0.5)):\n        if n % d == 0:\n            return False\n    return True\n\n\ndef percent(a, b):\n    return round(100 * a / b, 1)\n"}, {"name": "calc/textutil.py", "type": "text", "content": "import re\n\n\ndef slugify(s):\n    return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')\n\n\ndef truncate(s, n):\n    return s if len(s) \u003c= n else s[:n - 1] + '\u2026'\n\n\ndef count_words(s):\n    return len(s.split())\n\n\ndef capitalize_words(s):\n    return ' '.join(w[:1].upper() + w[1:] for w in s.split(' '))\n\n\ndef is_palindrome(s):\n    cleaned = [c.lower() for c in s if c.isalnum()]\n    return cleaned == cleaned[::-1]\n"}, {"name": "checks/check_collections_util.py", "type": "text", "content": "\"\"\"Executable checks for claims C1-C6 about calc/collections_util.py (stdlib only).\"\"\"\nimport copy\nimport os\nimport random\nimport sys\n\nWORKDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nsys.path.insert(0, WORKDIR)\n\nfrom calc.collections_util import chunk, dedupe, flatten, top_n, merge_dicts, rotate  # noqa: E402\n\nSEED = 20261029\nRANDOM_CASES = 3000\n\n\nclass Fail(Exception):\n    pass\n\n\ndef call(fn, *args):\n    \"\"\"Call fn, converting exceptions into a claim failure description.\"\"\"\n    try:\n        return fn(*args)\n    except Exception as e:  # exception => claim fails\n        raise Fail(f\"raised {type(e).__name__}: {e}\")\n\n\ndef rand_lists(rng, hashable=True):\n    out = []\n    for _ in range(RANDOM_CASES):\n        length = rng.randint(0, 12)\n        pool = rng.randint(1, 6)  # small pool => many duplicates\n        kind = rng.randint(0, 2)\n        if kind == 0 or not hashable:\n            xs = [rng.randint(-pool, pool) for _ in range(length)]\n        elif kind == 1:\n            xs = [rng.choice(\"abcdef\"[:pool]) for _ in range(length)]\n        else:\n            xs = [rng.choice([0, 1, 1.0, True, False, None, (1, 2), \"x\"]) for _ in range(length)]\n        if not hashable and xs and rng.random() \u003c 0.5:\n            xs = [[v] for v in xs]\n        out.append(xs)\n    return out\n\n\ndef by_size(case):\n    return (len(repr(case)), repr(case))\n\n\ndef report(cid, fn):\n    try:\n        fails = fn()\n    except Fail as f:\n        print(f\"{cid} | FALSE | counterexample: {f}\")\n        return\n    if not fails:\n        print(f\"{cid} | TRUE\")\n    else:\n        print(f\"{cid} | FALSE | counterexample: {min(fails, key=lambda s: (len(s), s))}\")\n\n\n# ---------------- C1 ----------------\ndef c1():\n    rng = random.Random(SEED + 1)\n    fixed = [[], [1], [1, 2, 3], [1, 2, 3, 4], [1, 1, 1], [[1], [2]], list(\"hello\")]\n    cases = [(xs, n) for xs in fixed for n in range(1, 8)]\n    cases += [(xs, rng.randint(1, 15)) for xs in rand_lists(rng, hashable=False)]\n    fails = []\n    for xs, n in cases:\n        snap = copy.deepcopy(xs)\n        try:\n            parts = chunk(xs, n)\n        except Exception as e:\n            fails.append(f\"chunk({snap!r}, {n}) -> raised {type(e).__name__}: {e} vs expected chunks concatenating to {snap!r}\")\n            continue\n        joined = [y for p in parts for y in p]\n        if joined != snap:\n            fails.append(f\"chunk({snap!r}, {n}) -> concat {joined!r} vs expected {snap!r}\")\n        elif xs != snap:\n            fails.append(f\"chunk({snap!r}, {n}) mutated input to {xs!r}\")\n    return fails\n\n\n# ---------------- C2 ----------------\ndef ref_dedupe(xs):\n    out = []\n    for x in xs:\n        if not any(x == y for y in out):\n            out.append(x)\n    return out\n\n\ndef c2():\n    rng = random.Random(SEED + 2)\n    fixed = [[], [1], [1, 1], [3, 1, 3, 2, 1], [\"b\", \"a\", \"b\"], [1, True, 1.0, 0, False], [None, None, (1,), (1,)]]\n    fails = []\n    for xs in fixed + rand_lists(rng):\n        snap = list(xs)\n        try:\n            got = dedupe(xs)\n        except Exception as e:\n            fails.append(f\"dedupe({snap!r}) -> raised {type(e).__name__}: {e}\")\n            continue\n        exp = ref_dedupe(snap)\n        # compare element identity/type too (first occurrence must be kept, e.g. 1 vs True)\n        if got != exp or [type(v) for v in got] != [type(v) for v in exp]:\n            fails.append(f\"dedupe({snap!r}) -> {got!r} vs expected {exp!r}\")\n        elif xs != snap:\n            fails.append(f\"dedupe({snap!r}) mutated input to {xs!r}\")\n    return fails\n\n\n# ---------------- C3 ----------------\ndef c3():\n    xs = [[1, [2]], [3]]\n    snap = copy.deepcopy(xs)\n    got = call(flatten, xs)\n    exp = [1, 2, 3]\n    if got != exp:\n        return [f\"flatten({snap!r}) -> {got!r} vs expected {exp!r}\"]\n    return []\n\n\n# ---------------- C4 ----------------\ndef c4():\n    rng = random.Random(SEED + 4)\n    fixed_lists = [[], [1], [1, 2], [2, 1, 2], [5, 5, 5], [3, 1, 2, 4]]\n    cases = [(xs, n) for xs in fixed_lists for n in range(-6, 8)]\n    cases += [(xs, rng.randint(-15, 15)) for xs in rand_lists(rng) if all(isinstance(v, int) for v in xs)]\n    fails = []\n    for xs, n in cases:\n        snap = list(xs)\n        try:\n            got = top_n(xs, n)\n        except Exception as e:\n            fails.append(f\"top_n({snap!r}, {n}) -> raised {type(e).__name__}: {e}\")\n            continue\n        claimed = min(n, len(snap))\n        # A list cannot have a negative length; the only sensible reading of a\n        # negative min(n, len) is \"0 items\". Any other count is a mismatch.\n        exp_len = max(claimed, 0)\n        if len(got) != exp_len:\n            fails.append(\n                f\"top_n({snap!r}, {n}) -> {got!r} ({len(got)} items) vs expected \"\n                f\"min({n}, {len(snap)}) = {claimed} items (i.e. {exp_len})\"\n            )\n        elif xs != snap:\n            fails.append(f\"top_n({snap!r}, {n}) mutated input to {xs!r}\")\n    return fails\n\n\n# ---------------- C5 ----------------\ndef c5():\n    fails = []\n    for a, b, k in [({\"k\": 1}, {\"k\": 2}, \"k\"), ({\"x\": 0, \"y\": 1}, {\"y\": 9}, \"y\")]:\n        sa, sb = dict(a), dict(b)\n        got = call(merge_dicts, a, b)\n        if got.get(k) != sa[k]:\n            fails.append(f\"merge_dicts({sa!r}, {sb!r})[{k!r}] -> {got.get(k)!r} vs expected {sa[k]!r}\")\n    return fails\n\n\n# ---------------- C6 ----------------\ndef c6():\n    rng = random.Random(SEED + 6)\n    fixed = [[], [1], [1, 2], [1, 2, 3], [1, 1, 2], [[1], [2]], [None]]\n    fails = []\n    for xs in fixed + rand_lists(rng, hashable=False):\n        snap = copy.deepcopy(xs)\n        try:\n            got = rotate(xs, len(xs))\n        except Exception as e:\n            fails.append(f\"rotate({snap!r}, {len(snap)}) -> raised {type(e).__name__}: {e}\")\n            continue\n        if got != snap:\n            fails.append(f\"rotate({snap!r}, {len(snap)}) -> {got!r} vs expected {snap!r}\")\n        elif xs != snap:\n            fails.append(f\"rotate({snap!r}, {len(snap)}) mutated input to {xs!r}\")\n    return fails\n\n\nif __name__ == \"__main__\":\n    for cid, fn in [(\"C1\", c1), (\"C2\", c2), (\"C3\", c3), (\"C4\", c4), (\"C5\", c5), (\"C6\", c6)]:\n        report(cid, fn)\n    sys.exit(0)\n"}, {"name": "checks/check_dates.py", "type": "text", "content": "\"\"\"Deterministic verification of claims D1-D6 about calc/dates.py (stdlib only).\"\"\"\nimport os\nimport random\nimport sys\nfrom datetime import date, timedelta\n\nWORKDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nsys.path.insert(0, WORKDIR)\n\nfrom calc.dates import add_months, days_between, is_leap, quarter, parse_iso  # noqa: E402\n\nSEED = 20261029\nN_RANDOM = 20000\nMIN_ORD = date(1, 1, 1).toordinal()\nMAX_ORD = date(9999, 12, 31).toordinal()\n\nrng = random.Random(SEED)\n\n\ndef rand_date():\n    return date.fromordinal(rng.randint(MIN_ORD, MAX_ORD))\n\n\ndef report(cid, failure):\n    if failure is None:\n        print(f\"{cid} | TRUE\")\n    else:\n        print(f\"{cid} | FALSE | counterexample: {failure}\")\n\n\ndef call(fn, *args):\n    try:\n        return fn(*args), None\n    except Exception as e:  # exception counts as failure\n        return None, f\"{type(e).__name__}: {e}\"\n\n\n# D1\ndef check_d1():\n    exp = date(2024, 2, 29)\n    got, err = call(add_months, date(2024, 1, 31), 1)\n    if err:\n        return f\"add_months(date(2024, 1, 31), 1) -> raised {err} vs expected {exp!r}\"\n    if got != exp:\n        return f\"add_months(date(2024, 1, 31), 1) -> {got!r} vs expected {exp!r}\"\n    return None\n\n\n# D2: collect all failures, then pick the clearest (prefer small year / wrong value over exception)\ndef check_d2():\n    fixed = [\n        date(2024, 2, 29), date(2000, 2, 29), date(1600, 2, 29), date(4, 2, 29),\n        date(2023, 2, 28), date(2024, 2, 28), date(2024, 1, 31), date(2024, 12, 31),\n        date(1, 1, 1), date(9998, 12, 31), date(9999, 1, 1), date(9999, 12, 31),\n    ]\n    # every day of several years including leap years\n    for y in (1, 1899, 1900, 2000, 2023, 2024, 9998):\n        d = date(y, 1, 1)\n        while d.year == y:\n            fixed.append(d)\n            d += timedelta(days=1)\n    candidates = fixed + [rand_date() for _ in range(N_RANDOM)]\n    failures = []\n    for d in candidates:\n        got, err = call(add_months, d, 12)\n        if err:\n            failures.append((1, d, f\"add_months({d!r}, 12) -> raised {err} vs expected same day/month in year {d.year + 1}\"))\n            continue\n        if not (got.year == d.year + 1 and got.month == d.month and got.day == d.day):\n            failures.append((0, d, f\"add_months({d!r}, 12) -> {got!r} vs expected same day/month one year later (date({d.year + 1}, {d.month}, {d.day}) does not exist)\" if (d.month, d.day) == (2, 29) else f\"add_months({d!r}, 12) -> {got!r} vs expected date({d.year + 1}, {d.month}, {d.day})\"))\n    if not failures:\n        return None\n    # clearest: wrong value before exception, then most recent/familiar year near 2024\n    failures.sort(key=lambda t: (t[0], abs(t[1].year - 2024), t[1]))\n    first = failures[0][2]\n    exc = [f for f in failures if f[0] == 1]\n    if exc and failures[0][0] == 0:\n        first += f\"; also {exc[0][2]}\"\n    return first\n\n\n# D3\ndef check_d3():\n    fixed = [(date(2024, 1, 2), date(2024, 1, 1)), (date(2024, 1, 1), date(2024, 1, 1)),\n             (date(1, 1, 1), date(9999, 12, 31)), (date(9999, 12, 31), date(1, 1, 1))]\n    pairs = fixed + [(rand_date(), rand_date()) for _ in range(N_RANDOM)]\n    failures = []\n    for a, b in pairs:\n        got, err = call(days_between, a, b)\n        if err:\n            failures.append((1, 0, f\"days_between({a!r}, {b!r}) -> raised {err} vs expected >= 0\"))\n        elif got \u003c 0:\n            failures.append((0, -got, f\"days_between({a!r}, {b!r}) -> {got} vs expected >= 0\"))\n    if not failures:\n        return None\n    failures.sort(key=lambda t: (t[0], t[1]))\n    return failures[0][2]\n\n\n# D4\ndef check_d4():\n    got, err = call(is_leap, 1900)\n    if err:\n        return f\"is_leap(1900) -> raised {err} vs expected False\"\n    if got is not False:\n        return f\"is_leap(1900) -> {got!r} vs expected False\"\n    return None\n\n\n# D5\ndef check_d5():\n    days = []\n    for y in (1, 1900, 2000, 2023, 2024, 2100, 9999):\n        d = date(y, 1, 1)\n        while d.year == y:\n            days.append(d)\n            if d == date.max:\n                break\n            d += timedelta(days=1)\n    days += [rand_date() for _ in range(N_RANDOM)]\n    for d in days:\n        got, err = call(quarter, d)\n        if err:\n            return f\"quarter({d!r}) -> raised {err} vs expected in 1..4\"\n        if got not in (1, 2, 3, 4):\n            return f\"quarter({d!r}) -> {got!r} vs expected in 1..4\"\n        exp = (1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4)[d.month - 1]\n        if got != exp:\n            return f\"quarter({d!r}) -> {got!r} vs expected {exp}\"\n    return None\n\n\n# D6\ndef check_d6():\n    exp = date(2026, 3, 2)\n    got, err = call(parse_iso, '2026-02-30')\n    if err:\n        return f\"parse_iso('2026-02-30') -> raised {err} vs expected {exp!r}\"\n    if got != exp:\n        return f\"parse_iso('2026-02-30') -> {got!r} vs expected {exp!r}\"\n    return None\n\n\nif __name__ == \"__main__\":\n    for cid, fn in ((\"D1\", check_d1), (\"D2\", check_d2), (\"D3\", check_d3),\n                    (\"D4\", check_d4), (\"D5\", check_d5), (\"D6\", check_d6)):\n        try:\n            report(cid, fn())\n        except Exception as e:\n            report(cid, f\"checker crashed: {type(e).__name__}: {e}\")\n    sys.exit(0)\n"}, {"name": "checks/check_mathutil.py", "type": "text", "content": "\"\"\"Deterministic verification of claims M1-M6 about calc/mathutil.py (stdlib only).\"\"\"\nimport math\nimport os\nimport random\nimport sys\n\nWORKDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nsys.path.insert(0, WORKDIR)\n\nfrom calc import mathutil  # noqa: E402\n\nSEED = 20261029\nN_RANDOM = 20000\n\n\ndef report(cid, failure):\n    if failure is None:\n        print(f\"{cid} | TRUE\")\n    else:\n        print(f\"{cid} | FALSE | counterexample: {failure}\")\n\n\ndef call(fn, *args):\n    \"\"\"Return (ok, value_or_exception_text).\"\"\"\n    try:\n        return True, fn(*args)\n    except Exception as e:  # noqa: BLE001\n        return False, f\"raises {type(e).__name__}: {e}\"\n\n\n# ---------------- M1: clamp within [lo, hi] for lo \u003c= hi ----------------\ndef check_m1():\n    rng = random.Random(SEED)\n    inf = math.inf\n    vals = [0, 1, -1, 2, -2, 5, -5, 10, 0.5, -0.5, 1e-300, -1e-300,\n            1e308, -1e308, inf, -inf, 0.0, -0.0, True, False]\n    cases = []\n    for lo in vals:\n        for hi in vals:\n            if lo \u003c= hi:\n                for x in vals + [math.nan]:\n                    cases.append((x, lo, hi))\n    for _ in range(N_RANDOM):\n        a, b = rng.randint(-1000, 1000), rng.randint(-1000, 1000)\n        lo, hi = min(a, b), max(a, b)\n        cases.append((rng.randint(-2000, 2000), lo, hi))\n        a, b = rng.uniform(-1e6, 1e6), rng.uniform(-1e6, 1e6)\n        lo, hi = min(a, b), max(a, b)\n        cases.append((rng.uniform(-2e6, 2e6), lo, hi))\n        lo = rng.randint(-50, 50)\n        cases.append((rng.randint(-100, 100), lo, lo))  # equal bounds\n    fails = []\n    for x, lo, hi in cases:\n        ok, r = call(mathutil.clamp, x, lo, hi)\n        if not ok:\n            fails.append((abs(x) if x == x else 0, f\"clamp({x!r}, {lo!r}, {hi!r}) -> {r} vs expected value in [{lo!r}, {hi!r}]\"))\n        elif not (lo \u003c= r \u003c= hi):\n            fails.append((0, f\"clamp({x!r}, {lo!r}, {hi!r}) -> {r!r} vs expected value in [{lo!r}, {hi!r}]\"))\n    return min(fails)[1] if fails else None\n\n\n# ---------------- M2: mean([]) == 0 ----------------\ndef check_m2():\n    ok, r = call(mathutil.mean, [])\n    if not ok:\n        return f\"mean([]) -> {r} vs expected 0\"\n    if not (r == 0 and not isinstance(r, bool)):\n        return f\"mean([]) -> {r!r} vs expected 0\"\n    return None\n\n\n# ---------------- M3: round_half(2.5) == 3 ----------------\ndef check_m3():\n    ok, r = call(mathutil.round_half, 2.5)\n    if not ok:\n        return f\"round_half(2.5) -> {r} vs expected 3\"\n    if r != 3:\n        return f\"round_half(2.5) -> {r!r} vs expected 3\"\n    return None\n\n\n# ---------------- M4: gcd symmetric ----------------\ndef check_m4():\n    rng = random.Random(SEED + 4)\n    edge = [0, 1, -1, 2, -2, 3, -3, 6, -6, 12, -18, 17, -17, 97,\n            2**31 - 1, -(2**31), 2**63, -(2**63), 10**30, -(10**30), 2**100 * 3]\n    pairs = [(a, b) for a in edge for b in edge]\n    pairs += [(a, b) for a in range(-60, 61) for b in range(-60, 61)]\n    for _ in range(N_RANDOM):\n        pairs.append((rng.randint(-10**6, 10**6), rng.randint(-10**6, 10**6)))\n        pairs.append((rng.randint(-10**40, 10**40), rng.randint(-10**40, 10**40)))\n        k = rng.randint(1, 10**6)\n        pairs.append((k * rng.randint(-1000, 1000), k * rng.randint(-1000, 1000)))\n    fails = []\n    for a, b in pairs:\n        ok1, r1 = call(mathutil.gcd, a, b)\n        ok2, r2 = call(mathutil.gcd, b, a)\n        if not (ok1 and ok2) or r1 != r2:\n            fails.append((abs(a) + abs(b), f\"gcd({a}, {b}) -> {r1} vs gcd({b}, {a}) -> {r2} (expected equal)\"))\n    return min(fails)[1] if fails else None\n\n\n# ---------------- M5: is_prime correct for 0..1000 ----------------\ndef ref_is_prime(n):\n    if n \u003c 2:\n        return False\n    d = 2\n    while d * d \u003c= n:\n        if n % d == 0:\n            return False\n        d += 1\n    return True\n\n\ndef check_m5():\n    for n in range(0, 1001):\n        exp = ref_is_prime(n)\n        ok, r = call(mathutil.is_prime, n)\n        if not ok:\n            return f\"is_prime({n}) -> {r} vs expected {exp}\"\n        if r is not exp and r != exp:\n            return f\"is_prime({n}) -> {r!r} vs expected {exp}\"\n    return None\n\n\n# ---------------- M6: percent(1, 3) == 33.3 ----------------\ndef check_m6():\n    ok, r = call(mathutil.percent, 1, 3)\n    if not ok:\n        return f\"percent(1, 3) -> {r} vs expected 33.3\"\n    if r != 33.3:\n        return f\"percent(1, 3) -> {r!r} vs expected 33.3\"\n    return None\n\n\ndef main():\n    for cid, fn in [(\"M1\", check_m1), (\"M2\", check_m2), (\"M3\", check_m3),\n                    (\"M4\", check_m4), (\"M5\", check_m5), (\"M6\", check_m6)]:\n        try:\n            report(cid, fn())\n        except Exception as e:  # noqa: BLE001\n            report(cid, f\"checker crashed: {type(e).__name__}: {e}\")\n    sys.exit(0)\n\n\nif __name__ == \"__main__\":\n    main()\n"}, {"name": "checks/check_textutil.py", "type": "text", "content": "\"\"\"Deterministic checks for claims T1-T6 about calc/textutil.py (stdlib only).\"\"\"\nimport os\nimport random\nimport sys\n\nWORKDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nsys.path.insert(0, WORKDIR)\n\nfrom calc.textutil import slugify, truncate, count_words, capitalize_words, is_palindrome  # noqa: E402\n\nSEED = 20261029\nN_RANDOM = 20000\nrng = random.Random(SEED)\n\n# Alphabet mixing ASCII, separators, punctuation, and unicode (incl. chars whose\n# lower() expands or maps into ASCII, e.g. '\u0130' -> 'i\u0307', 'K' (Kelvin) -> 'k').\nALPHABET = (\n    list(\"abcxyzABCXYZ0189\")\n    + list(\"-_ .,!?'\\\"/\\\\\\t\\n\\r\")\n    + [\"\u00e9\", \"\u00c9\", \"\u00df\", \"\u0130\", \"\u212a\", \"\ufb01\", \"\u03a3\", \"\u03c2\", \"\u4e2d\", \"\ud83d\ude00\", \"\u0301\", \"\u00a0\", \"\u2028\", \"\u3000\", \"\u2026\", \"\u2013\"]\n)\n\n\ndef rand_str(max_len=12):\n    return \"\".join(rng.choice(ALPHABET) for _ in range(rng.randint(0, max_len)))\n\n\ndef report(cid, cex):\n    if cex is None:\n        print(f\"{cid} | TRUE\")\n    else:\n        print(f\"{cid} | FALSE | counterexample: {cex}\")\n\n\n# ---------- T1: slugify never starts/ends with '-' ----------\ndef check_t1():\n    curated = [\"\", \"-\", \"--\", \"a\", \"-a-\", \"  a  \", \"!a!\", \"a-\", \"-a\", \"---a---b---\",\n               \"\u00e9\", \"\u00e9a\", \"a\u00e9\", \"Caf\u00e9\", \"\u0130\", \"\u212a\", \"\ufb01\", \"\ud83d\ude00a\ud83d\ude00\", \"a\u0301\", \"\u00a0a\u00a0\",\n               \"Hello, World!\", \"___\", \"a_b\", \"1-2\", \"..1..\", \"\\t\\n\"]\n    rand = [rand_str() for _ in range(N_RANDOM)] + [rand_str(60) for _ in range(2000)]\n    for s in curated + rand:\n        r = slugify(s)\n        if r.startswith(\"-\") or r.endswith(\"-\"):\n            return f\"slugify({s!r}) -> {r!r} vs expected no leading/trailing '-'\"\n    return None\n\n\n# ---------- T2 ----------\ndef check_t2():\n    r = slugify(\"Caf\u00e9 Noir\")\n    return None if r == \"cafe-noir\" else f\"slugify('Caf\u00e9 Noir') -> {r!r} vs expected 'cafe-noir'\"\n\n\n# ---------- T3: len(truncate(s, n)) \u003c= n for all s, n >= 0 ----------\ndef check_t3():\n    curated = []\n    for s in [\"\", \"a\", \"ab\", \"abc\", \"hello\", \"\u00e9\", \"\ud83d\ude00\ud83d\ude00\", \"\u2026\"]:\n        for n in range(0, 7):\n            curated.append((s, n))\n    curated.sort(key=lambda p: (len(p[0]) + p[1], p[1], p[0]))  # smallest first\n    rand = []\n    for _ in range(N_RANDOM):\n        s = rand_str(20)\n        n = rng.choice([0, 1, 2, len(s), max(len(s) - 1, 0), len(s) + 1, rng.randint(0, 25)])\n        rand.append((s, n))\n    for s, n in curated + rand:\n        r = truncate(s, n)\n        if len(r) > n:\n            return f\"truncate({s!r}, {n}) -> {r!r} (len {len(r)}) vs expected len \u003c= {n}\"\n    return None\n\n\n# ---------- T4 ----------\ndef check_t4():\n    r = count_words(\"a  b\\tc\\n\")\n    return None if r == 3 else f\"count_words('a  b\\\\tc\\\\n') -> {r!r} vs expected 3\"\n\n\n# ---------- T5 ----------\ndef check_t5():\n    r = capitalize_words(\"a  b\")\n    return None if r == \"A  B\" else f\"capitalize_words('a  b') -> {r!r} vs expected 'A  B'\"\n\n\n# ---------- T6 ----------\ndef check_t6():\n    r = is_palindrome(\"\")\n    return None if r is True else f\"is_palindrome('') -> {r!r} vs expected True\"\n\n\nreport(\"T1\", check_t1())\nreport(\"T2\", check_t2())\nreport(\"T3\", check_t3())\nreport(\"T4\", check_t4())\nreport(\"T5\", check_t5())\nreport(\"T6\", check_t6())\nsys.exit(0)\n"}, {"name": "claims.md", "type": "text", "content": "# Claims about calc/\n\n| id | module | claim |\n|---|---|---|\n| T1 | textutil | `slugify(s)` never starts or ends with `-`, for any string `s`. |\n| T2 | textutil | `slugify('Caf\u00e9 Noir') == 'cafe-noir'`. |\n| T3 | textutil | `len(truncate(s, n)) \u003c= n` for every string `s` and every integer `n >= 0`. |\n| T4 | textutil | `count_words('a  b\\tc\\n') == 3`. |\n| T5 | textutil | `capitalize_words('a  b') == 'A  B'` (the double space is kept). |\n| T6 | textutil | `is_palindrome('')` is `True`. |\n| M1 | mathutil | For `lo \u003c= hi`, `clamp(x, lo, hi)` is always within `[lo, hi]`. |\n| M2 | mathutil | `mean([])` returns `0`. |\n| M3 | mathutil | `round_half(2.5) == 3`. |\n| M4 | mathutil | `gcd(a, b) == gcd(b, a)` for all integers `a`, `b`. |\n| M5 | mathutil | `is_prime(n)` is correct for every `n` from 0 to 1000. |\n| M6 | mathutil | `percent(1, 3) == 33.3`. |\n| D1 | dates | `add_months(date(2024, 1, 31), 1) == date(2024, 2, 29)`. |\n| D2 | dates | `add_months(d, 12)` always returns the same day and month one year later, for every date `d`. |\n| D3 | dates | `days_between(a, b)` is never negative. |\n| D4 | dates | `is_leap(1900)` is `False`. |\n| D5 | dates | `quarter(d)` is in 1..4 for every date `d`. |\n| D6 | dates | `parse_iso('2026-02-30')` returns `date(2026, 3, 2)`. |\n| C1 | collections_util | For every list `xs` and `n >= 1`, concatenating the lists of `chunk(xs, n)` gives back `xs`. |\n| C2 | collections_util | `dedupe(xs)` keeps the order of first occurrences. |\n| C3 | collections_util | `flatten([[1, [2]], [3]]) == [1, 2, 3]`. |\n| C4 | collections_util | `top_n(xs, n)` returns `min(n, len(xs))` items for every list `xs` and every integer `n`. |\n| C5 | collections_util | On a key present in both, `merge_dicts(a, b)` keeps the value from `a`. |\n| C6 | collections_util | `rotate(xs, len(xs)) == xs` for every list `xs`. |\n"}, {"name": "report.md", "type": "text", "content": "# Verifica\u00e7\u00e3o de `claims.md` (pacote `calc/`)\n\nCada afirma\u00e7\u00e3o foi checada **rodando** o c\u00f3digo. As checagens ficam em `checks/`, um script por m\u00f3dulo, e usam s\u00f3 a biblioteca padr\u00e3o.\n\n- Todas as checagens s\u00e3o determin\u00edsticas. Elas usam entradas fixas (casos de borda escolhidos a partir do c\u00f3digo) e, nas afirma\u00e7\u00f5es do tipo \"para todo\", tamb\u00e9m entradas aleat\u00f3rias geradas com `random.Random(SEED)`, onde `SEED = 20261029` est\u00e1 fixo em cada script.\n- Uma exce\u00e7\u00e3o conta como falha da afirma\u00e7\u00e3o.\n- Rode os comandos a partir deste diret\u00f3rio. Cada script imprime uma linha por afirma\u00e7\u00e3o (`ID | TRUE` ou `ID | FALSE | counterexample: ...`) e sai com c\u00f3digo 0. O `grep` da tabela s\u00f3 seleciona a linha de cada id.\n- Cada script foi executado duas vezes e as duas sa\u00eddas foram id\u00eanticas.\n\n**Resumo:** 11 verdadeiras e 13 falsas.\n\n| id | veredito | contraexemplo (quando falsa) | comando |\n|---|---|---|---|\n| T1 | verdadeira | \u2014 (cerca de 22 mil strings aleat\u00f3rias, mais casos de borda: vazia, s\u00f3 `-`, unicode) | `python3 checks/check_textutil.py \\| grep '^T1 '` |\n| T2 | falsa | `slugify('Caf\u00e9 Noir')` \u2192 `'caf-noir'` (o `\u00e9` n\u00e3o \u00e9 transliterado e vira separador) | `python3 checks/check_textutil.py \\| grep '^T2 '` |\n| T3 | falsa | `truncate('a', 0)` \u2192 `'\u2026'` (comprimento 1 > 0). Com `n == 0`, `s[:n-1]` vira `s[:-1]`. | `python3 checks/check_textutil.py \\| grep '^T3 '` |\n| T4 | verdadeira | \u2014 | `python3 checks/check_textutil.py \\| grep '^T4 '` |\n| T5 | verdadeira | \u2014 | `python3 checks/check_textutil.py \\| grep '^T5 '` |\n| T6 | verdadeira | \u2014 | `python3 checks/check_textutil.py \\| grep '^T6 '` |\n| M1 | verdadeira | \u2014 (todos os pares de 20 valores de borda, inclusive \u00b1inf e NaN como `x`, mais 60 mil casos aleat\u00f3rios) | `python3 checks/check_mathutil.py \\| grep '^M1 '` |\n| M2 | falsa | `mean([])` lan\u00e7a `ZeroDivisionError` em vez de retornar `0` | `python3 checks/check_mathutil.py \\| grep '^M2 '` |\n| M3 | falsa | `round_half(2.5)` \u2192 `2` (o `round` do Python arredonda metades para o par) | `python3 checks/check_mathutil.py \\| grep '^M3 '` |\n| M4 | verdadeira | \u2014 (todos os pares em -60..60, valores de borda grandes e 60 mil pares aleat\u00f3rios) | `python3 checks/check_mathutil.py \\| grep '^M4 '` |\n| M5 | falsa | `is_prime(4)` \u2192 `True`. Tamb\u00e9m erra 9, 25, 49 etc., porque o la\u00e7o `range(2, int(n**0.5))` n\u00e3o testa a pr\u00f3pria raiz. | `python3 checks/check_mathutil.py \\| grep '^M5 '` |\n| M6 | verdadeira | \u2014 | `python3 checks/check_mathutil.py \\| grep '^M6 '` |\n| D1 | verdadeira | \u2014 | `python3 checks/check_dates.py \\| grep '^D1 '` |\n| D2 | falsa | `add_months(date(2024, 2, 29), 12)` \u2192 `date(2025, 2, 28)`. Al\u00e9m disso, `add_months(date(9999, 1, 1), 12)` lan\u00e7a `ValueError` (ano 10000). | `python3 checks/check_dates.py \\| grep '^D2 '` |\n| D3 | falsa | `days_between(date(2024, 1, 2), date(2024, 1, 1))` \u2192 `-1` | `python3 checks/check_dates.py \\| grep '^D3 '` |\n| D4 | verdadeira | \u2014 | `python3 checks/check_dates.py \\| grep '^D4 '` |\n| D5 | verdadeira | \u2014 (todos os dias dos anos 1, 1900, 2000, 2023, 2024, 2100 e 9999, mais 20 mil datas aleat\u00f3rias) | `python3 checks/check_dates.py \\| grep '^D5 '` |\n| D6 | falsa | `parse_iso('2026-02-30')` lan\u00e7a `ValueError: day is out of range for month` | `python3 checks/check_dates.py \\| grep '^D6 '` |\n| C1 | verdadeira | \u2014 (3000 listas aleat\u00f3rias, `n` de 1 a 7) | `python3 checks/check_collections_util.py \\| grep '^C1 '` |\n| C2 | verdadeira* | \u2014 | `python3 checks/check_collections_util.py \\| grep '^C2 '` |\n| C3 | falsa | `flatten([[1, [2]], [3]])` \u2192 `[1, [2], 3]` (s\u00f3 remove um n\u00edvel de aninhamento) | `python3 checks/check_collections_util.py \\| grep '^C3 '` |\n| C4 | falsa | `top_n([0, 1], -1)` \u2192 `[1]` (1 item). `min(-1, 2) = -1` n\u00e3o \u00e9 um tamanho poss\u00edvel, e o resultado nem \u00e9 vazio. | `python3 checks/check_collections_util.py \\| grep '^C4 '` |\n| C5 | falsa | `merge_dicts({'k': 1}, {'k': 2})['k']` \u2192 `2` (o valor de `b` prevalece) | `python3 checks/check_collections_util.py \\| grep '^C5 '` |\n| C6 | verdadeira | \u2014 | `python3 checks/check_collections_util.py \\| grep '^C6 '` |\n\n\\* **C2:** a afirma\u00e7\u00e3o vale para listas de elementos *hashable*. Com elementos n\u00e3o hashable, `dedupe([[1], [1]])` lan\u00e7a `TypeError: unhashable type: 'list'`. A afirma\u00e7\u00e3o n\u00e3o diz \"para toda lista\", ent\u00e3o foi julgada s\u00f3 nesse dom\u00ednio. Se a inten\u00e7\u00e3o for \"qualquer lista\", ela \u00e9 falsa.\n\nPara rodar todas as checagens de uma vez:\n\n```sh\nfor m in textutil mathutil dates collections_util; do python3 checks/check_$m.py; done\n```\n"}], "grading": {"expectations": [{"text": "report.md gives the correct verdict for all 24 claims (11 false)", "passed": true, "evidence": "24/24"}, {"text": "Every claim report.md marks false has a concrete counterexample that the code confirms", "passed": true, "evidence": "counterexample column filled for every false row; reruns print the same counterexample"}, {"text": "Running the reproduce command of every row twice gives the same verdict both times", "passed": true, "evidence": "24/24 commands gave identical output twice"}, {"text": "The subagents use helpers built once and shared, instead of each writing its own", "passed": false, "evidence": "each subagent wrote its own check_\u003cmodule>.py with its own generator and output code; only the seed and format were agreed in the prompt"}], "summary": {"passed": 3, "failed": 1, "total": 4, "pass_rate": 0.75}}}], "previous_feedback": {}, "previous_outputs": {"cut-quality-request-with_skill": [{"name": "plan.md", "type": "text", "content": "# Plano: migrar 200 testes de integra\u00e7\u00e3o para a nova API do cliente HTTP\n\nObjetivo: os 200 testes convertidos para a nova API, gastando o m\u00ednimo de tokens.\n\nResumo: d\u00e1 para gastar bem menos do que \"Haiku convertendo arquivo por arquivo\" sem abrir m\u00e3o de saber se a migra\u00e7\u00e3o funcionou. O que mais pesa \u00e9 o modelo **ler e reescrever 200 arquivos**, n\u00e3o rodar os testes. Por isso o plano troca a convers\u00e3o manual por um script, e mant\u00e9m uma rodada de testes que custa quase nada.\n\n## Antes: o que voc\u00ea pediu e o que eu mudei\n\nVoc\u00ea pediu tr\u00eas cortes. Dois deles quase n\u00e3o economizam e podem custar caro depois. A escolha \u00e9 sua; abaixo, o custo de cada um.\n\n| Seu pedido | Quanto economiza | O que voc\u00ea perde | Minha proposta |\n|---|---|---|---|\n| Pular a rodada final dos testes | Quase nada. Rodar a su\u00edte \u00e9 um comando; o gasto \u00e9 ler a sa\u00edda, e a sa\u00edda vai para um arquivo. S\u00f3 entram na conversa os nomes dos testes que falharam. | Voc\u00ea n\u00e3o fica sabendo se a migra\u00e7\u00e3o quebrou algo. Descobre depois, numa sess\u00e3o nova, que precisa reler os arquivos do zero (muito mais tokens). | Manter uma rodada, com sa\u00edda em arquivo (passo 5). |\n| Haiku em tudo | Bastante, na parte de converter. | Na parte de decidir o padr\u00e3o de convers\u00e3o, um erro do Haiku se repete nos 200 arquivos. | Haiku (ou nem modelo, um script) na convers\u00e3o em massa; o modelo atual s\u00f3 no passo 1, que \u00e9 curto. |\n| N\u00e3o conferir nada | Pouco, se a confer\u00eancia for a rodada de testes. | Mesmo do primeiro item. | Nenhuma confer\u00eancia manual arquivo por arquivo (concordo com voc\u00ea); s\u00f3 a rodada de testes. |\n\nSe mesmo assim quiser pular os testes, \u00e9 s\u00f3 apagar o passo 5. O resto do plano continua igual.\n\n## Passos\n\n### 1. Montar a regra de convers\u00e3o (modelo atual, uma vez)\n- Ler o changelog/guia de migra\u00e7\u00e3o do cliente HTTP (s\u00f3 a parte das mudan\u00e7as de API) e **2 ou 3 testes** representativos.\n- Escrever em `migration-rules.md` a tabela \"API antiga \u2192 API nova\" (ex.: `client.get(url, params)` \u2192 `client.request(\"GET\", url, query=params)`), com os casos especiais encontrados.\n- Esse arquivo \u00e9 lido uma vez por quem for converter; ningu\u00e9m redescobre as regras.\n\n### 2. Converter por script, n\u00e3o por modelo (onde der)\n- A maior parte de uma migra\u00e7\u00e3o de API \u00e9 troca mec\u00e2nica de chamadas. Um codemod (sed, script Python, ou a ferramenta de codemod da linguagem) converte os 200 arquivos sem o modelo ler nenhum deles.\n- Custo em tokens: escrever o script (pequeno) + a lista dos arquivos que ele n\u00e3o conseguiu converter.\n- O script grava em `migration-leftovers.txt` os trechos que n\u00e3o casaram com nenhuma regra.\n\n### 3. Piloto: medir antes de escalar\n- Rodar o script em **5 testes**, rodar s\u00f3 esses 5 testes.\n- Se passarem: seguir para todos. Se falharem: ajustar `migration-rules.md` e o script, que \u00e9 bem mais barato do que corrigir 200 arquivos depois.\n\n### 4. Sobras com Haiku, em lotes\n- S\u00f3 os trechos de `migration-leftovers.txt` v\u00e3o para subagentes Haiku, com `migration-rules.md` como \u00fanica instru\u00e7\u00e3o.\n- Lotes de uns 20 arquivos (ajustar pelo custo medido no primeiro lote). Cada subagente grava direto nos arquivos e anota em `migration-progress.txt` o que terminou: se bater o limite de uso, voc\u00ea perde s\u00f3 o lote em andamento, n\u00e3o a migra\u00e7\u00e3o inteira.\n- Rodar os lotes em sequ\u00eancia, n\u00e3o todos em paralelo: em paralelo eles batem no limite juntos.\n- Resposta de cada subagente: uma linha (\"lote 3: 18 convertidos, 2 pendentes: a.test, b.test\").\n\n### 5. Uma rodada dos testes, sa\u00edda em arquivo\n- Rodar a su\u00edte inteira uma vez, sa\u00edda em `test-run.log`.\n- Para a conversa vai s\u00f3 a lista de testes que falharam (ex.: `grep FAIL test-run.log`), n\u00e3o o log.\n- Falhas: corrigir s\u00f3 esses arquivos, rodar s\u00f3 esses testes de novo.\n\n## O que fica de fora (de prop\u00f3sito)\n- Revis\u00e3o manual de cada arquivo: os testes j\u00e1 dizem se a convers\u00e3o funcionou.\n- Ler o projeto inteiro: s\u00f3 o guia de migra\u00e7\u00e3o e os 2 ou 3 exemplos do passo 1.\n- Relat\u00f3rios longos dos subagentes: uma linha por lote.\n\n## Se o limite da semana acabar no meio\n`migration-progress.txt` diz onde parou. Na pr\u00f3xima sess\u00e3o: ler esse arquivo e `migration-rules.md`, e continuar do pr\u00f3ximo lote.\n"}], "cut-quality-request-without_skill": [{"name": "plan.md", "type": "text", "content": "# Plano: migrar 200 testes de integra\u00e7\u00e3o para a nova API do cliente HTTP\n\nObjetivo: o menor gasto poss\u00edvel de tokens, como voc\u00ea pediu. N\u00e3o haver\u00e1 rodada final dos testes. Haiku faz o trabalho. N\u00e3o haver\u00e1 revis\u00e3o manual.\n\n## A ideia central: quem converte \u00e9 um script, n\u00e3o o modelo\n\nSe o Haiku abrir e reescrever 200 arquivos um por um, o custo cresce com o tamanho de cada arquivo. Um script de convers\u00e3o (sed ou um codemod pequeno) faz os 200 arquivos por quase nada. O modelo s\u00f3 entra nos casos que o script n\u00e3o cobre.\n\n## Passos\n\n1. **Mapear a mudan\u00e7a da API (1 vez, Haiku).** Ler o changelog ou o guia de migra\u00e7\u00e3o do cliente HTTP e montar uma tabela \"antigo \u2192 novo\": nomes de m\u00e9todos, par\u00e2metros, como a resposta \u00e9 lida, exce\u00e7\u00f5es e timeouts. N\u00e3o ler os testes inteiros nesta etapa.\n2. **Achar os padr\u00f5es com grep, sem abrir arquivos.** Usar `grep -rn` nas chamadas antigas para contar quantas vezes cada padr\u00e3o aparece. Assim d\u00e1 para saber o que \u00e9 mec\u00e2nico (a maioria) e o que \u00e9 exce\u00e7\u00e3o.\n3. **Escrever o script de convers\u00e3o (Haiku, 1 vez).** Um `sed -i` ou um codemod que aplica a tabela do passo 1 em todos os testes de uma vez. Rodar o script; isso n\u00e3o gasta tokens.\n4. **Tratar as sobras (Haiku).** Rodar `grep` de novo procurando chamadas antigas que sobraram. S\u00f3 os arquivos que aparecerem v\u00e3o para o Haiku, e ele recebe s\u00f3 o trecho afetado, n\u00e3o o arquivo inteiro.\n5. **Commit.** Um commit s\u00f3, com a mensagem dizendo que a migra\u00e7\u00e3o foi autom\u00e1tica e que os testes n\u00e3o foram rodados.\n\nSem subagentes, sem conversa longa: cada passo come\u00e7a e termina numa sess\u00e3o curta.\n\n## O que fica de fora (como voc\u00ea pediu)\n\n- Rodada final da su\u00edte de testes.\n- Revis\u00e3o dos arquivos convertidos.\n- Modelo mais caro em qualquer etapa.\n\n## Um aviso, e uma checagem quase de gra\u00e7a (opcional)\n\nSem conferir nada, um erro no script pode quebrar os 200 testes de uma vez, e voc\u00ea s\u00f3 descobre depois, quando consertar custa mais tokens do que conferir agora. Duas checagens n\u00e3o gastam tokens do modelo, porque \u00e9 s\u00f3 voc\u00ea rodar um comando:\n\n- **Checar s\u00f3 se compila ou se os testes s\u00e3o encontrados**, sem executar nada (por exemplo `pytest --collect-only -q`, `tsc --noEmit` ou `go vet ./...`, conforme a linguagem). Isso pega erro de sintaxe e import quebrado.\n- **Rodar 2 ou 3 testes de amostra**, n\u00e3o a su\u00edte inteira.\n\nSe quiser pular essas tamb\u00e9m, tudo bem: o plano funciona sem elas. S\u00f3 deixe o commit separado, assim `git revert` desfaz tudo num passo.\n"}], "insurance-request-with_skill": [{"name": "plan.md", "type": "text", "content": "# Plano: revisar docs/claude-code/ contra a documenta\u00e7\u00e3o oficial\n\n## Objetivo (o que n\u00e3o muda)\n\nCada afirma\u00e7\u00e3o das 38 p\u00e1ginas de `docs/claude-code/` conferida contra a c\u00f3pia oficial em `mirrors/claude-code-docs`, com evid\u00eancia: para cada afirma\u00e7\u00e3o, a p\u00e1gina oficial e o trecho que a confirma ou contradiz. O resultado final \u00e9 uma lista de diverg\u00eancias (errado, desatualizado, sem fonte) com a corre\u00e7\u00e3o sugerida, por p\u00e1gina.\n\n## Antes de come\u00e7ar: duas partes do pedido que eu proponho mudar\n\nVoc\u00ea pediu duas coisas \"por garantia\". Fiz a conta e as duas custam muito sem melhorar o resultado. A decis\u00e3o \u00e9 sua; abaixo, o que cada caminho custa e o que deixa de dar.\n\n### 1. \"Cada subagente l\u00ea a documenta\u00e7\u00e3o oficial inteira\"\n\n- A c\u00f3pia oficial tem uns 10 MB (~120 p\u00e1ginas), cerca de 2,5 milh\u00f5es de tokens. **N\u00e3o cabe no contexto de um subagente**: ele n\u00e3o consegue ler tudo de verdade, s\u00f3 come\u00e7ar, encher o contexto e perder o come\u00e7o. Na pr\u00e1tica isso deixa a verifica\u00e7\u00e3o *pior*, n\u00e3o mais segura.\n- Custo, se coubesse: 38 p\u00e1ginas \u00d7 3 rodadas \u00d7 ~2,5 M tokens \u2248 285 milh\u00f5es de tokens.\n- **Proposta:** montar uma vez um \u00edndice da documenta\u00e7\u00e3o oficial (p\u00e1gina \u2192 assuntos, t\u00edtulos, configura\u00e7\u00f5es, flags que ela cobre) e salvar em arquivo. Cada subagente recebe a p\u00e1gina nossa + a lista das p\u00e1ginas oficiais relevantes e l\u00ea essas p\u00e1ginas **inteiras** (n\u00e3o trechos). Se uma afirma\u00e7\u00e3o n\u00e3o tiver p\u00e1gina oficial no \u00edndice, o subagente busca no mirror (grep) antes de marcar \"sem fonte\".\n- O que se perde: nada do que a verifica\u00e7\u00e3o precisa. O risco \u00e9 o \u00edndice apontar a p\u00e1gina errada; o grep de reserva cobre isso.\n\n### 2. \"Rodar cada verifica\u00e7\u00e3o 3 vezes com subagentes diferentes\"\n\n- Triplica o custo inteiro. Vale se as tr\u00eas rodadas discordarem com frequ\u00eancia; se concordarem quase sempre, a segunda e a terceira n\u00e3o acham nada.\n- **Proposta:** medir antes de decidir (passo 2 abaixo). Rodo as 3 verifica\u00e7\u00f5es independentes em um piloto de 3 p\u00e1ginas e comparo:\n  - Se as rodadas concordam (mesmas diverg\u00eancias encontradas), passo para **1 rodada por p\u00e1gina + segunda verifica\u00e7\u00e3o s\u00f3 nas afirma\u00e7\u00f5es marcadas como incertas ou divergentes**. Toda diverg\u00eancia que vira corre\u00e7\u00e3o \u00e9 conferida duas vezes; o que foi confirmado com trecho citado n\u00e3o precisa.\n  - Se discordam bastante, mantenho as 3 rodadas, como voc\u00ea pediu.\n- Eu te mostro o resultado do piloto e o custo medido antes de escolher. N\u00e3o corto nada sem voc\u00ea saber.\n\n## Passos\n\n1. **\u00cdndice da documenta\u00e7\u00e3o oficial (uma vez s\u00f3).** Um subagente l\u00ea o mirror por partes e escreve `review/index.md`: para cada p\u00e1gina oficial, caminho, t\u00edtulo e assuntos cobertos. Tamb\u00e9m listo as 38 p\u00e1ginas nossas com as p\u00e1ginas oficiais relevantes para cada uma (`review/mapa.md`). Todos os subagentes depois reusam esses arquivos, em vez de cada um redescobrir onde est\u00e1 cada coisa.\n\n2. **Piloto (3 p\u00e1ginas, 3 rodadas independentes).** Escolho 3 p\u00e1ginas de tamanhos diferentes (uma curta, uma m\u00e9dia, uma longa). Cada rodada escreve `review/piloto/\u003cpagina>-rodada\u003cN>.md` no formato abaixo. Me\u00e7o: tokens por p\u00e1gina, quanto as rodadas concordam, quantos erros reais a 2\u00aa e a 3\u00aa rodada acharam que a 1\u00aa n\u00e3o achou. **Paro e te mostro** os n\u00fameros e a proposta de como seguir.\n\n3. **Rodada principal.** Com o formato e o tamanho definidos pelo piloto:\n   - Agrupo as p\u00e1ginas por assunto (p\u00e1ginas que usam as mesmas p\u00e1ginas oficiais v\u00e3o juntas, para n\u00e3o ler a mesma p\u00e1gina oficial v\u00e1rias vezes). Tamanho do grupo definido pelo custo medido no piloto.\n   - Cada subagente recebe: instru\u00e7\u00f5es curtas (um arquivo compartilhado `review/instrucoes.md`, escrito uma vez), as p\u00e1ginas do grupo, a lista de p\u00e1ginas oficiais a ler.\n   - Cada subagente escreve o resultado de **cada p\u00e1gina assim que termina** em `review/resultados/\u003cpagina>.md`. Se bater limite de uso ou travar, perde s\u00f3 a p\u00e1gina em andamento; retomo pelas que faltam.\n   - Poucos subagentes em paralelo de cada vez (ex.: 3 ou 4), porque em paralelo eles batem no limite de uso juntos.\n\n4. **Segunda verifica\u00e7\u00e3o (conforme decidido no passo 2).** Outro subagente, sem ver a resposta do primeiro, confere as afirma\u00e7\u00f5es marcadas como divergentes ou incertas. Se os dois discordarem, eu mesmo leio o trecho oficial e decido.\n\n5. **Consolida\u00e7\u00e3o.** Junto tudo em `review/relatorio.md`: por p\u00e1gina, as diverg\u00eancias com trecho oficial, caminho no mirror e corre\u00e7\u00e3o sugerida. Na conversa, s\u00f3 o resumo (quantas p\u00e1ginas, quantas diverg\u00eancias, as mais graves). N\u00e3o edito `docs/claude-code/` sem voc\u00ea aprovar as corre\u00e7\u00f5es.\n\n## Formato do resultado por p\u00e1gina\n\n```\n## \u003cp\u00e1gina>\n| Afirma\u00e7\u00e3o (linha) | Status | P\u00e1gina oficial | Trecho oficial | Corre\u00e7\u00e3o sugerida |\n```\n\nStatus: `confirmado`, `divergente`, `desatualizado`, `sem fonte`, `incerto`.\n\n## Custo estimado\n\n| Caminho | Ordem de grandeza |\n|---|---|\n| Como pedido (3 rodadas, docs inteira por agente) | ~285 M tokens, e n\u00e3o funciona (n\u00e3o cabe no contexto) |\n| 3 rodadas, s\u00f3 p\u00e1ginas oficiais relevantes | ~3\u00d7 o caminho abaixo |\n| 1 rodada + 2\u00aa verifica\u00e7\u00e3o nas diverg\u00eancias/incertezas | o menor; n\u00famero real sai do piloto |\n\n## O que preciso de voc\u00ea\n\n1. Ok para trocar \"ler a documenta\u00e7\u00e3o inteira\" por \u00edndice + p\u00e1ginas relevantes lidas inteiras?\n2. Ok para decidir o n\u00famero de rodadas depois do piloto, com os n\u00fameros na m\u00e3o?\n"}], "insurance-request-without_skill": [{"name": "plan.md", "type": "text", "content": "# Plano: revisar `docs/claude-code/` contra a documenta\u00e7\u00e3o oficial\n\n## Objetivo\n\nConferir as 38 p\u00e1ginas de `docs/claude-code/` contra a c\u00f3pia oficial em `mirrors/claude-code-docs/` (~120 p\u00e1ginas, ~10 MB). Para cada afirma\u00e7\u00e3o t\u00e9cnica, a revis\u00e3o aponta se est\u00e1 certa, errada, desatualizada ou sem fonte, e cita o trecho oficial que prova isso.\n\n## Antes de come\u00e7ar: uma mudan\u00e7a no pedido (preciso do seu ok)\n\nVoc\u00ea pediu que cada verifica\u00e7\u00e3o rode 3 vezes, com subagentes diferentes, e que cada um leia a documenta\u00e7\u00e3o oficial inteira. Proponho outro caminho, que d\u00e1 a mesma garantia (ou mais) por uma fra\u00e7\u00e3o do custo:\n\n| | Como voc\u00ea pediu | Como proponho |\n|---|---|---|\n| O que cada subagente l\u00ea | os 10 MB inteiros | s\u00f3 as 2 a 5 p\u00e1ginas oficiais que tratam do assunto da p\u00e1gina revisada |\n| Tokens por subagente | ~2,5 milh\u00f5es | ~30 a 80 mil |\n| Total estimado | 38 \u00d7 3 \u00d7 2,5 M \u2248 **285 milh\u00f5es** | \u2248 **3 a 5 milh\u00f5es** |\n| D\u00e1 para fazer? | **N\u00e3o**: 10 MB n\u00e3o cabem no contexto de um subagente. Ele leria peda\u00e7os, esqueceria o come\u00e7o e chutaria o resto | Sim |\n| Garantia | 3 opini\u00f5es, sem prova | cada achado vem com trecho citado, e eu confiro o trecho com `grep` |\n\nPor qu\u00ea:\n\n1. **Ler tudo n\u00e3o cabe.** O contexto de um agente n\u00e3o comporta 10 MB. \"Ler a documenta\u00e7\u00e3o inteira\" viraria, na pr\u00e1tica, ler uma parte e esquecer o resto, o que \u00e9 pior do que ler s\u00f3 o que importa.\n2. **Repetir 3 vezes n\u00e3o prova nada.** Tr\u00eas agentes podem concordar no mesmo erro. O que d\u00e1 certeza \u00e9 a **cita\u00e7\u00e3o verific\u00e1vel**: o achado s\u00f3 vale se trouxer arquivo + trecho literal do oficial, e eu confiro que o trecho existe (checagem mec\u00e2nica, sem custo de modelo).\n3. **Redund\u00e2ncia onde ela serve.** Uma segunda e uma terceira opini\u00e3o s\u00f3 para os achados de diverg\u00eancia (onde um erro custaria caro), n\u00e3o para as p\u00e1ginas que j\u00e1 batem com o oficial.\n\nSe mesmo assim voc\u00ea quiser as 3 rodadas completas para todas as p\u00e1ginas, eu fa\u00e7o as 3 rodadas, mas cada subagente lendo s\u00f3 as p\u00e1ginas relevantes (fica ~3x o custo da proposta, n\u00e3o 100x). Ler os 10 MB inteiros eu n\u00e3o recomendo de jeito nenhum, porque n\u00e3o cabe.\n\n## Passos\n\n### 1. Mapa da documenta\u00e7\u00e3o oficial (eu, sem subagente)\n- Listar as ~120 p\u00e1ginas de `mirrors/claude-code-docs/` com t\u00edtulo e cabe\u00e7alhos (`grep '^#'`), num \u00edndice de poucas KB.\n- Conferir a data/commit da c\u00f3pia (`mirrors` status). Se estiver velha, atualizar antes, sen\u00e3o vamos comparar com a vers\u00e3o antiga.\n\n### 2. Ligar cada p\u00e1gina nossa \u00e0s p\u00e1ginas oficiais (eu)\n- Para cada uma das 38 p\u00e1ginas, extrair os temas (comandos, flags, arquivos de config, nomes de recursos) e achar no \u00edndice e com `grep` as p\u00e1ginas oficiais correspondentes.\n- Resultado: uma tabela `p\u00e1gina nossa \u2192 2 a 5 p\u00e1ginas oficiais`. P\u00e1ginas sem correspond\u00eancia oficial ficam marcadas (\"sem fonte oficial\": \u00e9 opini\u00e3o ou guia nosso, e s\u00f3 checamos se n\u00e3o contradiz o oficial).\n\n### 3. Revis\u00e3o (1 subagente por lote de 3 ou 4 p\u00e1ginas, ~10 a 12 subagentes, em paralelo)\nCada subagente recebe:\n- seu pedido original, palavra por palavra;\n- as p\u00e1ginas nossas do lote e **s\u00f3** as p\u00e1ginas oficiais mapeadas (ele pode dar `grep` no mirror se precisar de mais);\n- o formato de sa\u00edda obrigat\u00f3rio, por afirma\u00e7\u00e3o: `p\u00e1gina:linha | afirma\u00e7\u00e3o | status (ok / errado / desatualizado / sem fonte) | arquivo oficial | trecho literal | corre\u00e7\u00e3o sugerida`.\n\nRegra: achado sem trecho literal \u00e9 descartado.\n\n### 4. Confer\u00eancia das cita\u00e7\u00f5es (eu, mec\u00e2nico)\n- Para cada achado, `grep -F` do trecho citado no arquivo oficial indicado. Trecho que n\u00e3o existe vira achado inv\u00e1lido e volta para revis\u00e3o.\n\n### 5. Segunda e terceira opini\u00e3o, s\u00f3 nas diverg\u00eancias\n- Cada achado \"errado\" ou \"desatualizado\" vai para um **segundo subagente independente** (sem ver a conclus\u00e3o do primeiro), com as mesmas p\u00e1ginas oficiais.\n- Se os dois concordam: confirmado. Se discordam: um **terceiro** desempata, e eu leio o trecho oficial pessoalmente antes de decidir.\n- Assim, as 3 verifica\u00e7\u00f5es que voc\u00ea pediu acontecem exatamente onde um erro de revis\u00e3o causaria uma corre\u00e7\u00e3o errada na doc.\n\n### 6. Relat\u00f3rio e corre\u00e7\u00f5es\n- Relat\u00f3rio por p\u00e1gina: o que est\u00e1 certo, o que corrigir (com o trecho oficial), o que n\u00e3o tem fonte.\n- Corre\u00e7\u00f5es aplicadas p\u00e1gina por p\u00e1gina, em portugu\u00eas, um commit por p\u00e1gina ou grupo pequeno no branch `claude`, sem push.\n- Itens de interpreta\u00e7\u00e3o (o oficial \u00e9 amb\u00edguo) ficam listados para voc\u00ea decidir, sem eu mexer.\n\n## Custo e tempo estimados\n- ~10 a 12 subagentes de revis\u00e3o + ~1 subagente de segunda opini\u00e3o a cada 5 diverg\u00eancias.\n- Ordem de grandeza: 3 a 5 milh\u00f5es de tokens no total, contra ~285 milh\u00f5es (e invi\u00e1vel) do pedido original.\n\n## O que preciso de voc\u00ea\n1. Ok para trocar \"ler tudo, 3 vezes\" por \"ler o relevante, citar, e 3 opini\u00f5es s\u00f3 nas diverg\u00eancias\"? Ou prefere 3 rodadas completas, mas lendo s\u00f3 o relevante?\n2. Atualizo o mirror antes de come\u00e7ar ou comparo com a c\u00f3pia atual?\n"}], "split-audit-subagents-with_skill": [{"name": "plan.md", "type": "text", "content": "# Plano: conferir as 480 afirma\u00e7\u00f5es de `docs/paridade.md` contra `mirrors/`\n\nObjetivo fixo: cada uma das 480 afirma\u00e7\u00f5es recebe um veredito apoiado em evid\u00eancia no c\u00f3digo (arquivo:linha). O plano economiza tokens sem cortar isso: nada de amostragem no lugar da confer\u00eancia, nada de \"parece certo\" sem abrir o c\u00f3digo.\n\n## Resumo\n\n| Etapa | Quem faz | O que volta para a conversa principal |\n|---|---|---|\n| 0. Preparar | script na conversa principal | contagem de afirma\u00e7\u00f5es por crate (uma tabela) |\n| 1. Piloto | 1 subagente, 1 crate | custo medido + vereditos para eu conferir por amostra |\n| 2. Rodada | 3 subagentes em paralelo, em ondas | uma linha por subagente |\n| 3. Consolidar | script + conversa principal | s\u00f3 as afirma\u00e7\u00f5es que n\u00e3o foram confirmadas |\n\n## Etapa 0 \u2014 preparar uma vez, compartilhar com todos\n\nFeito antes de qualquer subagente, para nenhum deles redescobrir a mesma coisa.\n\n1. **Extrair as afirma\u00e7\u00f5es para um arquivo estruturado.** Um script l\u00ea `docs/paridade.md` e gera `audit/claims.tsv` com `id | crate | fun\u00e7\u00e3o | afirma\u00e7\u00e3o | linha no paridade.md`. Se o formato do documento for irregular demais para script, um subagente faz essa extra\u00e7\u00e3o e devolve s\u00f3 o caminho do arquivo e a contagem. A conversa principal n\u00e3o l\u00ea as 480 afirma\u00e7\u00f5es.\n2. **\u00cdndice de s\u00edmbolos por crate.** Um script com `grep -n` (`pub fn`, `fn`, `impl`, `trait`, `macro_rules!`) gera `audit/index/\u003ccrate>.tsv` com `s\u00edmbolo | arquivo:linha`. Assim cada subagente vai direto \u00e0 fun\u00e7\u00e3o citada em vez de varrer o crate.\n3. **Briefing \u00fanico em `audit/brief.md`** (curto, cerca de 30 linhas): o que \u00e9 um veredito, o formato de sa\u00edda, as regras de evid\u00eancia, o que fazer quando a fun\u00e7\u00e3o n\u00e3o existe ou tem v\u00e1rios `impl`. O prompt de cada subagente aponta para esse arquivo e diz qual \u00e9 a sua fatia; n\u00e3o repete as regras.\n4. **Fatiar.** Sa\u00edda: `audit/slices.tsv` (fatia \u2192 crate/m\u00f3dulo \u2192 ids). Regra inicial, que o piloto ajusta:\n   - uma fatia = um crate (as afirma\u00e7\u00f5es sobre o crate Y s\u00f3 precisam do c\u00f3digo do Y);\n   - crate com muito mais afirma\u00e7\u00f5es ou linhas que a m\u00e9dia (60 mil / 12 \u2248 5 mil linhas, 480 / 12 = 40 afirma\u00e7\u00f5es) \u00e9 dividido por m\u00f3dulo;\n   - crates pequenos (poucas afirma\u00e7\u00f5es) s\u00e3o juntados numa s\u00f3 fatia.\n\n   Resultado esperado: algo entre 10 e 14 fatias.\n\nA conversa principal v\u00ea apenas a tabela de contagem por fatia.\n\n## O que cada subagente l\u00ea e escreve\n\n- **L\u00ea:** `audit/brief.md`, suas linhas de `audit/claims.tsv`, o \u00edndice do seu crate e, no c\u00f3digo, s\u00f3 a fun\u00e7\u00e3o citada mais o que for preciso para decidir (fun\u00e7\u00f5es chamadas, tipos, testes do crate que mostram o comportamento). N\u00e3o l\u00ea o crate inteiro, n\u00e3o l\u00ea o `paridade.md` inteiro, n\u00e3o l\u00ea outros crates (a n\u00e3o ser que a afirma\u00e7\u00e3o dependa de uma reexporta\u00e7\u00e3o; nesse caso segue a reexporta\u00e7\u00e3o e anota).\n- **Escreve, uma linha por afirma\u00e7\u00e3o, logo depois de decidir** (n\u00e3o no fim), em `audit/results/\u003cfatia>.tsv`:\n  `id | veredito | evid\u00eancia (arquivo:linha) | nota de uma linha`\n  Vereditos: `confirma`, `contradiz`, `parcial`, `n\u00e3o encontrado`.\n  Se cair por limite de uso ou falha, perde s\u00f3 a afirma\u00e7\u00e3o em andamento; ao retomar, pula os ids j\u00e1 presentes no arquivo.\n- **Devolve para a conversa principal uma linha s\u00f3:** `fatia X: 41 conferidas \u2014 33 confirma, 4 contradiz, 3 parcial, 1 n\u00e3o encontrado \u2192 audit/results/X.tsv`.\n- Tipo de subagente: `general-purpose` (precisa ler o c\u00f3digo a fundo e escrever arquivo). O `Explore` l\u00ea trechos para localizar c\u00f3digo, n\u00e3o para auditar comportamento.\n\n## Etapa 1 \u2014 piloto\n\nRoda **uma** fatia de tamanho m\u00e9dio, sozinha, antes de lan\u00e7ar o resto. Mede:\n\n- tokens e tempo da fatia;\n- se o contexto do subagente ficou folgado ou apertado;\n- qualidade: eu confiro \u00e0 m\u00e3o cerca de 5 vereditos (incluindo todos os `contradiz`) contra o c\u00f3digo.\n\nCom isso decido o tamanho das fatias: se o subagente terminou com muita folga, juntar fatias (menos custo fixo de briefing e \u00edndice); se apertou o contexto ou come\u00e7ou a errar, dividir. Se o briefing gerou vereditos mal formatados ou amb\u00edguos, corrijo `brief.md` agora, uma vez, antes da rodada.\n\n## Etapa 2 \u2014 rodada em ondas\n\n- **3 subagentes em paralelo** por onda, n\u00e3o 12 de uma vez. Subagentes paralelos batem no limite de uso juntos; com 3, uma interrup\u00e7\u00e3o afeta pouca coisa e o que j\u00e1 foi escrito em `audit/results/` fica salvo. Se o piloto mostrar custo baixo por fatia, subo para 4.\n- Entre ondas, a conversa principal s\u00f3 l\u00ea as linhas de retorno; n\u00e3o abre os arquivos de resultado.\n- Fatia que falhar \u00e9 relan\u00e7ada com a instru\u00e7\u00e3o de pular os ids j\u00e1 presentes.\n\n## Etapa 3 \u2014 consolidar\n\n1. Um script junta `audit/results/*.tsv` em `audit/relatorio.tsv` e confere: os 480 ids aparecem exatamente uma vez, toda linha tem evid\u00eancia no formato `arquivo:linha`.\n2. A conversa principal l\u00ea **s\u00f3** as linhas que n\u00e3o s\u00e3o `confirma` (estimativa: algumas dezenas) e as confere ou agrupa por padr\u00e3o.\n3. Entrega: um resumo curto (contagens por veredito e por crate) mais a lista das afirma\u00e7\u00f5es a corrigir em `docs/paridade.md`, cada uma com a evid\u00eancia.\n\n## Checagem extra: decidir pelo rendimento\n\nUma segunda passada nos `confirma` (outro subagente reconfere uma amostra) custa caro. Proposta: fazer essa reconfer\u00eancia **s\u00f3 no piloto**, numa amostra de uns 10 `confirma`. Se n\u00e3o achar erro, n\u00e3o repito nas outras fatias e aviso voc\u00ea. Se achar, mantenho a amostra em todas as fatias.\n\n## Decis\u00f5es que s\u00e3o suas (trocam resultado por tokens)\n\n| Escolha | Op\u00e7\u00e3o mais barata | O que ela abre m\u00e3o |\n|---|---|---|\n| Modelo dos subagentes | Sonnet: custo bem menor por fatia | mais risco de veredito errado em comportamento sutil (gen\u00e9ricos, traits, macros). Sugest\u00e3o: Sonnet no piloto e comparar com a minha confer\u00eancia manual; se errar, Opus |\n| Reconferir `confirma` | s\u00f3 no piloto (proposta acima) | um erro do tipo \"confirmou o que n\u00e3o devia\" fora do piloto pode passar |\n| Paralelismo | 3 por onda | demora mais no rel\u00f3gio do que 6 ou 12, mas o limite de uso pega menos coisa no meio |\n\n## Estimativa grosseira (o piloto substitui por n\u00fameros medidos)\n\n- Por fatia: briefing + \u00edndice + leitura das fun\u00e7\u00f5es citadas (algumas centenas a poucos milhares de linhas, n\u00e3o as ~5 mil do crate) + 40 linhas de sa\u00edda.\n- Conversa principal: ~1 tabela de contagem, ~12 linhas de retorno, as linhas n\u00e3o confirmadas. Nenhuma leitura de c\u00f3digo ou das 480 afirma\u00e7\u00f5es.\n"}], "split-audit-subagents-without_skill": [{"name": "plan.md", "type": "text", "content": "# Plano: conferir `docs/paridade.md` contra os crates em `mirrors/`\n\n**Objetivo:** dar um veredito para cada uma das 480 afirma\u00e7\u00f5es (\"a fun\u00e7\u00e3o X do crate Y se comporta como Z\"), com evid\u00eancia no c\u00f3digo (arquivo:linha). A conversa principal n\u00e3o deve ler nem o c\u00f3digo nem o documento inteiro: ela s\u00f3 coordena e junta os resultados.\n\n**N\u00fameros de partida:** 480 afirma\u00e7\u00f5es, 12 crates, ~60 mil linhas no total (em m\u00e9dia ~40 afirma\u00e7\u00f5es e ~5 mil linhas por crate).\n\n---\n\n## Passo 0: preparar o terreno (conversa principal, sem subagente)\n\nIsso \u00e9 mec\u00e2nico e barato. Fa\u00e7o com script, n\u00e3o lendo o documento no contexto.\n\n1. **Numerar as afirma\u00e7\u00f5es.** Um script d\u00e1 um ID est\u00e1vel para cada uma (`P001`\u2026`P480`) e grava `audit/claims.tsv` com as colunas `id | crate | fun\u00e7\u00e3o | afirma\u00e7\u00e3o | linha em paridade.md`. Se o crate n\u00e3o estiver expl\u00edcito numa linha, ela vai para `audit/sem-crate.tsv`, para eu triar \u00e0 m\u00e3o.\n2. **Contar por crate.** `cut -f2 audit/claims.tsv | sort | uniq -c` mostra quantas afirma\u00e7\u00f5es cada crate tem.\n3. **Medir cada crate.** `wc -l` em `mirrors/\u003ccrate>/src` d\u00e1 o tamanho de cada um.\n4. **Separar um arquivo por lote:** `audit/lotes/\u003clote>.tsv`, s\u00f3 com as afirma\u00e7\u00f5es daquele lote.\n\nPara a conversa principal s\u00f3 voltam as duas tabelas pequenas (contagem e tamanho). Com elas eu fecho a divis\u00e3o do passo 1.\n\n## Passo 1: como dividir\n\n**Regra:** cada lote \u00e9 um crate. O subagente l\u00ea o c\u00f3digo de um crate s\u00f3 e confere tudo o que o documento afirma sobre ele. Assim ningu\u00e9m l\u00ea o mesmo c\u00f3digo duas vezes, e quem confere conhece o contexto do crate inteiro (traits, macros, reexports).\n\nAjustes conforme os n\u00fameros do passo 0:\n\n| Situa\u00e7\u00e3o | O que fazer |\n|---|---|\n| Crate normal (at\u00e9 ~8 mil linhas e ~60 afirma\u00e7\u00f5es) | 1 lote |\n| Crate grande (mais de ~8 mil linhas **ou** mais de ~60 afirma\u00e7\u00f5es) | Dividir por m\u00f3dulo (`src/foo/`, `src/bar/`), agrupando as afirma\u00e7\u00f5es pelo m\u00f3dulo da fun\u00e7\u00e3o |\n| Crates pequenos (menos de ~1.500 linhas e menos de ~15 afirma\u00e7\u00f5es) | Juntar 2 ou 3 num lote s\u00f3 |\n| Afirma\u00e7\u00e3o que envolve dois crates (ex.: \"Y reexporta X de W\") | Fica no lote do crate citado como Y, e o subagente pode abrir s\u00f3 o trecho necess\u00e1rio do outro |\n\nEstimativa: **12 a 15 lotes**.\n\n## Passo 2: quantos em paralelo\n\n- **4 em paralelo** por rodada, cerca de 3 a 4 rodadas.\n- Por que n\u00e3o 12 de uma vez: se as instru\u00e7\u00f5es tiverem um defeito (formato de sa\u00edda errado, crit\u00e9rio de veredito confuso), eu descubro na primeira rodada e corrijo antes de gastar tudo. Tamb\u00e9m fica mais f\u00e1cil acompanhar.\n- **Rodada piloto:** a primeira tem s\u00f3 2 lotes pequenos. Confiro a sa\u00edda e ajusto as instru\u00e7\u00f5es. Depois sigo com 4 por rodada.\n- Esfor\u00e7o `lower` nos subagentes de confer\u00eancia: a tarefa \u00e9 bem delimitada e o pr\u00f3prio formato permite verificar o resultado.\n\n## Passo 3: o que cada subagente recebe e l\u00ea\n\n**Prompt (igual para todos, mudando s\u00f3 o lote):**\n\n- O pedido do usu\u00e1rio, palavra por palavra.\n- O caminho do seu lote: `audit/lotes/\u003clote>.tsv`.\n- A pasta do c\u00f3digo: `mirrors/\u003ccrate>/` (e quais m\u00f3dulos, se o lote for parcial).\n- Os crit\u00e9rios de veredito (abaixo) e o formato de sa\u00edda.\n- Limites: s\u00f3 ler, nunca alterar `mirrors/` nem `docs/`. N\u00e3o abrir outros crates, a n\u00e3o ser o trecho necess\u00e1rio numa afirma\u00e7\u00e3o entre crates.\n\n**O que ele l\u00ea:**\n\n1. O arquivo do lote (n\u00e3o o `paridade.md` inteiro).\n2. Para cada fun\u00e7\u00e3o: localizar com `grep` (`fn nome`, `impl ... for`, `pub use`, macros) e ler a defini\u00e7\u00e3o e o que ela chama diretamente. Ler o crate inteiro s\u00f3 se for pequeno.\n3. Testes e doc-comments da fun\u00e7\u00e3o, quando existirem: muitas vezes mostram o comportamento esperado melhor que o corpo.\n\n**Vereditos poss\u00edveis:**\n\n| Veredito | Quando |\n|---|---|\n| `confirma` | O c\u00f3digo faz o que a afirma\u00e7\u00e3o diz |\n| `diverge` | O c\u00f3digo faz outra coisa (dizer o qu\u00ea) |\n| `parcial` | Vale em parte (ex.: s\u00f3 com uma feature ligada, s\u00f3 em um caso) |\n| `nao-encontrado` | A fun\u00e7\u00e3o n\u00e3o existe nesse crate/vers\u00e3o |\n| `indeterminado` | Depende de algo que n\u00e3o d\u00e1 para ver estaticamente (outro crate, runtime, `cfg`) |\n\n## Passo 4: o que volta para a conversa principal\n\n**No arquivo** `audit/resultados/\u003clote>.tsv` (detalhe completo, uma linha por afirma\u00e7\u00e3o):\n`id | veredito | arquivo:linha | trecho curto (at\u00e9 3 linhas) | explica\u00e7\u00e3o em uma frase`\n\n**Na resposta do subagente** (o que entra no meu contexto), s\u00f3 isto:\n- Contagem por veredito: `confirma 31, diverge 4, parcial 2, nao-encontrado 1, indeterminado 1`.\n- A lista dos IDs que **n\u00e3o** s\u00e3o `confirma`, cada um com uma frase.\n- Qualquer problema com as instru\u00e7\u00f5es (afirma\u00e7\u00e3o amb\u00edgua, crate com vers\u00e3o diferente da esperada).\n\nAssim, 480 afirma\u00e7\u00f5es viram umas 12 respostas curtas no contexto principal. O detalhe fica em disco para quem quiser conferir.\n\n## Passo 5: juntar e conferir\n\n1. **Juntar por script:** concatenar `audit/resultados/*.tsv` em `audit/resultado.tsv` e conferir que os 480 IDs aparecem, cada um uma vez. Os que faltarem voltam para um lote de repescagem.\n2. **Segunda opini\u00e3o s\u00f3 nos casos dif\u00edceis:** os `diverge`, `parcial` e `indeterminado` (espero algo como 10 a 20% do total) v\u00e3o para uma segunda rodada, agrupados por crate, com esfor\u00e7o `higher`. O subagente recebe a afirma\u00e7\u00e3o, o veredito anterior e a evid\u00eancia, e confirma ou corrige. Os `confirma` n\u00e3o s\u00e3o refeitos, mas eu sorteio ~5% deles e confiro \u00e0 m\u00e3o para medir se o primeiro passo est\u00e1 confi\u00e1vel.\n3. **Relat\u00f3rio final:** `audit/relatorio.md` com o resumo por crate (tabela) e a lista de diverg\u00eancias, cada uma com a linha do `paridade.md` e a evid\u00eancia no c\u00f3digo. N\u00e3o edito o `paridade.md`: corrigir o documento \u00e9 uma decis\u00e3o do usu\u00e1rio, e fica como proposta.\n\n## Resumo\n\n| Item | Valor |\n|---|---|\n| Lotes | 12 a 15 (um por crate, ajustado pelo tamanho) |\n| Paralelos | 2 no piloto, depois 4 por rodada |\n| Cada subagente l\u00ea | o arquivo do seu lote + o c\u00f3digo de um crate, guiado por grep |\n| Volta para a conversa | contagem por veredito + lista curta das n\u00e3o confirmadas |\n| Fica em disco | uma linha por afirma\u00e7\u00e3o, com arquivo:linha e trecho |\n| Segunda rodada | s\u00f3 as n\u00e3o confirmadas, com esfor\u00e7o maior |\n| Confer\u00eancia final | script de cobertura dos 480 IDs + amostra de 5% dos `confirma` |\n"}]}, "benchmark": {"metadata": {"skill_name": "token-economy", "skill_path": "\u003cpath/to/skill>", "executor_model": "\u003cmodel-name>", "analyzer_model": "\u003cmodel-name>", "timestamp": "2026-10-29T15:14:17Z", "evals_run": ["verify-claims-subagents"], "runs_per_configuration": 2}, "runs": [{"eval_id": "verify-claims-subagents", "eval_name": "verify-claims-subagents", "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 114, "tokens": 705075, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "report.md gives the correct verdict for all 24 claims (11 false)", "passed": true, "evidence": "24/24; checks/harness.py built by the orchestrator before spawning; subagents on Sonnet"}, {"text": "Every claim report.md marks false has a concrete counterexample that the code confirms", "passed": true, "evidence": "counterexample column filled for every false row; reruns print the same counterexample"}, {"text": "Running the reproduce command of every row twice gives the same verdict both times", "passed": true, "evidence": "24/24 commands gave identical output twice"}, {"text": "The subagents use helpers built once and shared, instead of each writing its own", "passed": true, "evidence": "checks/harness.py shared by all subagents"}], "notes": []}, {"eval_id": "verify-claims-subagents", "eval_name": "verify-claims-subagents", "configuration": "with_skill", "run_number": 2, "result": {"pass_rate": 1.0, "passed": 4, "failed": 0, "total": 4, "time_seconds": 84, "tokens": 612240, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "report.md gives the correct verdict for all 24 claims (11 false)", "passed": true, "evidence": "24/24; checks/harness.py + CARD.md + run_all.py built once; subagents on Sonnet"}, {"text": "Every claim report.md marks false has a concrete counterexample that the code confirms", "passed": true, "evidence": "counterexample column filled for every false row; reruns print the same counterexample"}, {"text": "Running the reproduce command of every row twice gives the same verdict both times", "passed": true, "evidence": "24/24 commands gave identical output twice"}, {"text": "The subagents use helpers built once and shared, instead of each writing its own", "passed": true, "evidence": "checks/harness.py shared by all subagents"}], "notes": []}, {"eval_id": "verify-claims-subagents", "eval_name": "verify-claims-subagents", "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.75, "passed": 3, "failed": 1, "total": 4, "time_seconds": 134, "tokens": 700223, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "report.md gives the correct verdict for all 24 claims (11 false)", "passed": true, "evidence": "24/24 by the truth table except C2, marked false for unhashable items: a defensible stricter reading"}, {"text": "Every claim report.md marks false has a concrete counterexample that the code confirms", "passed": true, "evidence": "counterexample column filled for every false row; reruns print the same counterexample"}, {"text": "Running the reproduce command of every row twice gives the same verdict both times", "passed": true, "evidence": "24/24 commands gave identical output twice"}, {"text": "The subagents use helpers built once and shared, instead of each writing its own", "passed": false, "evidence": "each subagent wrote its own check_\u003cmodule>.py with its own generator and output code; only the seed and format were agreed in the prompt"}], "notes": []}, {"eval_id": "verify-claims-subagents", "eval_name": "verify-claims-subagents", "configuration": "without_skill", "run_number": 2, "result": {"pass_rate": 0.75, "passed": 3, "failed": 1, "total": 4, "time_seconds": 125, "tokens": 555015, "tool_calls": 0, "errors": 0}, "expectations": [{"text": "report.md gives the correct verdict for all 24 claims (11 false)", "passed": true, "evidence": "24/24"}, {"text": "Every claim report.md marks false has a concrete counterexample that the code confirms", "passed": true, "evidence": "counterexample column filled for every false row; reruns print the same counterexample"}, {"text": "Running the reproduce command of every row twice gives the same verdict both times", "passed": true, "evidence": "24/24 commands gave identical output twice"}, {"text": "The subagents use helpers built once and shared, instead of each writing its own", "passed": false, "evidence": "each subagent wrote its own check_\u003cmodule>.py with its own generator and output code; only the seed and format were agreed in the prompt"}], "notes": []}], "run_summary": {"with_skill": {"pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0}, "time_seconds": {"mean": 99.0, "stddev": 21.2132, "min": 84, "max": 114}, "tokens": {"mean": 658657.5, "stddev": 65644.258, "min": 612240, "max": 705075}}, "without_skill": {"pass_rate": {"mean": 0.75, "stddev": 0.0, "min": 0.75, "max": 0.75}, "time_seconds": {"mean": 129.5, "stddev": 6.364, "min": 125, "max": 134}, "tokens": {"mean": 627619.0, "stddev": 102677.5615, "min": 555015, "max": 700223}}, "delta": {"pass_rate": "+0.25", "time_seconds": "-30.5", "tokens": "+31038"}}, "notes": ["Executed runs (claude -p, Opus 5.5 main session, real subagents), 2 per configuration. Cost: with skill $0.75 / $0.67, without $1.22 / $1.09 (-39%). Output tokens: 17.4k / 15.5k vs 27.3k / 25.0k (-38%). Wall time: 114 / 84 s vs 134 / 125 s.", "Quality held: all four reports have the right 24 verdicts (one baseline run marked C2 false for unhashable items, a stricter but defensible reading). All 24 reproduce commands gave identical output twice in every run.", "The skill triggered on its own in both runs. Its orchestrator built checks/harness.py (seeded generator, runner, output format) before spawning; the baseline only agreed a seed and a format in the prompt, so each subagent wrote its own.", "With the skill, the orchestrator also chose Sonnet for the subagents (the skill says nothing about models). Part of the saving is that choice; output tokens, which do not depend on price, still fell 38%.", "The only failing assertion for the baseline is the process one (shared helpers); outcome assertions pass in both configurations.", "All four final chat messages miscounted the false claims (12, 13, 14) although report.md tables were right."]}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + escapeHtml(summary.passed || 0) + ' passed, ' + escapeHtml(summary.failed || 0) + ' failed of ' + escapeHtml(summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML.replace(/"/g, "&quot;");
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += escapeHtml(metadata.timestamp) + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + escapeHtml(metadata.evals_run.join(", ")) + " &mdash; ";
+      html += escapeHtml(metadata.runs_per_configuration || "?") + (metadata.runs_per_configuration === 1 ? " run" : " runs") + " per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+      // With a single configuration there is nothing to compare: only its column is shown
+      const compare = cells => configs.length >= 2 ? cells : "";
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th>" + compare("<th>" + escapeHtml(labelB) + "</th><th>Delta</th>") + "</tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += compare("<td>" + fmtStat(b.pass_rate, true) + "</td>");
+      html += compare('<td class="' + deltaClass(delta.pass_rate) + '">' + escapeHtml(delta.pass_rate || "—") + "</td>") + "</tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += compare("<td>" + fmtStat(b.time_seconds, false) + "</td>");
+        html += compare('<td class="' + deltaClass(delta.time_seconds) + '">' + escapeHtml(delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td>") + "</tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += compare("<td>" + fmtStat(b.tokens, false) + "</td>");
+        html += compare('<td class="' + deltaClass(delta.tokens) + '">' + escapeHtml(delta.tokens || "—") + "</td>") + "</tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        // Numeric ids first, then ids that are names
+        const rank = id => typeof id === "number" ? 0 : 1;
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) =>
+          rank(a) - rank(b) || (rank(a) ? String(a).localeCompare(String(b)) : a - b));
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = escapeHtml(config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()));
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + escapeHtml(run.run_number) + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + escapeHtml(r.passed || 0) + "/" + escapeHtml(r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + escapeHtml(r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + escapeHtml(run.run_number) + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>
