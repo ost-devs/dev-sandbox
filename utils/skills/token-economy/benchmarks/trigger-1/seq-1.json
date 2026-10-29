@@ -1,0 +1,66 @@
+[
+ {
+  "i": 0,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash",
+   "Bash",
+   "Bash",
+   "Bash",
+   "Bash",
+   "Bash",
+   "Read",
+   "Bash"
+  ],
+  "cost": 0.20357340000000002,
+  "q": "preciso conferir se os 40 arquivos de docs/claude-code ainda"
+ },
+ {
+  "i": 1,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash"
+  ],
+  "cost": 0.1467838,
+  "q": "ontem bati no limite de uso do plano max no meio da migração"
+ },
+ {
+  "i": 4,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash",
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.147526,
+  "q": "essa sessão tá ficando cara demais, já foram uns 400k tokens"
+ },
+ {
+  "i": 7,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash",
+   "Bash",
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.14659999999999998,
+  "q": "manda 5 agentes revisarem esse diff de 3 mil linhas em paral"
+ },
+ {
+  "i": 13,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Bash",
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.1362152,
+  "q": "o build do next tá gerando um bundle de 4MB, quero reduzir o"
+ }
+]

@@ -1,0 +1,304 @@
+[
+ {
+  "i": 2,
+  "should": true,
+  "tools": [
+   "Bash",
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.1039032,
+  "q": "Run a parity audit of our Rust port against the original C l"
+ },
+ {
+  "i": 3,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.1088042,
+  "q": "tenho 320 issues abertas no github (exportei pra issues.json"
+ },
+ {
+  "i": 5,
+  "should": true,
+  "tools": [
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.106805,
+  "q": "quero traduzir todos os 95 .md de docs/ pra inglês mantendo "
+ },
+ {
+  "i": 6,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash"
+  ],
+  "cost": 0.11521959999999999,
+  "q": "vou deixar um /loop rodando a noite toda revisando cada PR n"
+ },
+ {
+  "i": 8,
+  "should": true,
+  "tools": [
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.100137,
+  "q": "can you cut the cost of our nightly eval job? it spawns clau"
+ },
+ {
+  "i": 9,
+  "should": true,
+  "tools": [
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.103851,
+  "q": "preciso gerar 200 exemplos de entrada pra testar o parser de"
+ },
+ {
+  "i": 10,
+  "should": false,
+  "tools": [
+   "Skill:claude-api",
+   "ToolSearch"
+  ],
+  "cost": 0.0976272,
+  "q": "quanto custa o milhão de tokens de entrada e saída do opus 5"
+ },
+ {
+  "i": 11,
+  "should": false,
+  "tools": [
+   "Skill:claude-api",
+   "ToolSearch"
+  ],
+  "cost": 0.09830760000000001,
+  "q": "meu script python que chama a API da anthropic tá gastando m"
+ },
+ {
+  "i": 12,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Read",
+   "Bash"
+  ],
+  "cost": 0.10269980000000001,
+  "q": "configura a statusline pra mostrar o custo da sessão e o mod"
+ },
+ {
+  "i": 14,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Read"
+  ],
+  "cost": 0.1073336,
+  "q": "explica o que é token e por que o mesmo texto em português g"
+ },
+ {
+  "i": 15,
+  "should": false,
+  "tools": [
+   "Bash"
+  ],
+  "cost": 0.102047,
+  "q": "renomeia a função getUserData pra fetchUser em src/api/users"
+ },
+ {
+  "i": 16,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.0977262,
+  "q": "a query de relatório mensal no postgres demora 40s, já tem í"
+ },
+ {
+  "i": 17,
+  "should": false,
+  "tools": [
+   "Bash"
+  ],
+  "cost": 0.12075840000000002,
+  "q": "quero escrever uma skill nova pra padronizar mensagens de co"
+ },
+ {
+  "i": 18,
+  "should": false,
+  "tools": [
+   "Read",
+   "Bash"
+  ],
+  "cost": 0.1524944,
+  "q": "lê o docs/guias/branches.md e me diz se tá claro pra quem nu"
+ },
+ {
+  "i": 19,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.10316639999999999,
+  "q": "implementa um contador de tokens no nosso app de chat: antes"
+ },
+ {
+  "i": 2,
+  "should": true,
+  "tools": [
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.0769418,
+  "q": "Run a parity audit of our Rust port against the original C l"
+ },
+ {
+  "i": 3,
+  "should": true,
+  "tools": [
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.10041520000000001,
+  "q": "tenho 320 issues abertas no github (exportei pra issues.json"
+ },
+ {
+  "i": 5,
+  "should": true,
+  "tools": [
+   "Bash"
+  ],
+  "cost": 0.1196894,
+  "q": "quero traduzir todos os 95 .md de docs/ pra inglês mantendo "
+ },
+ {
+  "i": 6,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash"
+  ],
+  "cost": 0.1266334,
+  "q": "vou deixar um /loop rodando a noite toda revisando cada PR n"
+ },
+ {
+  "i": 8,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.12228140000000001,
+  "q": "can you cut the cost of our nightly eval job? it spawns clau"
+ },
+ {
+  "i": 9,
+  "should": true,
+  "tools": [
+   "Skill:token-economy",
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.0912936,
+  "q": "preciso gerar 200 exemplos de entrada pra testar o parser de"
+ },
+ {
+  "i": 10,
+  "should": false,
+  "tools": [
+   "Skill:claude-api",
+   "ToolSearch"
+  ],
+  "cost": 0.07334979999999999,
+  "q": "quanto custa o milhão de tokens de entrada e saída do opus 5"
+ },
+ {
+  "i": 11,
+  "should": false,
+  "tools": [
+   "Skill:claude-api",
+   "ToolSearch"
+  ],
+  "cost": 0.0283848,
+  "q": "meu script python que chama a API da anthropic tá gastando m"
+ },
+ {
+  "i": 12,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Read",
+   "Bash"
+  ],
+  "cost": 0.0812312,
+  "q": "configura a statusline pra mostrar o custo da sessão e o mod"
+ },
+ {
+  "i": 14,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Read"
+  ],
+  "cost": 0.08916260000000001,
+  "q": "explica o que é token e por que o mesmo texto em português g"
+ },
+ {
+  "i": 15,
+  "should": false,
+  "tools": [
+   "Bash"
+  ],
+  "cost": 0.0201876,
+  "q": "renomeia a função getUserData pra fetchUser em src/api/users"
+ },
+ {
+  "i": 16,
+  "should": false,
+  "tools": [
+   "Read",
+   "Bash"
+  ],
+  "cost": 0.07298,
+  "q": "a query de relatório mensal no postgres demora 40s, já tem í"
+ },
+ {
+  "i": 17,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Read"
+  ],
+  "cost": 0.022306400000000004,
+  "q": "quero escrever uma skill nova pra padronizar mensagens de co"
+ },
+ {
+  "i": 18,
+  "should": false,
+  "tools": [
+   "Read",
+   "Bash"
+  ],
+  "cost": 0.1069842,
+  "q": "lê o docs/guias/branches.md e me diz se tá claro pra quem nu"
+ },
+ {
+  "i": 19,
+  "should": false,
+  "tools": [
+   "Bash",
+   "Bash"
+  ],
+  "cost": 0.0802564,
+  "q": "implementa um contador de tokens no nosso app de chat: antes"
+ }
+]
