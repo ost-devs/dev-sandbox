@@ -139,6 +139,13 @@ class GitMirrors(Base):
         self.run_cli('--list')
         self.assertEqual((self.proj / '.gitignore').read_text().count('/mirrors/*'), 1)
 
+    def test_gitignore_adds_only_missing_lines(self):
+        (self.proj / '.gitignore').write_text('node_modules/\n/mirrors/*\n')
+        self.run_cli('--list')
+        text = (self.proj / '.gitignore').read_text()
+        self.assertEqual(text.count('/mirrors/*'), 1)
+        self.assertIn('!/mirrors/mirrors.json', text)
+
     def test_gitignore_override_warns(self):
         git('init', '-q', cwd=self.proj)
         (self.proj / '.gitignore').write_text('mirrors/\n')

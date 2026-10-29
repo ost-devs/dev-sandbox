@@ -89,9 +89,10 @@ def ensure_gitignore():
     gi = ROOT / '.gitignore'
     text = gi.read_text() if gi.exists() else ''
     text = text if text.strip() else ''
-    if not all(l in text.splitlines() for l in GITIGNORE):
+    missing = [l for l in GITIGNORE if l not in text.splitlines()]
+    if missing:   # only the lines not there yet: a run never duplicates one
         gi.write_text(text + ('' if not text else '\n' if text.endswith('\n') else '\n\n')
-                      + '# mirrors skill: copies ignored, manifest versioned\n' + '\n'.join(GITIGNORE) + '\n')
+                      + '# mirrors skill: copies ignored, manifest versioned\n' + '\n'.join(missing) + '\n')
         print('updated  .gitignore (commit it)')
     if git and (not ignored('mirrors/x/y') or ignored('mirrors/mirrors.json')):
         print(f'warning  .gitignore: another rule overrides {" and ".join(GITIGNORE)} (e.g. "mirrors/"); fix it by hand')
