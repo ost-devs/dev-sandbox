@@ -8,7 +8,7 @@ dentro ou fora do container, em qualquer repositório.
 | [`montar-consultor`](./skills/montar-consultor/SKILL.md) | Skill | Montar os arquivos que fazem uma conversa nova já saber o projeto | [Guia](../docs/claude-code/montar-consultor.md) |
 | [`estudar`](./skills/estudar/SKILL.md) | Skill | Transformar artigos da web (um, uma lista ou uma cadeia) em artigos do projeto, conferindo números e versões na fonte oficial. Precisa da `mirrors` | [Guia](../docs/claude-code/base-de-conhecimento.md#escrever-a-partir-de-artigos-estudar) |
 | [`mirrors`](./skills/mirrors/SKILL.md) | Skill | Guardar cópias somente leitura de repositórios de fora (docs, código de referência) | [Guia](../docs/claude-code/mirrors.md) |
-| [`token-economy`](./skills/token-economy/SKILL.md) | Skill | Chegar ao mesmo resultado gastando menos tokens: evitar trabalho repetido, medir antes de dividir, sem cortar o que garante a qualidade | Instale e o Claude usa ao planejar tarefas grandes |
+| [`token-economy`](./skills/token-economy/SKILL.md) | Skill | Chegar ao mesmo resultado gastando menos tokens: evitar trabalho repetido, medir antes de dividir, sem cortar o que garante a qualidade | [Guia](../docs/claude-code/economia-de-tokens.md) |
 | [`share-memories`](./skills/share-memories/SKILL.md) | Skill + hooks | Levar memórias para um grupo de projetos (todos, uma lista, uma categoria) e mantê-las sincronizadas. Instala os próprios hooks (`/share-memories install`) | [Guia](../docs/claude-code/compartilhar-memorias.md) |
 
 ## Instalar

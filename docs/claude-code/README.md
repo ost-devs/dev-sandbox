@@ -23,6 +23,8 @@ proveito dele. Valem também, em boa parte, fora do Docker.
 | [Memórias que se conectam](./memorias-como-sinapses.md) | (Especulativo) Se a memória do Claude Code está virando um grafo tipo Obsidian, ou sinapses; como ver o grafo hoje |
 | [Por baixo dos panos](./por-baixo-dos-panos/README.md) | Como o Claude Code funciona por dentro: janela de contexto, o que carrega e quando, reenvio a cada pedido, cache, compactação, subagentes |
 | [Modelo e esforço](./modelo-e-esforco.md) | Qual modelo e qual nível de esforço usar, com um diário de campo para comparar com a prática (esboço) |
+| [Economia de tokens](./economia-de-tokens.md) | O que a skill `token-economy` faz, quando entra, como instalar e ajustar ao projeto |
+| [Como a `token-economy` foi feita e testada](./economia-de-tokens-o-experimento.md) | De onde veio a skill, os três testes (planos, execução, acionamento), os números e o que eles não provam |
 
 Relacionados: [backup e git](../guias/backup-e-git.md) (como não perder
 `~/.claude`) e [sessões paralelas](../guias/portas-e-sessoes-paralelas.md)
