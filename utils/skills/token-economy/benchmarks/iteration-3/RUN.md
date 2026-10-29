@@ -30,3 +30,12 @@ Per case, cost metric = units per run. `ratio = mean(with_skill) / mean(without_
 ## Pilot
 
 See `pilot/`. Its runs are not part of the batch.
+
+## Next steps (for a fresh session)
+
+1. Run the smaller batch (about US$ 21 on Sonnet, 45-60 min), from any terminal; no session needed:
+   `WORK_ROOT=~/.cache/token-economy-runs bash utils/skills/token-economy/benchmarks/harness/small_batch.sh`
+   It stops at the first run that ends in a real error (usage limit, crash) and renames it `*.failed-*`; running it again resumes.
+2. Analyse: `compare.json` (verdict per case by the rule above), `summary.txt` (one line per run), `*/*/*/auto_grade.json` (grade details). Report cost and quality together; read a few `outputs/report.md` before trusting a grade.
+3. Pilot facts already known (`pilot/`, n=1 per config): the skill triggered in the claims cases only (ratios 0.90 with no subagents, 0.72 audit with 8 subagents, 0.79 verify-claims) and not in parser-diff (1.10) or triage-issues (0.91), which therefore measure run-to-run noise (about ±10%). Without "um por módulo" in the prompt, Sonnet spawned no subagents.
+4. Not in the smaller batch: parser-diff and triage-issues (5+5 each, about US$ 2.4), only if a noise estimate with more runs is wanted.
