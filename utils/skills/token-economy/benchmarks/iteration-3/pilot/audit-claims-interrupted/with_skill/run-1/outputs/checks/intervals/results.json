@@ -1,0 +1,97 @@
+[
+ {
+  "id": "I01",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I02",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I03",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I04",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I05",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I06",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I07",
+  "veredito": "falsa",
+  "contraexemplo": "-> True, expected False"
+ },
+ {
+  "id": "I08",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I09",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I10",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I11",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I12",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I13",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I14",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I15",
+  "veredito": "falsa",
+  "contraexemplo": "exceção: IndexError('list index out of range')"
+ },
+ {
+  "id": "I16",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I17",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "I18",
+  "veredito": "falsa",
+  "contraexemplo": "a=(0, 5), x=5: contains=True, overlaps(a,(5, 6))=False"
+ },
+ {
+  "id": "I19",
+  "veredito": "falsa",
+  "contraexemplo": "-> -2, expected 0"
+ }
+]

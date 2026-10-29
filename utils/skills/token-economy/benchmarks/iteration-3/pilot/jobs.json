@@ -1,0 +1,42 @@
+[
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "with_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "without_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "parser-diff",
+  "config": "with_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "parser-diff",
+  "config": "without_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "triage-issues",
+  "config": "with_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "triage-issues",
+  "config": "without_skill",
+  "run": "run-1"
+ }
+]

@@ -1,0 +1,97 @@
+[
+ {
+  "id": "D01",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D02",
+  "veredito": "falsa",
+  "contraexemplo": "2000-02-29 -> 2001-02-28"
+ },
+ {
+  "id": "D03",
+  "veredito": "falsa",
+  "contraexemplo": "2000-01-30 -> 2000-01-29"
+ },
+ {
+  "id": "D04",
+  "veredito": "falsa",
+  "contraexemplo": "(2024-01-02, 2024-01-01) -> -1"
+ },
+ {
+  "id": "D05",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D06",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D07",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D08",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D09",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D10",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D11",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D12",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D13",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D14",
+  "veredito": "falsa",
+  "contraexemplo": "iso_week(2021-01-01) -> 53"
+ },
+ {
+  "id": "D15",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D16",
+  "veredito": "falsa",
+  "contraexemplo": "parse_br('1/2/2024') -> datetime.date(2024, 2, 1) (no ValueError)"
+ },
+ {
+  "id": "D17",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D18",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "D19",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ }
+]

@@ -1,0 +1,97 @@
+[
+ {
+  "id": "L01",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L02",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L03",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L04",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L05",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L06",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L07",
+  "veredito": "falsa",
+  "contraexemplo": "flatten([[1, [2]], [3]]) -> [1, [2], 3]"
+ },
+ {
+  "id": "L08",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L09",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L10",
+  "veredito": "falsa",
+  "contraexemplo": "top_n([3, 2, 1], -1) -> [3, 2]"
+ },
+ {
+  "id": "L11",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L12",
+  "veredito": "falsa",
+  "contraexemplo": "([-1, 0, 1], 4) -> ([-1, 0, 1], [0, 1, -1])"
+ },
+ {
+  "id": "L13",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L14",
+  "veredito": "falsa",
+  "contraexemplo": "interleave([1, 2, 3], [9]) -> [1, 9]"
+ },
+ {
+  "id": "L15",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L16",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L17",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L18",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "L19",
+  "veredito": "falsa",
+  "contraexemplo": "([],) -> []"
+ }
+]

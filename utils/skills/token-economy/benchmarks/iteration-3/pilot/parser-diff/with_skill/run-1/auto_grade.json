@@ -1,0 +1,14 @@
+{
+ "diff_lines": 158,
+ "kinds_found": [
+  "escape",
+  "glued",
+  "spaces",
+  "trailing_empty"
+ ],
+ "missing": [],
+ "not_real": 0,
+ "cmd": "python3 -I gen_diffs.py diffs.jsonl diff-report.md",
+ "stable": true,
+ "same_as_submitted": true
+}

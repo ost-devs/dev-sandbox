@@ -2,6 +2,9 @@
 
     python3 -I grade_claims.py <run-dir> <truth.json>
 
+truth.json may list "ambiguous" ids next to the verdicts: either verdict is right for
+those (verify-claims-subagents C2: false for unhashable items, true for hashable ones).
+
 Reads <run-dir>/outputs/report.md, compares the verdicts with truth.json, checks that
 false rows have a counterexample, runs each distinct reproduce command twice from
 outputs/ and compares the two outputs. Writes <run-dir>/grading.json (skill-creator
@@ -58,10 +61,12 @@ def run(cmd, cwd):
 
 def main():
     run_dir, truth = Path(sys.argv[1]), json.loads(Path(sys.argv[2]).read_text())
+    ambiguous = set(truth.pop("ambiguous", []))
     out = run_dir / "outputs"
     report = out / "report.md"
     rows = parse_report(report.read_text(), set(truth)) if report.exists() else {}
-    wrong = sorted(i for i in truth if i not in rows or rows[i]["verdict"] != truth[i])
+    wrong = sorted(i for i in truth if i not in rows or (rows[i]["verdict"] != truth[i] and
+                                                         not (i in ambiguous and rows[i]["verdict"] is not None)))
     missing = sorted(i for i in truth if i not in rows)
     no_cex = sorted(i for i, r in rows.items() if r["verdict"] is False and
                     (not r["counterexample"] or r["counterexample"] in ("-", "—", "")))

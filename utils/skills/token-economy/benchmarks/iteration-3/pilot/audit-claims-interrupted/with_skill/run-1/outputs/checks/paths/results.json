@@ -1,0 +1,97 @@
+[
+ {
+  "id": "P01",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P02",
+  "veredito": "falsa",
+  "contraexemplo": "join('/usr','bin') -> 'usr/bin', expected '/usr/bin'"
+ },
+ {
+  "id": "P03",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P04",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P05",
+  "veredito": "falsa",
+  "contraexemplo": "ext('dir.d/arquivo') -> 'd/arquivo', expected ''"
+ },
+ {
+  "id": "P06",
+  "veredito": "falsa",
+  "contraexemplo": "ext('.bashrc') -> 'bashrc', expected ''"
+ },
+ {
+  "id": "P07",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P08",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P09",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P10",
+  "veredito": "falsa",
+  "contraexemplo": "normalize('../x') -> 'x', expected '../x'"
+ },
+ {
+  "id": "P11",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P12",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P13",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P14",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P15",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P16",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P17",
+  "veredito": "falsa",
+  "contraexemplo": "parent('/a') -> '', expected '/'"
+ },
+ {
+  "id": "P18",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "P19",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ }
+]

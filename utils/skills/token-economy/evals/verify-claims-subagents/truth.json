@@ -22,5 +22,8 @@
  "C3": false,
  "C4": false,
  "C5": false,
- "C6": true
+ "C6": true,
+ "ambiguous": [
+  "C2"
+ ]
 }

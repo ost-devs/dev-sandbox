@@ -1,0 +1,55 @@
+{
+ "case": "audit-claims-interrupted",
+ "config": "with_skill",
+ "model": "claude-sonnet-5-5",
+ "session_id": "662b3444-35b8-42c1-90c3-716163ced3eb",
+ "work_dir": "/tmp/dev-home/.cache/claude-tmp/claude-1000/-dev-sandbox/2cadecbd-c5dd-45b6-9a50-0907519cf674/scratchpad/runs/audit-claims-interrupted-with_skill-571ea2c3",
+ "interrupt_units": null,
+ "phases": [
+  {
+   "seconds": 144.0,
+   "exit": 0,
+   "killed": false,
+   "reported_cost_usd": 0.39579559999999997,
+   "subtype": "success",
+   "usage_after": {
+    "units": 180756,
+    "tokens": 352580,
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 42226,
+    "cache_read_input_tokens": 290556,
+    "output_tokens": 19780,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 18,
+      "cache_creation_input_tokens": 42226,
+      "cache_read_input_tokens": 290556,
+      "output_tokens": 19780
+     }
+    },
+    "messages": 9
+   }
+  }
+ ],
+ "usage": {
+  "units": 180756,
+  "tokens": 352580,
+  "input_tokens": 18,
+  "cache_creation_input_tokens": 42226,
+  "cache_read_input_tokens": 290556,
+  "output_tokens": 19780,
+  "by_model": {
+   "claude-sonnet-5-5": {
+    "input_tokens": 18,
+    "cache_creation_input_tokens": 42226,
+    "cache_read_input_tokens": 290556,
+    "output_tokens": 19780
+   }
+  },
+  "messages": 9
+ },
+ "skill_calls": [
+  "token-economy"
+ ],
+ "subagents": 0
+}

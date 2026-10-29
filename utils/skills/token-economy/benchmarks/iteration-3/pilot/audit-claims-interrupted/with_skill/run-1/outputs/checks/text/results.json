@@ -1,0 +1,97 @@
+[
+ {
+  "id": "T01",
+  "veredito": "falsa",
+  "contraexemplo": "'caf-noir' != 'cafe-noir'"
+ },
+ {
+  "id": "T02",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T03",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T04",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T05",
+  "veredito": "falsa",
+  "contraexemplo": "('a',0) -> '...'"
+ },
+ {
+  "id": "T06",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T07",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T08",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T09",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T10",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T11",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T12",
+  "veredito": "falsa",
+  "contraexemplo": "'ß' -> 'SS'"
+ },
+ {
+  "id": "T13",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T14",
+  "veredito": "falsa",
+  "contraexemplo": "'ø' != 'o'"
+ },
+ {
+  "id": "T15",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T16",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T17",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T18",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "T19",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ }
+]

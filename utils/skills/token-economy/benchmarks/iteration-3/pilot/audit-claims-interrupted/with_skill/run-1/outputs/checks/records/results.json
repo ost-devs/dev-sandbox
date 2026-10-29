@@ -1,0 +1,97 @@
+[
+ {
+  "id": "R01",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R02",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R03",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R04",
+  "veredito": "falsa",
+  "contraexemplo": "exceção: ValueError('dictionary update sequence element #1 has length 1; 2 is required')"
+ },
+ {
+  "id": "R05",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R06",
+  "veredito": "falsa",
+  "contraexemplo": "{'a': 'b;c'} -> exception ValueError('dictionary update sequence element #1 has length 1; 2 is required')"
+ },
+ {
+  "id": "R07",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R08",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R09",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R10",
+  "veredito": "falsa",
+  "contraexemplo": "{'a': 1, 'b': 2},{'a': 'b'} -> {'b': 2}"
+ },
+ {
+  "id": "R11",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R12",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R13",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R14",
+  "veredito": "falsa",
+  "contraexemplo": "[{'n': 1}, {'m': 2}] -> exception KeyError('n')"
+ },
+ {
+  "id": "R15",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R16",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R17",
+  "veredito": "falsa",
+  "contraexemplo": "-> None"
+ },
+ {
+  "id": "R18",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "R19",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ }
+]

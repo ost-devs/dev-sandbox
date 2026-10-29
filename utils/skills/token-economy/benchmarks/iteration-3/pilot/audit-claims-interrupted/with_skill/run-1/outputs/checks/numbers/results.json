@@ -1,0 +1,97 @@
+[
+ {
+  "id": "N01",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N02",
+  "veredito": "falsa",
+  "contraexemplo": "clamp(5,10,0) -> 10, expected 0"
+ },
+ {
+  "id": "N03",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N04",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N05",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N06",
+  "veredito": "falsa",
+  "contraexemplo": "median([]) -> ('EXC', \"IndexError('list index out of range')\")"
+ },
+ {
+  "id": "N07",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N08",
+  "veredito": "falsa",
+  "contraexemplo": "round_half(2.5) -> 2, expected 3"
+ },
+ {
+  "id": "N09",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N10",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N11",
+  "veredito": "falsa",
+  "contraexemplo": "percent(0, 0) -> ('EXC', \"ZeroDivisionError('division by zero')\")"
+ },
+ {
+  "id": "N12",
+  "veredito": "falsa",
+  "contraexemplo": "is_prime(4) -> True, expected False"
+ },
+ {
+  "id": "N13",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N14",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N15",
+  "veredito": "falsa",
+  "contraexemplo": "gcd(-50,1)=1 vs gcd(1,-50)=-1"
+ },
+ {
+  "id": "N16",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N17",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N18",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "N19",
+  "veredito": "falsa",
+  "contraexemplo": "digits_sum(-1) -> ('EXC', 'ValueError(\"invalid literal for int() with base 10: \\'-\\'\")')"
+ }
+]

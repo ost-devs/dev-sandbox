@@ -1,0 +1,53 @@
+{
+ "case": "parser-diff",
+ "config": "with_skill",
+ "model": "claude-sonnet-5-5",
+ "session_id": "5c54b082-6e7c-4aca-a900-d5b13805b6af",
+ "work_dir": "/tmp/dev-home/.cache/claude-tmp/claude-1000/-dev-sandbox/2cadecbd-c5dd-45b6-9a50-0907519cf674/scratchpad/runs/parser-diff-with_skill-f6fcad3b",
+ "interrupt_units": null,
+ "phases": [
+  {
+   "seconds": 56.0,
+   "exit": 0,
+   "killed": false,
+   "reported_cost_usd": 0.1582059,
+   "subtype": "success",
+   "usage_after": {
+    "units": 66205,
+    "tokens": 105784,
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 22352,
+    "cache_read_input_tokens": 77319,
+    "output_tokens": 6105,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 8,
+      "cache_creation_input_tokens": 22352,
+      "cache_read_input_tokens": 77319,
+      "output_tokens": 6105
+     }
+    },
+    "messages": 4
+   }
+  }
+ ],
+ "usage": {
+  "units": 66205,
+  "tokens": 105784,
+  "input_tokens": 8,
+  "cache_creation_input_tokens": 22352,
+  "cache_read_input_tokens": 77319,
+  "output_tokens": 6105,
+  "by_model": {
+   "claude-sonnet-5-5": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 22352,
+    "cache_read_input_tokens": 77319,
+    "output_tokens": 6105
+   }
+  },
+  "messages": 4
+ },
+ "skill_calls": [],
+ "subagents": 0
+}

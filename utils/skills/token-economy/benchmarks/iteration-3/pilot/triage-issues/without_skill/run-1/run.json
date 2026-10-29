@@ -1,0 +1,53 @@
+{
+ "case": "triage-issues",
+ "config": "without_skill",
+ "model": "claude-sonnet-5-5",
+ "session_id": "d3f8481d-a36c-4386-9716-47ded2d19fc0",
+ "work_dir": "/tmp/dev-home/.cache/claude-tmp/claude-1000/-dev-sandbox/2cadecbd-c5dd-45b6-9a50-0907519cf674/scratchpad/runs/triage-issues-without_skill-137b3e7d",
+ "interrupt_units": null,
+ "phases": [
+  {
+   "seconds": 26.0,
+   "exit": 0,
+   "killed": false,
+   "reported_cost_usd": 0.0874926,
+   "subtype": "success",
+   "usage_after": {
+    "units": 36490,
+    "tokens": 88789,
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 14480,
+    "cache_read_input_tokens": 72066,
+    "output_tokens": 2235,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 8,
+      "cache_creation_input_tokens": 14480,
+      "cache_read_input_tokens": 72066,
+      "output_tokens": 2235
+     }
+    },
+    "messages": 4
+   }
+  }
+ ],
+ "usage": {
+  "units": 36490,
+  "tokens": 88789,
+  "input_tokens": 8,
+  "cache_creation_input_tokens": 14480,
+  "cache_read_input_tokens": 72066,
+  "output_tokens": 2235,
+  "by_model": {
+   "claude-sonnet-5-5": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 14480,
+    "cache_read_input_tokens": 72066,
+    "output_tokens": 2235
+   }
+  },
+  "messages": 4
+ },
+ "skill_calls": [],
+ "subagents": 0
+}

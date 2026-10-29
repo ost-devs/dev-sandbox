@@ -1,0 +1,25 @@
+{
+ "expectations": [
+  {
+   "text": "triage.csv gives the type of truth.json for at least 78 of the 80 issues",
+   "passed": true,
+   "evidence": "80/80; wrong: []"
+  },
+  {
+   "text": "triage.csv marks all 12 duplicates of truth.json with the right original",
+   "passed": true,
+   "evidence": "12/12"
+  },
+  {
+   "text": "triage.csv marks no issue as a duplicate that truth.json does not",
+   "passed": true,
+   "evidence": "false duplicates: []"
+  }
+ ],
+ "summary": {
+  "passed": 3,
+  "failed": 0,
+  "total": 3,
+  "pass_rate": 1.0
+ }
+}

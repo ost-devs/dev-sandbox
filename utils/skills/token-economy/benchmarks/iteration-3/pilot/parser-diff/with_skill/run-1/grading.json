@@ -1,0 +1,25 @@
+{
+ "expectations": [
+  {
+   "text": "diffs.jsonl has at least one input for each of the 4 kinds of difference",
+   "passed": true,
+   "evidence": "found=['escape', 'glued', 'spaces', 'trailing_empty'] missing=[]"
+  },
+  {
+   "text": "Every line of diffs.jsonl is a real difference with the recorded outputs",
+   "passed": true,
+   "evidence": "158 lines; not real or wrong output: 0; unparsable: 0"
+  },
+  {
+   "text": "Running the reproduce command twice regenerates the same diffs.jsonl",
+   "passed": true,
+   "evidence": "cmd='python3 -I gen_diffs.py diffs.jsonl diff-report.md'; same twice=True; same as submitted=True"
+  }
+ ],
+ "summary": {
+  "passed": 3,
+  "failed": 0,
+  "total": 3,
+  "pass_rate": 1.0
+ }
+}

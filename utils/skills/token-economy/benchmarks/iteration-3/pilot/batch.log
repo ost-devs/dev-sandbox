@@ -1,0 +1,8 @@
+audit-claims-interrupted with_skill run-1: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill run-1: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents with_skill run-1: {"right": 23, "of": 24, "rows": 24, "wrong": 1, "missing": 0, "no_counterexample": 0, "commands": 24, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents without_skill run-1: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+parser-diff with_skill run-1: {"diff_lines": 158, "kinds_found": ["escape", "glued", "spaces", "trailing_empty"], "missing": [], "not_real": 0, "cmd": "python3 -I gen_diffs.py diffs.jsonl diff-report.md", "stable": true, "same_as_ 
+parser-diff without_skill run-1: {"diff_lines": 166, "kinds_found": ["escape", "glued", "spaces", "trailing_empty"], "missing": [], "not_real": 0, "cmd": "python3 difftool.py", "stable": true, "same_as_submitted": true} 
+triage-issues with_skill run-1: {"rows": 80, "types_right": 80, "dups_found": 12, "false_dups": [], "wrong_types": []} 
+triage-issues without_skill run-1: {"rows": 80, "types_right": 80, "dups_found": 12, "false_dups": [], "wrong_types": []} 

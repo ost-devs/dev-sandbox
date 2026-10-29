@@ -1,0 +1,97 @@
+[
+ {
+  "id": "M01",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M02",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M03",
+  "veredito": "falsa",
+  "contraexemplo": "to_cents('-1,50') -> -50 (esperado -150)"
+ },
+ {
+  "id": "M04",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M05",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M06",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M07",
+  "veredito": "falsa",
+  "contraexemplo": "format_brl(-150) -> 'R$ -2,50' (esperado 'R$ -1,50')"
+ },
+ {
+  "id": "M08",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M09",
+  "veredito": "falsa",
+  "contraexemplo": "split_bill(1,2) sum=0"
+ },
+ {
+  "id": "M10",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M11",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M12",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M13",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M14",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M15",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M16",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M17",
+  "veredito": "falsa",
+  "contraexemplo": "add_tax(100,0.15) -> 114 (esperado 115)"
+ },
+ {
+  "id": "M18",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ },
+ {
+  "id": "M19",
+  "veredito": "verdadeira",
+  "contraexemplo": ""
+ }
+]

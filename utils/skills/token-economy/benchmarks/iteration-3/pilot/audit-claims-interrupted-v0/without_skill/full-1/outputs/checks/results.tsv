@@ -1,0 +1,152 @@
+T01	FALSA	slugify('Café Noir') = 'caf-noir'; esperado 'cafe-noir'
+T02	VERDADEIRA	
+T03	VERDADEIRA	
+T04	VERDADEIRA	
+T05	FALSA	entrada ('a', 0): truncate = '...' (len 3)
+T06	VERDADEIRA	
+T07	VERDADEIRA	
+T08	VERDADEIRA	
+T09	VERDADEIRA	
+T10	VERDADEIRA	
+T11	VERDADEIRA	
+T12	FALSA	entrada ('ß',): title_case = 'SS'
+T13	VERDADEIRA	
+T14	FALSA	strip_accents('ø') = 'ø'; esperado 'o'
+T15	VERDADEIRA	
+T16	VERDADEIRA	
+T17	VERDADEIRA	
+T18	VERDADEIRA	
+T19	VERDADEIRA	
+N01	VERDADEIRA	
+N02	FALSA	clamp(5, 10, 0) = 10; esperado 0
+N03	VERDADEIRA	
+N04	VERDADEIRA	
+N05	VERDADEIRA	
+N06	FALSA	median([]) levantou IndexError('list index out of range'); esperado None
+N07	VERDADEIRA	
+N08	FALSA	round_half(2.5) = 2; esperado 3
+N09	VERDADEIRA	
+N10	VERDADEIRA	
+N11	FALSA	entrada (0,) levantou ZeroDivisionError('division by zero')
+N12	FALSA	is_prime(4) = True; correto = False
+N13	VERDADEIRA	
+N14	VERDADEIRA	
+N15	FALSA	entrada (-50, 1): gcd(-50,1)=1, gcd(1,-50)=-1
+N16	VERDADEIRA	
+N17	VERDADEIRA	
+N18	VERDADEIRA	
+N19	FALSA	entrada (-20,) levantou ValueError("invalid literal for int() with base 10: '-'")
+D01	VERDADEIRA	
+D02	FALSA	entrada (datetime.date(2000, 2, 29),): add_months = 2001-02-28
+D03	FALSA	entrada (datetime.date(2000, 1, 30),): ida e volta = 2000-01-29
+D04	FALSA	entrada (datetime.date(2010, 4, 6), datetime.date(1966, 2, 12)): days_between = -16124
+D05	VERDADEIRA	
+D06	VERDADEIRA	
+D07	VERDADEIRA	
+D08	VERDADEIRA	
+D09	VERDADEIRA	
+D10	VERDADEIRA	
+D11	VERDADEIRA	
+D12	VERDADEIRA	
+D13	VERDADEIRA	
+D14	FALSA	iso_week(2021-01-01) = 53; esperado 1
+D15	VERDADEIRA	
+D16	FALSA	parse_br('1/2/2024') = datetime.date(2024, 2, 1); esperado ValueError
+D17	VERDADEIRA	
+D18	VERDADEIRA	
+D19	VERDADEIRA	
+L01	VERDADEIRA	
+L02	VERDADEIRA	
+L03	VERDADEIRA	
+L04	VERDADEIRA	
+L05	VERDADEIRA	
+L06	VERDADEIRA	
+L07	FALSA	flatten([[1,[2]],[3]]) = [1, [2], 3]; esperado [1, 2, 3]
+L08	VERDADEIRA	
+L09	VERDADEIRA	
+L10	FALSA	top_n([3,2,1], -1) = [3, 2]; esperado []
+L11	VERDADEIRA	
+L12	FALSA	entrada ([3, -5], 3): rotate(xs,k)=[3, -5], rotate(xs,1)=[-5, 3]
+L13	VERDADEIRA	
+L14	FALSA	interleave([1,2,3],[9]) = [1, 9]; esperado [1, 9, 2, 3]
+L15	VERDADEIRA	
+L16	VERDADEIRA	
+L17	VERDADEIRA	
+L18	VERDADEIRA	
+L19	FALSA	entrada ([],): len(pairwise)=0, len(xs)-1=-1
+M01	VERDADEIRA	
+M02	VERDADEIRA	
+M03	FALSA	to_cents('-1,50') = -50; esperado -150
+M04	VERDADEIRA	
+M05	VERDADEIRA	
+M06	VERDADEIRA	
+M07	FALSA	format_brl(-150) = 'R$ -2,50'; esperado 'R$ -1,50'
+M08	VERDADEIRA	
+M09	FALSA	entrada (1, 2): split_bill = [0, 0]
+M10	VERDADEIRA	
+M11	VERDADEIRA	
+M12	VERDADEIRA	
+M13	VERDADEIRA	
+M14	VERDADEIRA	
+M15	VERDADEIRA	
+M16	VERDADEIRA	
+M17	FALSA	add_tax(100, 0.15) = 114; esperado 115
+M18	VERDADEIRA	
+M19	VERDADEIRA	
+I01	VERDADEIRA	
+I02	VERDADEIRA	
+I03	VERDADEIRA	
+I04	VERDADEIRA	
+I05	VERDADEIRA	
+I06	VERDADEIRA	
+I07	FALSA	contains((0,5), 5) = True; esperado False
+I08	VERDADEIRA	
+I09	VERDADEIRA	
+I10	VERDADEIRA	
+I11	VERDADEIRA	
+I12	VERDADEIRA	
+I13	VERDADEIRA	
+I14	VERDADEIRA	
+I15	FALSA	merge([]) levantou IndexError('list index out of range'); esperado []
+I16	VERDADEIRA	
+I17	VERDADEIRA	
+I18	FALSA	entrada ((0, 1), 1): contains=True, overlaps(a,(1,2))=False
+I19	FALSA	length((3,1)) = -2; esperado 0
+P01	VERDADEIRA	
+P02	FALSA	join('/usr','bin') = 'usr/bin'; esperado '/usr/bin'
+P03	VERDADEIRA	
+P04	VERDADEIRA	
+P05	FALSA	ext('dir.d/arquivo') = 'd/arquivo'; esperado ''
+P06	FALSA	ext('.bashrc') = 'bashrc'; esperado ''
+P07	VERDADEIRA	
+P08	VERDADEIRA	
+P09	VERDADEIRA	
+P10	FALSA	normalize('../x') = 'x'; esperado '../x'
+P11	VERDADEIRA	
+P12	VERDADEIRA	
+P13	VERDADEIRA	
+P14	VERDADEIRA	
+P15	VERDADEIRA	
+P16	VERDADEIRA	
+P17	FALSA	parent('/a') = ''; esperado '/'
+P18	VERDADEIRA	
+P19	VERDADEIRA	
+R01	VERDADEIRA	
+R02	VERDADEIRA	
+R03	VERDADEIRA	
+R04	FALSA	parse_kv('a=1;flag') levantou ValueError('dictionary update sequence element #1 has length 1; 2 is required'); esperado {'a': '1', 'flag': ''}
+R05	VERDADEIRA	
+R06	FALSA	entrada ({'a': '1;b'},) levantou ValueError('dictionary update sequence element #1 has length 1; 2 is required')
+R07	VERDADEIRA	
+R08	VERDADEIRA	
+R09	VERDADEIRA	
+R10	FALSA	entrada ({'a': 1, 'b': 2}, {'a': 'b'}): rename = {'b': 2}
+R11	VERDADEIRA	
+R12	VERDADEIRA	
+R13	VERDADEIRA	
+R14	FALSA	sort_by([{'n':2},{'x':1},{'n':1}], 'n') levantou KeyError('n'); esperado [{'n': 1}, {'n': 2}, {'x': 1}]
+R15	VERDADEIRA	
+R16	VERDADEIRA	
+R17	FALSA	deep_get({'a':[1,2]}, 'a.0') = None; esperado 1
+R18	VERDADEIRA	
+R19	VERDADEIRA	

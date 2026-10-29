@@ -1,0 +1,152 @@
+{"id": "T01", "holds": false, "counterexample": "got 'caf-noir', expected 'cafe-noir'"}
+{"id": "T02", "holds": true, "counterexample": null}
+{"id": "T03", "holds": true, "counterexample": null}
+{"id": "T04", "holds": true, "counterexample": null}
+{"id": "T05", "holds": false, "counterexample": "input=(' ', 0): predicate false"}
+{"id": "T06", "holds": true, "counterexample": null}
+{"id": "T07", "holds": true, "counterexample": null}
+{"id": "T08", "holds": true, "counterexample": null}
+{"id": "T09", "holds": true, "counterexample": null}
+{"id": "T10", "holds": true, "counterexample": null}
+{"id": "T11", "holds": true, "counterexample": null}
+{"id": "T12", "holds": false, "counterexample": "input=('ß',): predicate false"}
+{"id": "T13", "holds": true, "counterexample": null}
+{"id": "T14", "holds": false, "counterexample": "got 'ø', expected 'o'"}
+{"id": "T15", "holds": true, "counterexample": null}
+{"id": "T16", "holds": true, "counterexample": null}
+{"id": "T17", "holds": true, "counterexample": null}
+{"id": "T18", "holds": true, "counterexample": null}
+{"id": "T19", "holds": true, "counterexample": null}
+{"id": "N01", "holds": true, "counterexample": null}
+{"id": "N02", "holds": false, "counterexample": "got 10, expected 0"}
+{"id": "N03", "holds": true, "counterexample": null}
+{"id": "N04", "holds": true, "counterexample": null}
+{"id": "N05", "holds": true, "counterexample": null}
+{"id": "N06", "holds": false, "counterexample": "raised IndexError: list index out of range (expected None)"}
+{"id": "N07", "holds": true, "counterexample": null}
+{"id": "N08", "holds": false, "counterexample": "got 2, expected 3"}
+{"id": "N09", "holds": true, "counterexample": null}
+{"id": "N10", "holds": true, "counterexample": null}
+{"id": "N11", "holds": false, "counterexample": "input=(0,): raised ZeroDivisionError: division by zero"}
+{"id": "N12", "holds": false, "counterexample": "input=(4,): predicate false"}
+{"id": "N13", "holds": true, "counterexample": null}
+{"id": "N14", "holds": true, "counterexample": null}
+{"id": "N15", "holds": false, "counterexample": "input=(-50, 1): predicate false"}
+{"id": "N16", "holds": true, "counterexample": null}
+{"id": "N17", "holds": true, "counterexample": null}
+{"id": "N18", "holds": true, "counterexample": null}
+{"id": "N19", "holds": false, "counterexample": "input=(-1000,): raised ValueError: invalid literal for int() with base 10: '-'"}
+{"id": "D01", "holds": true, "counterexample": null}
+{"id": "D02", "holds": false, "counterexample": "input=(datetime.date(2000, 2, 29),): predicate false"}
+{"id": "D03", "holds": false, "counterexample": "input=(datetime.date(2000, 1, 30),): predicate false"}
+{"id": "D04", "holds": false, "counterexample": "input=(datetime.date(2024, 1, 2), datetime.date(2024, 1, 1)): predicate false"}
+{"id": "D05", "holds": true, "counterexample": null}
+{"id": "D06", "holds": true, "counterexample": null}
+{"id": "D07", "holds": true, "counterexample": null}
+{"id": "D08", "holds": true, "counterexample": null}
+{"id": "D09", "holds": true, "counterexample": null}
+{"id": "D10", "holds": true, "counterexample": null}
+{"id": "D11", "holds": true, "counterexample": null}
+{"id": "D12", "holds": true, "counterexample": null}
+{"id": "D13", "holds": true, "counterexample": null}
+{"id": "D14", "holds": false, "counterexample": "got 53, expected 1"}
+{"id": "D15", "holds": true, "counterexample": null}
+{"id": "D16", "holds": false, "counterexample": "no exception; returned datetime.date(2024, 2, 1)"}
+{"id": "D17", "holds": true, "counterexample": null}
+{"id": "D18", "holds": true, "counterexample": null}
+{"id": "D19", "holds": true, "counterexample": null}
+{"id": "L01", "holds": true, "counterexample": null}
+{"id": "L02", "holds": true, "counterexample": null}
+{"id": "L03", "holds": true, "counterexample": null}
+{"id": "L04", "holds": true, "counterexample": null}
+{"id": "L05", "holds": true, "counterexample": null}
+{"id": "L06", "holds": true, "counterexample": null}
+{"id": "L07", "holds": false, "counterexample": "got [1, [2], 3], expected [1, 2, 3]"}
+{"id": "L08", "holds": true, "counterexample": null}
+{"id": "L09", "holds": true, "counterexample": null}
+{"id": "L10", "holds": false, "counterexample": "got [3, 2], expected []"}
+{"id": "L11", "holds": true, "counterexample": null}
+{"id": "L12", "holds": false, "counterexample": "input=([4, 0, 0], 4): predicate false"}
+{"id": "L13", "holds": true, "counterexample": null}
+{"id": "L14", "holds": false, "counterexample": "got [1, 9], expected [1, 9, 2, 3]"}
+{"id": "L15", "holds": true, "counterexample": null}
+{"id": "L16", "holds": true, "counterexample": null}
+{"id": "L17", "holds": true, "counterexample": null}
+{"id": "L18", "holds": true, "counterexample": null}
+{"id": "L19", "holds": false, "counterexample": "input=([],): predicate false"}
+{"id": "M01", "holds": true, "counterexample": null}
+{"id": "M02", "holds": true, "counterexample": null}
+{"id": "M03", "holds": false, "counterexample": "got -50, expected -150"}
+{"id": "M04", "holds": true, "counterexample": null}
+{"id": "M05", "holds": true, "counterexample": null}
+{"id": "M06", "holds": true, "counterexample": null}
+{"id": "M07", "holds": false, "counterexample": "got 'R$ -2,50', expected 'R$ -1,50'"}
+{"id": "M08", "holds": true, "counterexample": null}
+{"id": "M09", "holds": false, "counterexample": "input=(1, 2): predicate false"}
+{"id": "M10", "holds": true, "counterexample": null}
+{"id": "M11", "holds": true, "counterexample": null}
+{"id": "M12", "holds": true, "counterexample": null}
+{"id": "M13", "holds": true, "counterexample": null}
+{"id": "M14", "holds": true, "counterexample": null}
+{"id": "M15", "holds": true, "counterexample": null}
+{"id": "M16", "holds": true, "counterexample": null}
+{"id": "M17", "holds": false, "counterexample": "got 114, expected 115"}
+{"id": "M18", "holds": true, "counterexample": null}
+{"id": "M19", "holds": false, "counterexample": "input=(9007199254740993, 0.0): predicate false"}
+{"id": "I01", "holds": true, "counterexample": null}
+{"id": "I02", "holds": true, "counterexample": null}
+{"id": "I03", "holds": true, "counterexample": null}
+{"id": "I04", "holds": true, "counterexample": null}
+{"id": "I05", "holds": true, "counterexample": null}
+{"id": "I06", "holds": true, "counterexample": null}
+{"id": "I07", "holds": false, "counterexample": "got True, expected False"}
+{"id": "I08", "holds": true, "counterexample": null}
+{"id": "I09", "holds": true, "counterexample": null}
+{"id": "I10", "holds": true, "counterexample": null}
+{"id": "I11", "holds": true, "counterexample": null}
+{"id": "I12", "holds": true, "counterexample": null}
+{"id": "I13", "holds": true, "counterexample": null}
+{"id": "I14", "holds": true, "counterexample": null}
+{"id": "I15", "holds": false, "counterexample": "raised IndexError: list index out of range (expected [])"}
+{"id": "I16", "holds": true, "counterexample": null}
+{"id": "I17", "holds": true, "counterexample": null}
+{"id": "I18", "holds": false, "counterexample": "input=((7, 12), 12): predicate false"}
+{"id": "I19", "holds": false, "counterexample": "got -2, expected 0"}
+{"id": "P01", "holds": true, "counterexample": null}
+{"id": "P02", "holds": false, "counterexample": "got 'usr/bin', expected '/usr/bin'"}
+{"id": "P03", "holds": true, "counterexample": null}
+{"id": "P04", "holds": true, "counterexample": null}
+{"id": "P05", "holds": false, "counterexample": "got 'd/arquivo', expected ''"}
+{"id": "P06", "holds": false, "counterexample": "got 'bashrc', expected ''"}
+{"id": "P07", "holds": true, "counterexample": null}
+{"id": "P08", "holds": true, "counterexample": null}
+{"id": "P09", "holds": true, "counterexample": null}
+{"id": "P10", "holds": false, "counterexample": "got 'x', expected '../x'"}
+{"id": "P11", "holds": true, "counterexample": null}
+{"id": "P12", "holds": true, "counterexample": null}
+{"id": "P13", "holds": true, "counterexample": null}
+{"id": "P14", "holds": true, "counterexample": null}
+{"id": "P15", "holds": true, "counterexample": null}
+{"id": "P16", "holds": true, "counterexample": null}
+{"id": "P17", "holds": false, "counterexample": "got '', expected '/'"}
+{"id": "P18", "holds": true, "counterexample": null}
+{"id": "P19", "holds": true, "counterexample": null}
+{"id": "R01", "holds": true, "counterexample": null}
+{"id": "R02", "holds": true, "counterexample": null}
+{"id": "R03", "holds": true, "counterexample": null}
+{"id": "R04", "holds": false, "counterexample": "raised ValueError: dictionary update sequence element #1 has length 1; 2 is required (expected {'a': '1', 'flag': ''})"}
+{"id": "R05", "holds": true, "counterexample": null}
+{"id": "R06", "holds": false, "counterexample": "input=({'a b=': '='},): predicate false"}
+{"id": "R07", "holds": true, "counterexample": null}
+{"id": "R08", "holds": true, "counterexample": null}
+{"id": "R09", "holds": true, "counterexample": null}
+{"id": "R10", "holds": false, "counterexample": "input=({'a': 0, 'c': 2}, {'a': 'a', 'b': 'b', 'c': 'a'}): predicate false"}
+{"id": "R11", "holds": true, "counterexample": null}
+{"id": "R12", "holds": true, "counterexample": null}
+{"id": "R13", "holds": true, "counterexample": null}
+{"id": "R14", "holds": false, "counterexample": "raised KeyError: 'n' (expected ['b', 'a', 'nokey'])"}
+{"id": "R15", "holds": true, "counterexample": null}
+{"id": "R16", "holds": true, "counterexample": null}
+{"id": "R17", "holds": false, "counterexample": "got None, expected 1"}
+{"id": "R18", "holds": true, "counterexample": null}
+{"id": "R19", "holds": true, "counterexample": null}
