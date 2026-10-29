@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-for rj in sorted(Path(sys.argv[1]).glob("*/*/*/run.json")):
+for rj in sorted(p for p in Path(sys.argv[1]).glob("*/*/*/run.json") if ".failed" not in p.parent.name):
     d = json.loads(rj.read_text())
     g = json.loads((rj.parent / "grading.json").read_text())
     usd = [p["reported_cost_usd"] for p in d["phases"]]

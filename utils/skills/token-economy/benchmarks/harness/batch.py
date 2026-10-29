@@ -11,6 +11,8 @@ import argparse
 import json
 import subprocess
 import sys
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -24,7 +26,18 @@ GRADERS = {
 }
 
 
+STOP = threading.Event()
+
+
+def failed(out):
+    """A phase that ended in error (a real usage limit, a crash), not killed by our watcher."""
+    d = json.loads((out / "run.json").read_text())
+    return any(p["killed"] is not True and (p["subtype"] != "success" or p.get("is_error")) for p in d["phases"])
+
+
 def job(it_dir, work_root, j):
+    if STOP.is_set():
+        return f"not started (batch stopped): {j}"
     case_dir = SKILL_ROOT / "evals" / j["case"]
     out = it_dir / j["case"] / j["config"] / j["run"]
     if (out / "run.json").exists():
@@ -35,6 +48,10 @@ def job(it_dir, work_root, j):
         cmd += ["--interrupt-units", str(j["interrupt_units"])]
     r = subprocess.run(cmd, capture_output=True, text=True)
     (out / "runner.log").write_text(r.stdout + r.stderr)
+    if not (out / "run.json").exists() or failed(out):
+        STOP.set()
+        out.rename(out.with_name(out.name + f".failed-{int(time.time())}"))
+        return f"FAILED, batch stopped: {out} (see runner.log and result-*.json there)"
     g = GRADERS[j["case"]]
     gcmd = [sys.executable, "-I", str(HERE / g[0]), str(out)] + ([str(case_dir / "truth.json")] if len(g) > 1 else [])
     gr = subprocess.run(gcmd, capture_output=True, text=True)

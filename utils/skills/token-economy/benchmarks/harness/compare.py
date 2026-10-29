@@ -19,7 +19,7 @@ BANDS = [(0.5, "abismo"), (0.75, "grande diferença"), (0.9, "diferença pequena
 
 def runs(cfg_dir):
     out = []
-    for r in sorted(cfg_dir.glob("*/run.json")):
+    for r in sorted(p for p in cfg_dir.glob("*/run.json") if ".failed" not in p.parent.name):
         d = json.loads(r.read_text())
         g = json.loads((r.parent / "grading.json").read_text()) if (r.parent / "grading.json").exists() else None
         a = json.loads((r.parent / "auto_grade.json").read_text()) if (r.parent / "auto_grade.json").exists() else {}

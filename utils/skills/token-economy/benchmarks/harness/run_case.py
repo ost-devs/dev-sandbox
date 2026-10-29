@@ -64,7 +64,7 @@ def run_phase(cmd, cwd, out_json, sid, limit_units, timeout_s):
         result = None
     return {"seconds": round(time.time() - start, 1), "exit": proc.returncode, "killed": killed,
             "reported_cost_usd": (result or {}).get("total_cost_usd"),
-            "subtype": (result or {}).get("subtype")}
+            "subtype": (result or {}).get("subtype"), "is_error": (result or {}).get("is_error")}
 
 
 def main():
