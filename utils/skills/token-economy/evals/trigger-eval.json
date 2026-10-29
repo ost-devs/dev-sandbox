@@ -1,0 +1,23 @@
+[
+  {"query": "preciso conferir se os 40 arquivos de docs/claude-code ainda batem com a doc oficial em mirrors/claude-code-docs. pensei em abrir um subagente por arquivo, cada um lê o artigo e a página oficial e aponta divergências. monta o plano antes de rodar", "should_trigger": true},
+  {"query": "ontem bati no limite de uso do plano max no meio da migração dos testes pra vitest e perdi umas 2h. hoje quero terminar os 60 arquivos que faltam em src/__tests__, como organizo pra não acontecer de novo?", "should_trigger": true},
+  {"query": "Run a parity audit of our Rust port against the original C library: 14 modules, each needs fuzzed inputs compared between both implementations. Use parallel agents, one per module.", "should_trigger": true},
+  {"query": "tenho 320 issues abertas no github (exportei pra issues.json) e quero classificar cada uma em bug/feature/dúvida e marcar duplicadas. faz isso pra mim", "should_trigger": true},
+  {"query": "essa sessão tá ficando cara demais, já foram uns 400k tokens só lendo log. o arquivo logs/app-2026-10.log tem 80MB e eu só quero saber por que o worker reinicia de madrugada", "should_trigger": true},
+  {"query": "quero traduzir todos os 95 .md de docs/ pra inglês mantendo os links e os blocos de código intactos. pode usar subagentes se ajudar", "should_trigger": true},
+  {"query": "vou deixar um /loop rodando a noite toda revisando cada PR novo do repo e comentando. antes de ligar, me ajuda a deixar isso barato sem perder a qualidade da revisão", "should_trigger": true},
+  {"query": "manda 5 agentes revisarem esse diff de 3 mil linhas em paralelo, cada um olhando um aspecto diferente (segurança, performance, testes, nomes, docs), e junta tudo num relatório", "should_trigger": true},
+  {"query": "can you cut the cost of our nightly eval job? it spawns claude -p for each of the 250 cases in evals/ and every run re-reads the whole fixtures folder", "should_trigger": true},
+  {"query": "preciso gerar 200 exemplos de entrada pra testar o parser de CSV, rodar cada um no parser velho e no novo e listar onde diferem. quero poder repetir depois", "should_trigger": true},
+
+  {"query": "quanto custa o milhão de tokens de entrada e saída do opus 5.5 comparado com o sonnet 5.5? to decidindo qual usar no meu backend", "should_trigger": false},
+  {"query": "meu script python que chama a API da anthropic tá gastando muito, cada request manda o mesmo system prompt de 6k tokens. como ativo prompt caching no SDK?", "should_trigger": false},
+  {"query": "configura a statusline pra mostrar o custo da sessão e o modelo atual", "should_trigger": false},
+  {"query": "o build do next tá gerando um bundle de 4MB, quero reduzir o tamanho. dá uma olhada no next.config.js e nos imports de src/pages", "should_trigger": false},
+  {"query": "explica o que é token e por que o mesmo texto em português gasta mais que em inglês", "should_trigger": false},
+  {"query": "renomeia a função getUserData pra fetchUser em src/api/users.ts e atualiza os 3 lugares que chamam", "should_trigger": false},
+  {"query": "a query de relatório mensal no postgres demora 40s, já tem índice em created_at. me ajuda a otimizar (tá em sql/relatorio_mensal.sql)", "should_trigger": false},
+  {"query": "quero escrever uma skill nova pra padronizar mensagens de commit do time, começa me perguntando o que precisa", "should_trigger": false},
+  {"query": "lê o docs/guias/branches.md e me diz se tá claro pra quem nunca usou git", "should_trigger": false},
+  {"query": "implementa um contador de tokens no nosso app de chat: antes de mandar a mensagem pro modelo, mostra quantos tokens ela tem usando a API de count_tokens", "should_trigger": false}
+]
