@@ -245,8 +245,16 @@ ao custo em dólar quando há um único modelo.
 
 ### O que os números mostram
 
-- **Não é abismo.** O ganho de 13% a 15% é pequeno. Com 4+4 execuções, p=0,029
-  é o menor valor possível, então a amostra não permite mais precisão.
+- **Não é abismo, mas é ganho.** "Diferença pequena" é a faixa da régua, não um
+  juízo de valor: 13% a 15% a menos, com o mesmo resultado e quase nenhum custo
+  de contexto, é economia que vale ter. Na tarefa grande, as 4 execuções com a
+  skill saíram mais baratas que as 4 sem ela (16 de 16 pares). Com 4+4,
+  p=0,029 é o menor valor possível, então a amostra não permite mais precisão.
+- **A direção é a mesma, a força não.** Ganhando em pares de execuções: 16 de 16
+  na tarefa grande, 14 de 16 na interrompida e, na de 24 afirmações, 25 de 36 em
+  dólar e 17 de 36 em unidades, que é cara ou coroa. Em dólar, nenhum grupo ficou
+  com média pior com a skill. Na tarefa menor, quase todo o ganho em dólar vem da
+  execução no Haiku: sem ela, a razão fica em 0,96.
 - **O piloto exagerou:** deu 0,72 numa execução de cada lado. Com mais
   execuções, ficou em 0,87.
 - **A perda ao retomar não mudou de forma comprovada.** Custou 21% a mais com a
@@ -254,8 +262,9 @@ ao custo em dólar quando há um único modelo.
   ruído. Era a hipótese principal da interrupção, e ela não se confirmou.
 - **Montar ajudantes uma vez nem sempre compensa.** Nas 24 afirmações, a skill
   fez os ajudantes compartilhados nas 6 execuções, e o grupo sem skill em nenhuma.
-  Mesmo assim, não houve diferença clara. Com 4 módulos, a economia pode não
-  pagar o trabalho de montar (dedução, não medição).
+  Mesmo assim, não houve diferença clara. Com 4 módulos, os tokens que a IA
+  gasta escrevendo os ajudantes podem empatar com os que ela economiza depois
+  (dedução, não medição).
 
 ### Uma correção da regra
 
@@ -274,6 +283,9 @@ competente, e que estes testes são objetivos e lógicos, justamente onde ele
 brilha. Os dados combinam com isso: sem a skill, o Sonnet já paralelizou e
 acertou tudo. Mas a rodada não testa o outro lado. Nenhum caso executado foi uma
 tarefa aberta, sem gabarito. Não dá para dizer se ali a skill ajuda mais ou menos.
+Há também um teto: com todo mundo acertando 100%, estes casos não conseguem
+mostrar ganho de qualidade. O único indício fora da lógica pura é o plano do
+corte de qualidade (rodada 1), a favor da skill, mas foi um caso só e não executado.
 
 ## 8. O que dá para concluir, e o que não
 
@@ -281,7 +293,7 @@ tarefa aberta, sem gabarito. Não dá para dizer se ali a skill ajuda mais ou me
 |---|---|
 | Em tarefa grande com 8 subagentes no Sonnet, a skill custou uns 15% menos, sem perder qualidade | Que a economia vale para qualquer tarefa: foram 2 casos do mesmo tipo |
 | O Sonnet sem a skill acertou tudo e já paralelizou quando o pedido mandou | Que a skill melhora a qualidade em execução: nos testes, os dois lados acertaram tudo |
-| Em tarefa com 4 subagentes, a economia não ficou clara | Se ela reduz a perda ao retomar depois de um limite |
+| Em tarefa com 4 subagentes, o tamanho da economia não ficou claro | Se ela reduz a perda ao retomar depois de um limite |
 | Nos planos, ela protegeu mais o resultado no caso de corte de qualidade | Se isso se repete quando o pedido é executado |
 | Ela não entrou em nenhum pedido em que não devia | Se a nova descrição ("executar ou planejar") aciona mais |
 | O método de acionamento do `skill-creator` não funciona nesta versão do Claude Code | Quanto ela rende em tarefas abertas, sem gabarito, ou com outros modelos |

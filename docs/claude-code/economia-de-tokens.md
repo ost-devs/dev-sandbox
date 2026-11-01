@@ -9,12 +9,13 @@ A história de como ela foi feita e testada, com todos os números, está em
 
 Sem a skill, o Claude já faz bem o trabalho. Nos testes com execução real, ele
 dividiu a tarefa entre subagentes, rodou o código e acertou todas as afirmações,
-**com ou sem ela**. A skill não melhorou o resultado medido: só reduziu um pouco
-o custo em tarefa grande com vários subagentes.
+**com ou sem ela**. O ganho medido da skill é de custo, não de qualidade.
 
-Não espere um salto. Espere uns **15% a menos** nesse tipo de tarefa e nenhuma
-diferença clara em tarefa menor. Os números estão em
-[Quanto economiza](#quanto-economiza).
+Em tarefa grande com vários subagentes, ela custou uns **15% a menos** com o
+mesmo resultado, e toda execução com a skill saiu mais barata que toda execução
+sem ela. É uma economia modesta, mas de graça: a skill ocupa uns 90 tokens de
+contexto até ser usada. Em tarefa menor, o tamanho do ganho ainda não está
+claro. Os números estão em [Quanto economiza](#quanto-economiza).
 
 ## O que ela faz
 
@@ -54,14 +55,16 @@ Teste com o Sonnet em tarefas reais, cada grupo rodado várias vezes:
 |---|---|---|---|---|
 | Conferir 152 afirmações em 8 módulos, com 8 subagentes | 4 de cada lado | US$ 0,72 | US$ 0,85 | Diferença pequena: cerca de 15% mais barato |
 | A mesma tarefa, parando no meio por limite de uso simulado | 4 de cada lado | só em unidades | só em unidades | Cerca de 18% menos, com evidência fraca |
-| Conferir 24 afirmações em 4 módulos, com 4 subagentes | 6 de cada lado | US$ 0,31 | US$ 0,36 | Inconclusivo: pode não haver diferença |
+| Conferir 24 afirmações em 4 módulos, com 4 subagentes | 6 de cada lado | US$ 0,31 | US$ 0,36 | Inconclusivo: média menor em dólar, mas com a skill houve execuções mais caras |
 
 A qualidade foi igual em todas: **todas as execuções acertaram tudo**.
 
 O que isso quer dizer na prática:
 
-- **Tarefa grande com muitos subagentes:** economia pequena, mas real.
-- **Tarefa pequena:** não conte com economia.
+- **Tarefa grande com muitos subagentes:** 15% a menos sem perder qualidade é
+  dinheiro de verdade, ainda mais em quem repete esse tipo de trabalho.
+- **Tarefa menor:** em nenhum grupo a média em dólar ficou pior com a skill, mas
+  a amostra não mostra de quanto é o ganho. Conte como possível, não como certo.
 - **Tarefas sem subagentes ou que não acionam a skill:** não medimos o suficiente.
 - **Tarefas abertas, como arquitetura ou decisões de produto:** não testamos.
   Estes testes são objetivos e lógicos, com resposta certa que se confere
@@ -76,9 +79,9 @@ no [artigo do experimento](./economia-de-tokens-o-experimento.md).
 
 | Seu caso | Sugestão |
 |---|---|
-| Roda com frequência tarefas grandes com vários subagentes | Vale: custa quase nada de contexto e rende uns 15% nesse tipo de tarefa |
-| Bate no limite de uso nesse tipo de tarefa | Vale testar, sabendo que o ganho é pequeno |
-| Faz tarefas pequenas e médias no dia a dia | Pode ignorar: não vai mudar sua conta |
+| Roda tarefas grandes com vários subagentes | Vale: uns 15% a menos, sem perda de qualidade nos testes |
+| Bate no limite de uso nesse tipo de tarefa | Vale: 15% a menos é mais trabalho dentro do mesmo limite |
+| Faz só tarefas pequenas e médias | Instale se quiser: custa quase nada, mas o ganho ali não está medido com clareza |
 
 ## Instalar
 
