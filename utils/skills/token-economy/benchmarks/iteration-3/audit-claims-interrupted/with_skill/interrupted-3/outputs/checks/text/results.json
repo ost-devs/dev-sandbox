@@ -1,0 +1,116 @@
+[
+ {
+  "id": "T01",
+  "verdict": "falsa",
+  "counterexample": "got 'caf-noir', expected 'cafe-noir'",
+  "note": null
+ },
+ {
+  "id": "T02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "3037 inputs"
+ },
+ {
+  "id": "T03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "3037 inputs"
+ },
+ {
+  "id": "T04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "3037 inputs"
+ },
+ {
+  "id": "T05",
+  "verdict": "falsa",
+  "counterexample": "truncate(' ', 0) = '...' (len 3)",
+  "note": null
+ },
+ {
+  "id": "T06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T12",
+  "verdict": "falsa",
+  "counterexample": "input 'ß'",
+  "note": null
+ },
+ {
+  "id": "T13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T14",
+  "verdict": "falsa",
+  "counterexample": "got 'ø', expected 'o'",
+  "note": null
+ },
+ {
+  "id": "T15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "T19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "3037 inputs"
+ }
+]

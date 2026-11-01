@@ -1,0 +1,19 @@
+D01	verdadeira	
+D02	falsa	datetime.date(2000, 2, 29) raised ValueError: day is out of range for month
+D03	falsa	datetime.date(2000, 1, 30)
+D04	falsa	(datetime.date(2024, 1, 2), datetime.date(2024, 1, 1))
+D05	verdadeira	
+D06	verdadeira	
+D07	verdadeira	
+D08	verdadeira	
+D09	verdadeira	
+D10	verdadeira	
+D11	verdadeira	
+D12	verdadeira	
+D13	verdadeira	
+D14	falsa	iso_week(2021-01-01) -> 53, expected 1
+D15	verdadeira	
+D16	falsa	parse_br('1/2/2024') returned datetime.date(2024, 2, 1), no ValueError
+D17	verdadeira	
+D18	verdadeira	
+D19	verdadeira	

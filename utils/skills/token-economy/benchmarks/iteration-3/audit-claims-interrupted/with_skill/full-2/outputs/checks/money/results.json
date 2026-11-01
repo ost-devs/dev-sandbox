@@ -1,0 +1,97 @@
+[
+ {
+  "id": "M01",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M02",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M03",
+  "verdict": "falsa",
+  "counterexample": "actual=-50 expected=-150"
+ },
+ {
+  "id": "M04",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M05",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M06",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M07",
+  "verdict": "falsa",
+  "counterexample": "actual='R$ -2,50' expected='R$ -1,50'"
+ },
+ {
+  "id": "M08",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M09",
+  "verdict": "falsa",
+  "counterexample": "args=(1, 29)"
+ },
+ {
+  "id": "M10",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M11",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M12",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M13",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M14",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M15",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M16",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M17",
+  "verdict": "falsa",
+  "counterexample": "actual=114 expected=115"
+ },
+ {
+  "id": "M18",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "M19",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ }
+]

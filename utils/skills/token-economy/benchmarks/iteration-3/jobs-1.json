@@ -1,0 +1,102 @@
+[
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "full-1"
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "full-1"
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "full-2"
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "full-2"
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "full-3"
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "full-3"
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "full-4"
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "full-4"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "with_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "without_skill",
+  "run": "run-1"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "with_skill",
+  "run": "run-2"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "without_skill",
+  "run": "run-2"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "with_skill",
+  "run": "run-3"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "without_skill",
+  "run": "run-3"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "with_skill",
+  "run": "run-4"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "without_skill",
+  "run": "run-4"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "with_skill",
+  "run": "run-5"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "without_skill",
+  "run": "run-5"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "with_skill",
+  "run": "run-6"
+ },
+ {
+  "case": "verify-claims-subagents",
+  "config": "without_skill",
+  "run": "run-6"
+ }
+]

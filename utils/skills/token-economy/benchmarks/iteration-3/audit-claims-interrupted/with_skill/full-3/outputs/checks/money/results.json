@@ -1,0 +1,116 @@
+[
+ {
+  "id": "M01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M03",
+  "verdict": "falsa",
+  "counterexample": "got -50, expected -150",
+  "how": "fixed"
+ },
+ {
+  "id": "M04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M07",
+  "verdict": "falsa",
+  "counterexample": "got 'R$ -2,50', expected 'R$ -1,50'",
+  "how": "fixed"
+ },
+ {
+  "id": "M08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M09",
+  "verdict": "falsa",
+  "counterexample": "args=(4255, 11)",
+  "how": "seed=121665914 n=3000"
+ },
+ {
+  "id": "M10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=276873225 n=3000"
+ },
+ {
+  "id": "M12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2307494323 n=3000"
+ },
+ {
+  "id": "M13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M17",
+  "verdict": "falsa",
+  "counterexample": "got 114, expected 115",
+  "how": "fixed"
+ },
+ {
+  "id": "M18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "M19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=509298747 n=3000"
+ }
+]

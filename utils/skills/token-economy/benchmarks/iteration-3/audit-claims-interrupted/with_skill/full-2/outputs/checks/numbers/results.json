@@ -1,0 +1,97 @@
+[
+ {
+  "id": "N01",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N02",
+  "verdict": "falsa",
+  "counterexample": "actual=10 expected=0"
+ },
+ {
+  "id": "N03",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N04",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N05",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N06",
+  "verdict": "falsa",
+  "counterexample": "IndexError: list index out of range"
+ },
+ {
+  "id": "N07",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N08",
+  "verdict": "falsa",
+  "counterexample": "actual=2 expected=3"
+ },
+ {
+  "id": "N09",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N10",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N11",
+  "verdict": "falsa",
+  "counterexample": "ZeroDivisionError: division by zero"
+ },
+ {
+  "id": "N12",
+  "verdict": "falsa",
+  "counterexample": "wrong for n=[4, 6, 8, 9, 15, 25, 35, 49] (count 18); e.g. is_prime(4)=True"
+ },
+ {
+  "id": "N13",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N14",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N15",
+  "verdict": "falsa",
+  "counterexample": "a=-50 b=1: gcd(a,b)=1 gcd(b,a)=-1"
+ },
+ {
+  "id": "N16",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N17",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N18",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "N19",
+  "verdict": "falsa",
+  "counterexample": "args=(-1,) raised ValueError: invalid literal for int() with base 10: '-'"
+ }
+]

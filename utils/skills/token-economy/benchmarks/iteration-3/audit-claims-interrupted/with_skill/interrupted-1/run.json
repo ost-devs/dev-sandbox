@@ -1,0 +1,93 @@
+{
+ "case": "audit-claims-interrupted",
+ "config": "with_skill",
+ "model": "claude-sonnet-5-5",
+ "session_id": "56f26851-6dc4-4879-b271-590914859b54",
+ "work_dir": "/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-361eb7dc",
+ "interrupt_units": 203138.0,
+ "phases": [
+  {
+   "seconds": 56.2,
+   "exit": -9,
+   "killed": true,
+   "reported_cost_usd": null,
+   "subtype": null,
+   "is_error": null,
+   "usage_after": {
+    "units": 205328,
+    "tokens": 429095,
+    "input_tokens": 50,
+    "cache_creation_input_tokens": 103903,
+    "cache_read_input_tokens": 316390,
+    "output_tokens": 8752,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 50,
+      "cache_creation_input_tokens": 103903,
+      "cache_read_input_tokens": 316390,
+      "output_tokens": 8752
+     }
+    },
+    "messages": 25
+   }
+  },
+  {
+   "seconds": 98.0,
+   "exit": 0,
+   "killed": false,
+   "reported_cost_usd": 0.3915433,
+   "subtype": "success",
+   "is_error": false,
+   "usage_after": {
+    "units": 428027,
+    "tokens": 1211999,
+    "input_tokens": 132,
+    "cache_creation_input_tokens": 148732,
+    "cache_read_input_tokens": 1035448,
+    "output_tokens": 27687,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 132,
+      "cache_creation_input_tokens": 148732,
+      "cache_read_input_tokens": 1035448,
+      "output_tokens": 27687
+     },
+     "<synthetic>": {
+      "input_tokens": 0,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "output_tokens": 0
+     }
+    },
+    "messages": 65
+   }
+  }
+ ],
+ "usage": {
+  "units": 428027,
+  "tokens": 1211999,
+  "input_tokens": 132,
+  "cache_creation_input_tokens": 148732,
+  "cache_read_input_tokens": 1035448,
+  "output_tokens": 27687,
+  "by_model": {
+   "claude-sonnet-5-5": {
+    "input_tokens": 132,
+    "cache_creation_input_tokens": 148732,
+    "cache_read_input_tokens": 1035448,
+    "output_tokens": 27687
+   },
+   "<synthetic>": {
+    "input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 0
+   }
+  },
+  "messages": 65
+ },
+ "skill_calls": [
+  "token-economy"
+ ],
+ "subagents": 15
+}

@@ -1,0 +1,78 @@
+{
+ "T01": {
+  "verdict": "falsa",
+  "counterexample": "got 'caf-noir', claim says 'cafe-noir'"
+ },
+ "T02": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T03": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T04": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T05": {
+  "verdict": "falsa",
+  "counterexample": "args=('a', 0) -> '...'"
+ },
+ "T06": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T07": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T08": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T09": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T10": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T11": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T12": {
+  "verdict": "falsa",
+  "counterexample": "args=('ß',) -> 'SS'"
+ },
+ "T13": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T14": {
+  "verdict": "falsa",
+  "counterexample": "got 'ø', claim says 'o'"
+ },
+ "T15": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T16": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T17": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T18": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T19": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ }
+}

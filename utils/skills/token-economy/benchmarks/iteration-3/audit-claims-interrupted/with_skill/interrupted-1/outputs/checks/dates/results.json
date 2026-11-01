@@ -1,0 +1,78 @@
+{
+ "D01": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D02": {
+  "verdict": "falsa",
+  "counterexample": "x=datetime.date(2000, 2, 29)"
+ },
+ "D03": {
+  "verdict": "falsa",
+  "counterexample": "x=datetime.date(2000, 1, 30)"
+ },
+ "D04": {
+  "verdict": "falsa",
+  "counterexample": "args=(datetime.date(7264, 5, 27), datetime.date(3110, 2, 21))"
+ },
+ "D05": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D06": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D07": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D08": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D09": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D10": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D11": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D12": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D13": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D14": {
+  "verdict": "falsa",
+  "counterexample": "got 53, claim says 1"
+ },
+ "D15": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D16": {
+  "verdict": "falsa",
+  "counterexample": "parse_br('1/2/2024') returned datetime.date(2024, 2, 1), no ValueError"
+ },
+ "D17": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D18": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "D19": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ }
+}

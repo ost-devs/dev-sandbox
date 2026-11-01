@@ -1,0 +1,116 @@
+[
+ {
+  "id": "L01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "L02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "5025 inputs"
+ },
+ {
+  "id": "L03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "L04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "L05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "1005 inputs"
+ },
+ {
+  "id": "L06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "1005 inputs"
+ },
+ {
+  "id": "L07",
+  "verdict": "falsa",
+  "counterexample": "got [1, [2], 3], expected [1, 2, 3]",
+  "note": null
+ },
+ {
+  "id": "L08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "L09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "6030 inputs"
+ },
+ {
+  "id": "L10",
+  "verdict": "falsa",
+  "counterexample": "got [3, 2], expected []",
+  "note": null
+ },
+ {
+  "id": "L11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "L12",
+  "verdict": "falsa",
+  "counterexample": "input ([1, 2, 3], 4)",
+  "note": null
+ },
+ {
+  "id": "L13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "8040 inputs"
+ },
+ {
+  "id": "L14",
+  "verdict": "falsa",
+  "counterexample": "got [1, 9], expected [1, 9, 2, 3]",
+  "note": null
+ },
+ {
+  "id": "L15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "10000 inputs"
+ },
+ {
+  "id": "L16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "L17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "1005 inputs"
+ },
+ {
+  "id": "L18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "L19",
+  "verdict": "falsa",
+  "counterexample": "input []",
+  "note": null
+ }
+]

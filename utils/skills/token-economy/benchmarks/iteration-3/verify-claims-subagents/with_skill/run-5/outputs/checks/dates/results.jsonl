@@ -1,0 +1,6 @@
+{"id": "D1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "D2", "verdict": "falsa", "counterexample": "add_months(0004-02-29, 12) = 0005-02-28", "seed": 20261101}
+{"id": "D3", "verdict": "falsa", "counterexample": "days_between(2024-01-02, 2024-01-01) = -1", "seed": 20261101}
+{"id": "D4", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "D5", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "D6", "verdict": "falsa", "counterexample": "raised ValueError: day is out of range for month", "seed": 20261101}

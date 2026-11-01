@@ -1,0 +1,6 @@
+D1	VERDADEIRA	
+D2	FALSA	add_months(0004-02-29,12)=0005-02-28
+D3	FALSA	days_between(2024-02-29,2024-02-28)=-1
+D4	VERDADEIRA	
+D5	VERDADEIRA	
+D6	FALSA	parse_iso('2026-02-30') raises ValueError: day is out of range for month

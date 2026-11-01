@@ -1,0 +1,6 @@
+T1	VERDADEIRA	
+T2	FALSA	slugify('Café Noir')='caf-noir'
+T3	FALSA	s=' ', n=0 -> '…' (len 1)
+T4	VERDADEIRA	
+T5	VERDADEIRA	
+T6	VERDADEIRA	

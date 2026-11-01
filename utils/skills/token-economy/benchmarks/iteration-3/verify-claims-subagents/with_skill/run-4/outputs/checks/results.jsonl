@@ -1,0 +1,24 @@
+{"id": "T1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "T2", "verdict": "falsa", "counterexample": "slugify('Café Noir') == 'caf-noir'", "seed": 20261101}
+{"id": "T3", "verdict": "falsa", "counterexample": "truncate('a', 0) == '…'", "seed": 20261101}
+{"id": "T4", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "T5", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "T6", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "M1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "M2", "verdict": "falsa", "counterexample": "raised ZeroDivisionError: division by zero", "seed": 20261101}
+{"id": "M3", "verdict": "falsa", "counterexample": "round_half(2.5) == 2", "seed": 20261101}
+{"id": "M4", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "M5", "verdict": "falsa", "counterexample": "is_prime(4) == True, expected False", "seed": 20261101}
+{"id": "M6", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "D1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "D2", "verdict": "falsa", "counterexample": "add_months(datetime.date(2024, 2, 29), 12) = datetime.date(2025, 2, 28)", "seed": 20261101}
+{"id": "D3", "verdict": "falsa", "counterexample": "days_between(datetime.date(2024, 1, 2), datetime.date(2024, 1, 1)) = -1", "seed": 20261101}
+{"id": "D4", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "D5", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "D6", "verdict": "falsa", "counterexample": "raised ValueError: day is out of range for month", "seed": 20261101}
+{"id": "C1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "C2", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "C3", "verdict": "falsa", "counterexample": "flatten([[1, [2]], [3]]) == [1, [2], 3]", "seed": 20261101}
+{"id": "C4", "verdict": "falsa", "counterexample": "top_n([], -3) -> [], len 0 != -3", "seed": 20261101}
+{"id": "C5", "verdict": "falsa", "counterexample": "merge_dicts({'k': 'a'}, {'k': 'b'}) == {'k': 'b'}", "seed": 20261101}
+{"id": "C6", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}

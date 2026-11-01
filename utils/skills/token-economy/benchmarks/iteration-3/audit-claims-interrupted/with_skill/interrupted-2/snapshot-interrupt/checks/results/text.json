@@ -1,0 +1,78 @@
+{
+ "T01": {
+  "verdict": "falsa",
+  "counterexample": " got 'caf-noir', expected 'cafe-noir'"
+ },
+ "T02": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T03": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T04": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T05": {
+  "verdict": "falsa",
+  "counterexample": "args=('loYh7fg2CJQ', 2)"
+ },
+ "T06": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T07": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T08": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T09": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T10": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T11": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T12": {
+  "verdict": "falsa",
+  "counterexample": "args=('ßßßéA-',)"
+ },
+ "T13": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T14": {
+  "verdict": "falsa",
+  "counterexample": " got 'ø', expected 'o'"
+ },
+ "T15": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T16": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T17": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T18": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "T19": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ }
+}

@@ -1,0 +1,69 @@
+{
+ "case": "audit-claims-interrupted",
+ "config": "with_skill",
+ "model": "claude-sonnet-5-5",
+ "session_id": "46d8c823-2f46-4d29-88fe-c2c5c9b123eb",
+ "work_dir": "/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062",
+ "interrupt_units": null,
+ "phases": [
+  {
+   "seconds": 86.0,
+   "exit": 0,
+   "killed": false,
+   "reported_cost_usd": 0.7466759,
+   "subtype": "success",
+   "is_error": false,
+   "usage_after": {
+    "units": 394667,
+    "tokens": 1018140,
+    "input_tokens": 104,
+    "cache_creation_input_tokens": 144877,
+    "cache_read_input_tokens": 847414,
+    "output_tokens": 25745,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 104,
+      "cache_creation_input_tokens": 144877,
+      "cache_read_input_tokens": 847414,
+      "output_tokens": 25745
+     }
+    },
+    "messages": 46
+   }
+  }
+ ],
+ "usage": {
+  "units": 394667,
+  "tokens": 1018140,
+  "input_tokens": 104,
+  "cache_creation_input_tokens": 144877,
+  "cache_read_input_tokens": 847414,
+  "output_tokens": 25745,
+  "by_model": {
+   "claude-sonnet-5-5": {
+    "input_tokens": 104,
+    "cache_creation_input_tokens": 144877,
+    "cache_read_input_tokens": 847414,
+    "output_tokens": 25745
+   }
+  },
+  "messages": 46
+ },
+ "skill_calls": [
+  "token-economy",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/claims.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/claims.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/claims.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/claims.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-f2433062/claims.md"
+ ],
+ "subagents": 8
+}

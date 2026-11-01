@@ -1,0 +1,56 @@
+audit-claims-interrupted with_skill full-1: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill full-1: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 8, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted with_skill full-2: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 8, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill full-2: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted with_skill full-3: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 8, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill full-3: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted with_skill full-4: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill full-4: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents with_skill run-1: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 24, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents without_skill run-1: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents with_skill run-2: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents without_skill run-2: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents with_skill run-3: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents without_skill run-3: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents with_skill run-4: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents without_skill run-4: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents with_skill run-5: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 24, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents without_skill run-5: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents with_skill run-6: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 24, "unstable": 0, "failing": 0, "no_command": 0} 
+verify-claims-subagents without_skill run-6: {"right": 24, "of": 24, "rows": 24, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 4, "unstable": 0, "failing": 0, "no_command": 0} 
+FAILED, batch stopped: /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/with_skill/interrupted-1 (see runner.log and result-*.json there)
+FAILED, batch stopped: /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/without_skill/interrupted-1 (see runner.log and result-*.json there)
+FAILED, batch stopped: /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/with_skill/interrupted-2 (see runner.log and result-*.json there)
+FAILED, batch stopped: /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/without_skill/interrupted-2 (see runner.log and result-*.json there)
+not started (batch stopped): {'case': 'audit-claims-interrupted', 'config': 'with_skill', 'run': 'interrupted-3', 'interrupt_units': 203138}
+not started (batch stopped): {'case': 'audit-claims-interrupted', 'config': 'without_skill', 'run': 'interrupted-3', 'interrupt_units': 203138}
+not started (batch stopped): {'case': 'audit-claims-interrupted', 'config': 'with_skill', 'run': 'interrupted-4', 'interrupt_units': 203138}
+not started (batch stopped): {'case': 'audit-claims-interrupted', 'config': 'without_skill', 'run': 'interrupted-4', 'interrupt_units': 203138}
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/with_skill/full-1
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/without_skill/full-1
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/with_skill/full-2
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/without_skill/full-2
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/with_skill/full-3
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/without_skill/full-3
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/with_skill/full-4
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/audit-claims-interrupted/without_skill/full-4
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/with_skill/run-1
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/without_skill/run-1
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/with_skill/run-2
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/without_skill/run-2
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/with_skill/run-3
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/without_skill/run-3
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/with_skill/run-4
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/without_skill/run-4
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/with_skill/run-5
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/without_skill/run-5
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/with_skill/run-6
+skip /dev-sandbox/utils/skills/token-economy/benchmarks/iteration-3/verify-claims-subagents/without_skill/run-6
+audit-claims-interrupted with_skill interrupted-1: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill interrupted-1: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted with_skill interrupted-2: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill interrupted-2: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 8, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted with_skill interrupted-3: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 8, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill interrupted-3: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted with_skill interrupted-4: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 
+audit-claims-interrupted without_skill interrupted-4: {"right": 152, "of": 152, "rows": 152, "wrong": 0, "missing": 0, "no_counterexample": 0, "commands": 152, "unstable": 0, "failing": 0, "no_command": 0} 

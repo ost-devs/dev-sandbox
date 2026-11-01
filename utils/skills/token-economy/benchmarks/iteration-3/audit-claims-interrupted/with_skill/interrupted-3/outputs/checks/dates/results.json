@@ -1,0 +1,116 @@
+[
+ {
+  "id": "D01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "D02",
+  "verdict": "falsa",
+  "counterexample": "input datetime.date(2000, 2, 29)",
+  "note": null
+ },
+ {
+  "id": "D03",
+  "verdict": "falsa",
+  "counterexample": "input datetime.date(2000, 1, 30)",
+  "note": null
+ },
+ {
+  "id": "D04",
+  "verdict": "falsa",
+  "counterexample": "input (datetime.date(2024, 1, 2), datetime.date(2024, 1, 1))",
+  "note": null
+ },
+ {
+  "id": "D05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "2003 inputs"
+ },
+ {
+  "id": "D06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "D07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "D08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "9999 inputs"
+ },
+ {
+  "id": "D09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "D10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "D11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "11323 inputs"
+ },
+ {
+  "id": "D12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "D13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "11323 inputs"
+ },
+ {
+  "id": "D14",
+  "verdict": "falsa",
+  "counterexample": "got 53, expected 1",
+  "note": null
+ },
+ {
+  "id": "D15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "D16",
+  "verdict": "falsa",
+  "counterexample": "parse_br('1/2/2024') returned datetime.date(2024, 2, 1), no ValueError",
+  "note": null
+ },
+ {
+  "id": "D17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "all x, all k"
+ },
+ {
+  "id": "D18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "all x, all k"
+ },
+ {
+  "id": "D19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "11323 inputs"
+ }
+]

@@ -1,0 +1,6 @@
+{"id": "C1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "C2", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "C3", "verdict": "falsa", "counterexample": "flatten([[1, [2]], [3]]) -> [1, [2], 3], expected [1, 2, 3]", "seed": 20261101}
+{"id": "C4", "verdict": "falsa", "counterexample": "xs=[] n=-3 -> len 0, expected min(n, len(xs)) = -3", "seed": 20261101}
+{"id": "C5", "verdict": "falsa", "counterexample": "a={'k': 1} b={'k': 2} -> {'k': 2}, expected value from a (1)", "seed": 20261101}
+{"id": "C6", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}

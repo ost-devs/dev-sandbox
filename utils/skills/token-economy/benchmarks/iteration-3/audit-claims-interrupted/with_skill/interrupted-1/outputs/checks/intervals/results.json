@@ -1,0 +1,78 @@
+{
+ "I01": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I02": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I03": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I04": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I05": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I06": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I07": {
+  "verdict": "falsa",
+  "counterexample": "got True, claim says False"
+ },
+ "I08": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I09": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I10": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I11": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I12": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I13": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I14": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I15": {
+  "verdict": "falsa",
+  "counterexample": "raised IndexError: list index out of range"
+ },
+ "I16": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I17": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "I18": {
+  "verdict": "falsa",
+  "counterexample": "args=((-6, 17), 17)"
+ },
+ "I19": {
+  "verdict": "falsa",
+  "counterexample": "got -2, claim says 0"
+ }
+}

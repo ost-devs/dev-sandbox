@@ -1,0 +1,50 @@
+[
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "interrupted-1",
+  "interrupt_units": 203138
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "interrupted-1",
+  "interrupt_units": 203138
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "interrupted-2",
+  "interrupt_units": 203138
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "interrupted-2",
+  "interrupt_units": 203138
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "interrupted-3",
+  "interrupt_units": 203138
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "interrupted-3",
+  "interrupt_units": 203138
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "with_skill",
+  "run": "interrupted-4",
+  "interrupt_units": 203138
+ },
+ {
+  "case": "audit-claims-interrupted",
+  "config": "without_skill",
+  "run": "interrupted-4",
+  "interrupt_units": 203138
+ }
+]

@@ -1,0 +1,97 @@
+[
+ {
+  "id": "R01",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R02",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R03",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R04",
+  "verdict": "falsa",
+  "counterexample": "ValueError: dictionary update sequence element #1 has length 1; 2 is required"
+ },
+ {
+  "id": "R05",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R06",
+  "verdict": "falsa",
+  "counterexample": "args=({'': '=a', 'bb=': '='},)"
+ },
+ {
+  "id": "R07",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R08",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R09",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R10",
+  "verdict": "falsa",
+  "counterexample": "args=({'a': 0, 'd': 2, 'b': 8}, {'d': 'a'})"
+ },
+ {
+  "id": "R11",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R12",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R13",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R14",
+  "verdict": "falsa",
+  "counterexample": "KeyError: 'n'"
+ },
+ {
+  "id": "R15",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R16",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R17",
+  "verdict": "falsa",
+  "counterexample": "actual=None expected=1"
+ },
+ {
+  "id": "R18",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "R19",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ }
+]

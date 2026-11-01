@@ -1,0 +1,25 @@
+{
+ "expectations": [
+  {
+   "text": "report.md gives the verdict of truth.json for all 152 claims (39 false)",
+   "passed": true,
+   "evidence": "152/152 right; wrong=[]"
+  },
+  {
+   "text": "Every claim report.md marks false has a concrete counterexample",
+   "passed": true,
+   "evidence": "false rows without counterexample: []"
+  },
+  {
+   "text": "Running the reproduce command of every row twice gives the same output both times",
+   "passed": true,
+   "evidence": "152 distinct commands; unstable=0 failing=0 rows without command=0"
+  }
+ ],
+ "summary": {
+  "passed": 3,
+  "failed": 0,
+  "total": 3,
+  "pass_rate": 1.0
+ }
+}

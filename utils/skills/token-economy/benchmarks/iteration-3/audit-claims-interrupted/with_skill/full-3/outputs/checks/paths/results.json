@@ -1,0 +1,116 @@
+[
+ {
+  "id": "P01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P02",
+  "verdict": "falsa",
+  "counterexample": "got 'usr/bin', expected '/usr/bin'",
+  "how": "fixed"
+ },
+ {
+  "id": "P03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P05",
+  "verdict": "falsa",
+  "counterexample": "got 'd/arquivo', expected ''",
+  "how": "fixed"
+ },
+ {
+  "id": "P06",
+  "verdict": "falsa",
+  "counterexample": "got 'bashrc', expected ''",
+  "how": "fixed"
+ },
+ {
+  "id": "P07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P10",
+  "verdict": "falsa",
+  "counterexample": "got 'x', expected '../x'",
+  "how": "fixed"
+ },
+ {
+  "id": "P11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=75427882 n=3000"
+ },
+ {
+  "id": "P12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "P17",
+  "verdict": "falsa",
+  "counterexample": "got '', expected '/'",
+  "how": "fixed"
+ },
+ {
+  "id": "P18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2107787406 n=3000"
+ },
+ {
+  "id": "P19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=178616344 n=3000"
+ }
+]

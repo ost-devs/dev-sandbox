@@ -1,0 +1,19 @@
+I01	verdadeira	
+I02	verdadeira	
+I03	verdadeira	
+I04	verdadeira	
+I05	verdadeira	
+I06	verdadeira	
+I07	falsa	contains((0,5),5) -> True vs. esperado False
+I08	verdadeira	
+I09	verdadeira	
+I10	verdadeira	
+I11	verdadeira	
+I12	verdadeira	
+I13	verdadeira	
+I14	verdadeira	
+I15	falsa	merge([]) -> 'EXC IndexError: list index out of range' vs. esperado []
+I16	verdadeira	
+I17	verdadeira	
+I18	falsa	a=(-2, -1) x=-1 -> contains=True, overlaps(a,(x,x+1))=False vs. True
+I19	falsa	length((3,1)) -> -2 vs. esperado 0

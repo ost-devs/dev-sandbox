@@ -1,0 +1,116 @@
+[
+ {
+  "id": "R01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "R02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "R03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "R04",
+  "verdict": "falsa",
+  "counterexample": "raised ValueError: dictionary update sequence element #1 has length 1; 2 is required",
+  "note": null
+ },
+ {
+  "id": "R05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "1501 inputs"
+ },
+ {
+  "id": "R06",
+  "verdict": "falsa",
+  "counterexample": "input {'a=': '1'}",
+  "note": null
+ },
+ {
+  "id": "R07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "R08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "1504 inputs"
+ },
+ {
+  "id": "R09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "R10",
+  "verdict": "falsa",
+  "counterexample": "input ({'a': 1, 'b': 2}, {'a': 'b'})",
+  "note": null
+ },
+ {
+  "id": "R11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "R12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "1501 inputs"
+ },
+ {
+  "id": "R13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "1501 inputs"
+ },
+ {
+  "id": "R14",
+  "verdict": "falsa",
+  "counterexample": "sort_by([{'x': 1}, {'n': 1}], 'n') raised KeyError: 'n'",
+  "note": null
+ },
+ {
+  "id": "R15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "R16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "R17",
+  "verdict": "falsa",
+  "counterexample": "got None, expected 1",
+  "note": null
+ },
+ {
+  "id": "R18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "1505 inputs"
+ },
+ {
+  "id": "R19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ }
+]

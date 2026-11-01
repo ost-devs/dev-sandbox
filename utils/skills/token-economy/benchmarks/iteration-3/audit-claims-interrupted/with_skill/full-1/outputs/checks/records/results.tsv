@@ -1,0 +1,19 @@
+R01	verdadeira	
+R02	verdadeira	
+R03	verdadeira	
+R04	falsa	parse_kv('a=1;flag') raised ValueError: dictionary update sequence element #1 has length 1; 2 is required
+R05	verdadeira	
+R06	falsa	d={'a': 'b;c'} raised ValueError('dictionary update sequence element #1 has length 1; 2 is required')
+R07	verdadeira	
+R08	verdadeira	
+R09	verdadeira	
+R10	falsa	rename({'a': 1, 'b': 2},{'a': 'b'}) = {'b': 2}
+R11	verdadeira	
+R12	verdadeira	
+R13	verdadeira	
+R14	falsa	sort_by([{'x': 1}, {'n': 2}], 'n') raised KeyError: 'n'
+R15	verdadeira	
+R16	verdadeira	
+R17	falsa	deep_get({'a':[1,2]},'a.0') = None
+R18	verdadeira	
+R19	verdadeira	

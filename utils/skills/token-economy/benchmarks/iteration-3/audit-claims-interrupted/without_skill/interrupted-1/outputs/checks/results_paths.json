@@ -1,0 +1,116 @@
+[
+ {
+  "id": "P01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P02",
+  "verdict": "falsa",
+  "counterexample": "join('/usr', 'bin') -> 'usr/bin' (esperado '/usr/bin')",
+  "note": "execucao unica"
+ },
+ {
+  "id": "P03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P05",
+  "verdict": "falsa",
+  "counterexample": "ext('dir.d/arquivo') -> 'd/arquivo' (esperado '')",
+  "note": "execucao unica"
+ },
+ {
+  "id": "P06",
+  "verdict": "falsa",
+  "counterexample": "ext('.bashrc') -> 'bashrc' (esperado '')",
+  "note": "execucao unica"
+ },
+ {
+  "id": "P07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P10",
+  "verdict": "falsa",
+  "counterexample": "normalize('../x') -> 'x' (esperado '../x')",
+  "note": "execucao unica"
+ },
+ {
+  "id": "P11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo ate 5 tokens de ['a', 'b', '.', '/', '..', 'x', '1'] + 3000 amostras longas com semente 12345; nenhum contraexemplo achado"
+ },
+ {
+  "id": "P12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "P17",
+  "verdict": "falsa",
+  "counterexample": "parent('/a') -> '' (esperado '/')",
+  "note": "execucao unica"
+ },
+ {
+  "id": "P18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "nomes nao vazios alfanumericos; exaustivo ate 4 de 6 nomes + 3000 amostras com semente 12345; nenhum contraexemplo achado"
+ },
+ {
+  "id": "P19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "18550 strings com ponto (exaustivo ate 5 tokens + amostras, semente 12345); nenhum contraexemplo achado"
+ }
+]

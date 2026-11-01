@@ -1,0 +1,35 @@
+{
+ "seed": 20261101,
+ "results": [
+  {
+   "id": "M1",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  },
+  {
+   "id": "M2",
+   "verdict": "falsa",
+   "counterexample": "raises ZeroDivisionError: division by zero"
+  },
+  {
+   "id": "M3",
+   "verdict": "falsa",
+   "counterexample": "round_half(2.5)=2"
+  },
+  {
+   "id": "M4",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  },
+  {
+   "id": "M5",
+   "verdict": "falsa",
+   "counterexample": "is_prime(4)=True, expected False"
+  },
+  {
+   "id": "M6",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  }
+ ]
+}

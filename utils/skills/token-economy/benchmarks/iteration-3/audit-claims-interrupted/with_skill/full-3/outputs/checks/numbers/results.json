@@ -1,0 +1,116 @@
+[
+ {
+  "id": "N01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=199053073 n=3000"
+ },
+ {
+  "id": "N02",
+  "verdict": "falsa",
+  "counterexample": "got 10",
+  "how": "fixed"
+ },
+ {
+  "id": "N03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N06",
+  "verdict": "falsa",
+  "counterexample": "raises IndexError: list index out of range",
+  "how": "fixed"
+ },
+ {
+  "id": "N07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=3804162596 n=3000"
+ },
+ {
+  "id": "N08",
+  "verdict": "falsa",
+  "counterexample": "got 2",
+  "how": "fixed"
+ },
+ {
+  "id": "N09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N11",
+  "verdict": "falsa",
+  "counterexample": "args=(0,) raises ZeroDivisionError: division by zero",
+  "how": "seed=314998352 n=3000"
+ },
+ {
+  "id": "N12",
+  "verdict": "falsa",
+  "counterexample": "wrong for [4, 6, 8, 9, 15, 25, 35, 49, 121, 143]",
+  "how": "fixed"
+ },
+ {
+  "id": "N13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N15",
+  "verdict": "falsa",
+  "counterexample": "a=-50 b=1: 1 vs -1",
+  "how": "fixed"
+ },
+ {
+  "id": "N16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=4221950821 n=3000"
+ },
+ {
+  "id": "N18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "N19",
+  "verdict": "falsa",
+  "counterexample": "args=(-883,) raises ValueError: invalid literal for int() with base 10: '-'",
+  "how": "seed=471725666 n=3000"
+ }
+]

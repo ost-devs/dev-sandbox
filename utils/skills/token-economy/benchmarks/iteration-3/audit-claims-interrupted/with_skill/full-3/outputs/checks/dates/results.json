@@ -1,0 +1,116 @@
+[
+ {
+  "id": "D01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D02",
+  "verdict": "falsa",
+  "counterexample": "x=2000-02-29",
+  "how": "fixed"
+ },
+ {
+  "id": "D03",
+  "verdict": "falsa",
+  "counterexample": "x=2000-01-30",
+  "how": "fixed"
+ },
+ {
+  "id": "D04",
+  "verdict": "falsa",
+  "counterexample": "args=(datetime.date(8157, 6, 14), datetime.date(2364, 7, 9))",
+  "how": "seed=1981824584 n=3000"
+ },
+ {
+  "id": "D05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=19336926 n=3000"
+ },
+ {
+  "id": "D06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=525466502 n=3000"
+ },
+ {
+  "id": "D12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D14",
+  "verdict": "falsa",
+  "counterexample": "iso_week=53",
+  "how": "fixed"
+ },
+ {
+  "id": "D15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "D16",
+  "verdict": "falsa",
+  "counterexample": "no ValueError; returned 2024-02-01",
+  "how": "fixed"
+ },
+ {
+  "id": "D17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=4130496179 n=3000"
+ },
+ {
+  "id": "D18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=1720533794 n=3000"
+ },
+ {
+  "id": "D19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ }
+]

@@ -1,0 +1,116 @@
+[
+ {
+  "id": "L01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "L02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "L03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "chunk(xs,0) com xs=[],[1],[1,2,3] levanta ValueError"
+ },
+ {
+  "id": "L04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "L05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "L06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "L07",
+  "verdict": "falsa",
+  "counterexample": "flatten([[1, [2]], [3]]) -> [1, [2], 3] (esperado [1, 2, 3])",
+  "note": "execucao unica"
+ },
+ {
+  "id": "L08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "L09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "L10",
+  "verdict": "falsa",
+  "counterexample": "top_n([3, 2, 1], -1) -> [3, 2] (esperado [])",
+  "note": "execucao unica"
+ },
+ {
+  "id": "L11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "L12",
+  "verdict": "falsa",
+  "counterexample": "rotate([0, -1], 3) = [0, -1] vs rotate([0, -1], 1) = [-1, 0]",
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; contraexemplo encontrado"
+ },
+ {
+  "id": "L13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "L14",
+  "verdict": "falsa",
+  "counterexample": "interleave([1, 2, 3], [9]) -> [1, 9] (esperado [1, 9, 2, 3])",
+  "note": "execucao unica"
+ },
+ {
+  "id": "L15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "L16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "L17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "L18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "L19",
+  "verdict": "falsa",
+  "counterexample": "pairwise([]) = [] (len 0, esperado -1)",
+  "note": "exaustivo em listas len<=4 sobre {0,1,2} + 1500 listas semeadas (semente 4242) x k; contraexemplo encontrado"
+ }
+]

@@ -1,0 +1,19 @@
+M01	verdadeira	
+M02	verdadeira	
+M03	falsa	to_cents('-1,50') = -50, expected -150
+M04	verdadeira	
+M05	verdadeira	
+M06	verdadeira	
+M07	falsa	format_brl(-150) = 'R$ -2,50', expected 'R$ -1,50'
+M08	verdadeira	
+M09	falsa	split_bill(1, 2) = [0, 0]... sum=0
+M10	verdadeira	
+M11	verdadeira	
+M12	verdadeira	
+M13	verdadeira	
+M14	verdadeira	
+M15	verdadeira	
+M16	verdadeira	
+M17	falsa	add_tax(100, 0.15) = 114, expected 115
+M18	verdadeira	
+M19	verdadeira	

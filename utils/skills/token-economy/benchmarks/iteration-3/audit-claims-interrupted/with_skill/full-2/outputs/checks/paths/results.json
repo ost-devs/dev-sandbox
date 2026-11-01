@@ -1,0 +1,97 @@
+[
+ {
+  "id": "P01",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P02",
+  "verdict": "falsa",
+  "counterexample": "actual='usr/bin' expected='/usr/bin'"
+ },
+ {
+  "id": "P03",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P04",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P05",
+  "verdict": "falsa",
+  "counterexample": "actual='d/arquivo' expected=''"
+ },
+ {
+  "id": "P06",
+  "verdict": "falsa",
+  "counterexample": "actual='bashrc' expected=''"
+ },
+ {
+  "id": "P07",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P08",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P09",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P10",
+  "verdict": "falsa",
+  "counterexample": "actual='x' expected='../x'"
+ },
+ {
+  "id": "P11",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P12",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P13",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P14",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P15",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P16",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P17",
+  "verdict": "falsa",
+  "counterexample": "actual='' expected='/'"
+ },
+ {
+  "id": "P18",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "P19",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ }
+]

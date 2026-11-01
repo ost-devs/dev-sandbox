@@ -1,0 +1,68 @@
+{
+ "case": "verify-claims-subagents",
+ "config": "with_skill",
+ "model": "claude-sonnet-5-5",
+ "session_id": "f9e3f6e4-a8c5-4cba-9cf4-60673bd5b2f7",
+ "work_dir": "/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5db43532",
+ "interrupt_units": null,
+ "phases": [
+  {
+   "seconds": 74.0,
+   "exit": 0,
+   "killed": false,
+   "reported_cost_usd": 0.1651278,
+   "subtype": "success",
+   "is_error": false,
+   "usage_after": {
+    "units": 295220,
+    "tokens": 611406,
+    "input_tokens": 68,
+    "cache_creation_input_tokens": 93815,
+    "cache_read_input_tokens": 491782,
+    "output_tokens": 25741,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 28,
+      "cache_creation_input_tokens": 20309,
+      "cache_read_input_tokens": 208447,
+      "output_tokens": 4010
+     },
+     "claude-haiku-5-5": {
+      "input_tokens": 40,
+      "cache_creation_input_tokens": 73506,
+      "cache_read_input_tokens": 283335,
+      "output_tokens": 21731
+     }
+    },
+    "messages": 29
+   }
+  }
+ ],
+ "usage": {
+  "units": 295220,
+  "tokens": 611406,
+  "input_tokens": 68,
+  "cache_creation_input_tokens": 93815,
+  "cache_read_input_tokens": 491782,
+  "output_tokens": 25741,
+  "by_model": {
+   "claude-sonnet-5-5": {
+    "input_tokens": 28,
+    "cache_creation_input_tokens": 20309,
+    "cache_read_input_tokens": 208447,
+    "output_tokens": 4010
+   },
+   "claude-haiku-5-5": {
+    "input_tokens": 40,
+    "cache_creation_input_tokens": 73506,
+    "cache_read_input_tokens": 283335,
+    "output_tokens": 21731
+   }
+  },
+  "messages": 29
+ },
+ "skill_calls": [
+  "token-economy"
+ ],
+ "subagents": 4
+}

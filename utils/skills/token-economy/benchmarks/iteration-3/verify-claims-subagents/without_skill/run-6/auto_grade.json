@@ -1,0 +1,10 @@
+{
+ "rows": 24,
+ "wrong": [],
+ "missing": [],
+ "no_counterexample": [],
+ "commands": 4,
+ "unstable": [],
+ "failing": [],
+ "no_command": []
+}

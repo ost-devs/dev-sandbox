@@ -1,0 +1,19 @@
+{"id": "R01", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R01"}
+{"id": "R02", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R02"}
+{"id": "R03", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R03"}
+{"id": "R04", "verdict": "falsa", "counterexample": "raised ValueError('dictionary update sequence element #1 has length 1; 2 is required'), expected {'a': '1', 'flag': ''}", "command": "python3 checks/check_records.py R04"}
+{"id": "R05", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R05"}
+{"id": "R06", "verdict": "falsa", "counterexample": "d={'a=b': 'c'}: to_kv='a=b=c', parse_kv(to_kv(d))={'a': 'b=c'}", "command": "python3 checks/check_records.py R06"}
+{"id": "R07", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R07"}
+{"id": "R08", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R08"}
+{"id": "R09", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R09"}
+{"id": "R10", "verdict": "falsa", "counterexample": "d={'a': 1, 'b': 2}, mapping={'a': 'b'}: got {'b': 2} (len 1), expected len 2", "command": "python3 checks/check_records.py R10"}
+{"id": "R11", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R11"}
+{"id": "R12", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R12"}
+{"id": "R13", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R13"}
+{"id": "R14", "verdict": "falsa", "counterexample": "rows=[{'n': 2}, {'x': 1}, {'n': 1}]: raised KeyError('n'), expected rows without \"n\" at the end", "command": "python3 checks/check_records.py R14"}
+{"id": "R15", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R15"}
+{"id": "R16", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R16"}
+{"id": "R17", "verdict": "falsa", "counterexample": "got None, expected 1", "command": "python3 checks/check_records.py R17"}
+{"id": "R18", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R18"}
+{"id": "R19", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_records.py R19"}

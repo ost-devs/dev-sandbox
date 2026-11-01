@@ -1,0 +1,81 @@
+{
+ "case": "audit-claims-interrupted",
+ "config": "with_skill",
+ "model": "claude-sonnet-5-5",
+ "session_id": "56fc152e-0b61-4349-9d43-a4301ade1ad4",
+ "work_dir": "/tmp/dev-home/.cache/token-economy-runs/audit-claims-interrupted-with_skill-80e64ffe",
+ "interrupt_units": 203138.0,
+ "phases": [
+  {
+   "seconds": 50.2,
+   "exit": -9,
+   "killed": true,
+   "reported_cost_usd": null,
+   "subtype": null,
+   "is_error": null,
+   "usage_after": {
+    "units": 221294,
+    "tokens": 487967,
+    "input_tokens": 60,
+    "cache_creation_input_tokens": 91581,
+    "cache_read_input_tokens": 382627,
+    "output_tokens": 13699,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 60,
+      "cache_creation_input_tokens": 91581,
+      "cache_read_input_tokens": 382627,
+      "output_tokens": 13699
+     }
+    },
+    "messages": 29
+   }
+  },
+  {
+   "seconds": 162.0,
+   "exit": 0,
+   "killed": false,
+   "reported_cost_usd": 0.2981098,
+   "subtype": "success",
+   "is_error": false,
+   "usage_after": {
+    "units": 382050,
+    "tokens": 967603,
+    "input_tokens": 110,
+    "cache_creation_input_tokens": 117993,
+    "cache_read_input_tokens": 818990,
+    "output_tokens": 30510,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 110,
+      "cache_creation_input_tokens": 117993,
+      "cache_read_input_tokens": 818990,
+      "output_tokens": 30510
+     }
+    },
+    "messages": 47
+   }
+  }
+ ],
+ "usage": {
+  "units": 382050,
+  "tokens": 967603,
+  "input_tokens": 110,
+  "cache_creation_input_tokens": 117993,
+  "cache_read_input_tokens": 818990,
+  "output_tokens": 30510,
+  "by_model": {
+   "claude-sonnet-5-5": {
+    "input_tokens": 110,
+    "cache_creation_input_tokens": 117993,
+    "cache_read_input_tokens": 818990,
+    "output_tokens": 30510
+   }
+  },
+  "messages": 47
+ },
+ "skill_calls": [
+  "token-economy"
+ ],
+ "subagents": 8
+}

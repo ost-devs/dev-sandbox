@@ -1,0 +1,116 @@
+[
+ {
+  "id": "L01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "L02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2437991109 n=3000"
+ },
+ {
+  "id": "L03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "L04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "L05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=255090534 n=3000"
+ },
+ {
+  "id": "L06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2520583900 n=3000"
+ },
+ {
+  "id": "L07",
+  "verdict": "falsa",
+  "counterexample": "got [1, [2], 3], expected [1, 2, 3]",
+  "how": "fixed"
+ },
+ {
+  "id": "L08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "L09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=109187917 n=3000"
+ },
+ {
+  "id": "L10",
+  "verdict": "falsa",
+  "counterexample": "got [3, 2], expected []",
+  "how": "fixed"
+ },
+ {
+  "id": "L11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "L12",
+  "verdict": "falsa",
+  "counterexample": "args=([4, -2, 9, 5, 3, -1, 4], 11)",
+  "how": "seed=2286680964 n=3000"
+ },
+ {
+  "id": "L13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=4283222802 n=3000"
+ },
+ {
+  "id": "L14",
+  "verdict": "falsa",
+  "counterexample": "got [1, 9], expected [1, 9, 2, 3]",
+  "how": "fixed"
+ },
+ {
+  "id": "L15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=372207143 n=3000"
+ },
+ {
+  "id": "L16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "L17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=4162916107 n=3000"
+ },
+ {
+  "id": "L18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "L19",
+  "verdict": "falsa",
+  "counterexample": "args=([],)",
+  "how": "seed=530129420 n=3000"
+ }
+]

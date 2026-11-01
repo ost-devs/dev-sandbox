@@ -1,0 +1,116 @@
+[
+ {
+  "id": "D01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "D02",
+  "verdict": "falsa",
+  "counterexample": "add_months(datetime.date(2000, 2, 29), 12) = datetime.date(2001, 2, 28)",
+  "note": "exaustivo: 11323 datas 2000-2030"
+ },
+ {
+  "id": "D03",
+  "verdict": "falsa",
+  "counterexample": "add_months(add_months(datetime.date(2000, 1, 30),1),-1) = datetime.date(2000, 1, 29)",
+  "note": "exaustivo: 11323 datas 2000-2030"
+ },
+ {
+  "id": "D04",
+  "verdict": "falsa",
+  "counterexample": "days_between(datetime.date(2024, 1, 1), datetime.date(1, 1, 1)) = -738885",
+  "note": "bordas + 1000 pares aleatorios (semente 12345) em todo o dominio de date"
+ },
+ {
+  "id": "D05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "bordas + 1000 pares aleatorios (semente 12345) em todo o dominio de date; nenhum contraexemplo achado"
+ },
+ {
+  "id": "D06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "D07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "D08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: anos 1..9999; nenhum contraexemplo achado"
+ },
+ {
+  "id": "D09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "D10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "D11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: todos os meses dos anos 1..9999 (quarter depende so do mes); nenhum contraexemplo achado"
+ },
+ {
+  "id": "D12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "D13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: 11323 datas 2000-2030; nenhum contraexemplo achado"
+ },
+ {
+  "id": "D14",
+  "verdict": "falsa",
+  "counterexample": "iso_week(date(2021,1,1)) -> 53 (esperado 1)",
+  "note": "execucao unica"
+ },
+ {
+  "id": "D15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "D16",
+  "verdict": "falsa",
+  "counterexample": "parse_br('1/2/2024') = datetime.date(2024, 2, 1) (nao levantou excecao)",
+  "note": "execucao unica"
+ },
+ {
+  "id": "D17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: 11323 datas x 2001 valores de k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "D18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: 11323 datas x 61 valores de k; nenhum contraexemplo achado"
+ },
+ {
+  "id": "D19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: 11323 datas 2000-2030; nenhum contraexemplo achado"
+ }
+]

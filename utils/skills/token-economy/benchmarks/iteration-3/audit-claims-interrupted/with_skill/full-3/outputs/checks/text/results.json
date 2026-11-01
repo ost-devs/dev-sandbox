@@ -1,0 +1,116 @@
+[
+ {
+  "id": "T01",
+  "verdict": "falsa",
+  "counterexample": "got 'caf-noir', expected 'cafe-noir'",
+  "how": "fixed"
+ },
+ {
+  "id": "T02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2204448781 n=3000"
+ },
+ {
+  "id": "T03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=4100065435 n=3000"
+ },
+ {
+  "id": "T04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=1778818360 n=3000"
+ },
+ {
+  "id": "T05",
+  "verdict": "falsa",
+  "counterexample": "args=('Ωã\\\\.YãİΩc', 2)",
+  "how": "seed=486649262 n=3000"
+ },
+ {
+  "id": "T06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=4077898882 n=3000"
+ },
+ {
+  "id": "T08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T12",
+  "verdict": "falsa",
+  "counterexample": "args=('ßYøǅ😀Yﬁǅ/',)",
+  "how": "seed=2591951180 n=3000"
+ },
+ {
+  "id": "T13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T14",
+  "verdict": "falsa",
+  "counterexample": "got 'ø', expected 'o'",
+  "how": "fixed"
+ },
+ {
+  "id": "T15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2635320661 n=3000"
+ },
+ {
+  "id": "T17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "T19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=229429444 n=3000"
+ }
+]

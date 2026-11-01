@@ -1,0 +1,78 @@
+{
+ "P01": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P02": {
+  "verdict": "falsa",
+  "counterexample": "got 'usr/bin', claim says '/usr/bin'"
+ },
+ "P03": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P04": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P05": {
+  "verdict": "falsa",
+  "counterexample": "got 'd/arquivo', claim says ''"
+ },
+ "P06": {
+  "verdict": "falsa",
+  "counterexample": "got 'bashrc', claim says ''"
+ },
+ "P07": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P08": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P09": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P10": {
+  "verdict": "falsa",
+  "counterexample": "got 'x', claim says '../x'"
+ },
+ "P11": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P12": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P13": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P14": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P15": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P16": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P17": {
+  "verdict": "falsa",
+  "counterexample": "got '', claim says '/'"
+ },
+ "P18": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "P19": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ }
+}

@@ -1,0 +1,333 @@
+{
+ "audit-claims-interrupted": {
+  "full": {
+   "units": {
+    "with_mean": 378236,
+    "without_mean": 434317,
+    "with_sd": 14234,
+    "without_sd": 21039,
+    "ratio": 0.871,
+    "ci95": [
+     0.826,
+     0.914
+    ],
+    "p": 0.0286,
+    "verdict": "diferença pequena a favor da skill",
+    "n": [
+     4,
+     4
+    ]
+   },
+   "usd": {
+    "with_mean": 1,
+    "without_mean": 1,
+    "with_sd": 0,
+    "without_sd": 0,
+    "ratio": 0.846,
+    "ci95": [
+     0.794,
+     0.895
+    ],
+    "p": 0.0286,
+    "verdict": "diferença pequena a favor da skill",
+    "n": [
+     4,
+     4
+    ]
+   },
+   "seconds": {
+    "with_mean": 93,
+    "without_mean": 148,
+    "with_sd": 9,
+    "without_sd": 69,
+    "ratio": 0.631,
+    "ci95": [
+     0.437,
+     0.983
+    ],
+    "p": 0.1714,
+    "verdict": "grande diferença a favor da skill",
+    "n": [
+     4,
+     4
+    ]
+   },
+   "pass_rate": {
+    "with": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "without": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "skill_used": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "subagents": {
+    "with": [
+     8,
+     8,
+     8,
+     8
+    ],
+    "without": [
+     8,
+     8,
+     8,
+     8
+    ]
+   },
+   "units_raw": {
+    "with": [
+     366767,
+     394667,
+     365905,
+     385603
+    ],
+    "without": [
+     428017,
+     464633,
+     415955,
+     428664
+    ]
+   }
+  },
+  "interrupted": {
+   "units": {
+    "with_mean": 456501,
+    "without_mean": 559054,
+    "with_sd": 69696,
+    "without_sd": 75987,
+    "ratio": 0.817,
+    "ci95": [
+     0.687,
+     0.969
+    ],
+    "p": 0.1143,
+    "verdict": "diferença pequena a favor da skill",
+    "n": [
+     4,
+     4
+    ]
+   },
+   "usd": null,
+   "seconds": {
+    "with_mean": 155,
+    "without_mean": 242,
+    "with_sd": 41,
+    "without_sd": 92,
+    "ratio": 0.639,
+    "ci95": [
+     0.444,
+     0.99
+    ],
+    "p": 0.2,
+    "verdict": "grande diferença a favor da skill",
+    "n": [
+     4,
+     4
+    ]
+   },
+   "pass_rate": {
+    "with": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "without": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "skill_used": [
+    true,
+    true,
+    true,
+    true
+   ],
+   "subagents": {
+    "with": [
+     15,
+     15,
+     8,
+     14
+    ],
+    "without": [
+     15,
+     9,
+     15,
+     12
+    ]
+   },
+   "units_raw": {
+    "with": [
+     428027,
+     546188,
+     382050,
+     469740
+    ],
+    "without": [
+     655634,
+     569726,
+     538052,
+     472803
+    ]
+   }
+  },
+  "resume_overhead": {
+   "with": {
+    "full_mean": 378236,
+    "interrupted_mean": 456501,
+    "overhead_units": 78266,
+    "overhead_pct_of_full": 20.7,
+    "units_at_kill": [
+     205328,
+     207054,
+     221294,
+     203439
+    ]
+   },
+   "without": {
+    "full_mean": 434317,
+    "interrupted_mean": 559054,
+    "overhead_units": 124736,
+    "overhead_pct_of_full": 28.7,
+    "units_at_kill": [
+     227136,
+     245143,
+     208486,
+     204808
+    ]
+   }
+  }
+ },
+ "verify-claims-subagents": {
+  "all": {
+   "units": {
+    "with_mean": 196912,
+    "without_mean": 182194,
+    "with_sd": 48649,
+    "without_sd": 15680,
+    "ratio": 1.081,
+    "ci95": [
+     0.925,
+     1.316
+    ],
+    "p": 0.7381,
+    "verdict": "inconclusivo (intervalo cruza 1)",
+    "n": [
+     6,
+     6
+    ]
+   },
+   "usd": {
+    "with_mean": 0,
+    "without_mean": 0,
+    "with_sd": 0,
+    "without_sd": 0,
+    "ratio": 0.879,
+    "ci95": [
+     0.703,
+     1.008
+    ],
+    "p": 0.1558,
+    "verdict": "inconclusivo (intervalo cruza 1)",
+    "n": [
+     6,
+     6
+    ]
+   },
+   "seconds": {
+    "with_mean": 63,
+    "without_mean": 90,
+    "with_sd": 9,
+    "without_sd": 81,
+    "ratio": 0.704,
+    "ci95": [
+     0.389,
+     1.238
+    ],
+    "p": 0.8896,
+    "verdict": "inconclusivo (intervalo cruza 1)",
+    "n": [
+     6,
+     6
+    ]
+   },
+   "pass_rate": {
+    "with": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "without": [
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "skill_used": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "subagents": {
+    "with": [
+     4,
+     4,
+     4,
+     4,
+     4,
+     4
+    ],
+    "without": [
+     4,
+     4,
+     4,
+     4,
+     4,
+     4
+    ]
+   },
+   "units_raw": {
+    "with": [
+     183226,
+     165991,
+     185085,
+     173808,
+     295220,
+     178143
+    ],
+    "without": [
+     178394,
+     166912,
+     165409,
+     199961,
+     201734,
+     180757
+    ]
+   }
+  }
+ }
+}

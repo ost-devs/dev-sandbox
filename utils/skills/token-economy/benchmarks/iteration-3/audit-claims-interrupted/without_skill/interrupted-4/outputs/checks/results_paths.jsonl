@@ -1,0 +1,19 @@
+{"id": "P01", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P01"}
+{"id": "P02", "verdict": "falsa", "counterexample": "got 'usr/bin', expected '/usr/bin'", "command": "python3 checks/check_paths.py P02"}
+{"id": "P03", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P03"}
+{"id": "P04", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P04"}
+{"id": "P05", "verdict": "falsa", "counterexample": "got 'd/arquivo', expected ''", "command": "python3 checks/check_paths.py P05"}
+{"id": "P06", "verdict": "falsa", "counterexample": "got 'bashrc', expected ''", "command": "python3 checks/check_paths.py P06"}
+{"id": "P07", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P07"}
+{"id": "P08", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P08"}
+{"id": "P09", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P09"}
+{"id": "P10", "verdict": "falsa", "counterexample": "got 'x', expected '../x'", "command": "python3 checks/check_paths.py P10"}
+{"id": "P11", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P11"}
+{"id": "P12", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P12"}
+{"id": "P13", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P13"}
+{"id": "P14", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P14"}
+{"id": "P15", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P15"}
+{"id": "P16", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P16"}
+{"id": "P17", "verdict": "falsa", "counterexample": "got '', expected '/'", "command": "python3 checks/check_paths.py P17"}
+{"id": "P18", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P18"}
+{"id": "P19", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_paths.py P19"}

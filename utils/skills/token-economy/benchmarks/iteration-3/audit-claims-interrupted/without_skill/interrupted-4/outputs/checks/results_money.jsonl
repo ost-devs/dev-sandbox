@@ -1,0 +1,19 @@
+{"id": "M01", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M01"}
+{"id": "M02", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M02"}
+{"id": "M03", "verdict": "falsa", "counterexample": "to_cents('-1,50'): got -50, expected -150", "command": "python3 checks/check_money.py M03"}
+{"id": "M04", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M04"}
+{"id": "M05", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M05"}
+{"id": "M06", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M06"}
+{"id": "M07", "verdict": "falsa", "counterexample": "format_brl(-150): got 'R$ -2,50', expected 'R$ -1,50'", "command": "python3 checks/check_money.py M07"}
+{"id": "M08", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M08"}
+{"id": "M09", "verdict": "falsa", "counterexample": "split_bill(1, 2) = [0, 0], sum 0 != 1", "command": "python3 checks/check_money.py M09"}
+{"id": "M10", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M10"}
+{"id": "M11", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M11"}
+{"id": "M12", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M12"}
+{"id": "M13", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M13"}
+{"id": "M14", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M14"}
+{"id": "M15", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M15"}
+{"id": "M16", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M16"}
+{"id": "M17", "verdict": "falsa", "counterexample": "add_tax(100, 0.15): got 114, expected 115", "command": "python3 checks/check_money.py M17"}
+{"id": "M18", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M18"}
+{"id": "M19", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_money.py M19"}

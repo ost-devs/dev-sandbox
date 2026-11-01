@@ -1,0 +1,28 @@
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from lib import Checker, rand_text, rand_int
+from kit.text import *
+c = Checker("text")
+def eq(a, b): return None if a == b else f"got {a!r}, expected {b!r}"
+T = lambda r: (rand_text(r),)
+TN = lambda r: (rand_text(r), r.randint(0, 20))
+c.fixed("T01", lambda: eq(slugify('Café Noir'), 'cafe-noir'))
+c.prop("T02", T, lambda s: not slugify(s).startswith('-') and not slugify(s).endswith('-'))
+c.prop("T03", T, lambda s: all(ch in "abcdefghijklmnopqrstuvwxyz0123456789-" for ch in slugify(s)))
+c.prop("T04", T, lambda s: slugify(slugify(s)) == slugify(s))
+c.prop("T05", TN, lambda s, n: len(truncate(s, n)) <= n)
+c.fixed("T06", lambda: eq(truncate('abcdef', 5), 'ab...'))
+c.prop("T07", TN, lambda s, n: len(s) > n or truncate(s, n) == s)
+c.fixed("T08", lambda: eq(count_words('a  b\tc\n'), 3))
+c.fixed("T09", lambda: eq(count_words(''), 0))
+c.fixed("T10", lambda: eq(title_case('a  b'), 'A  B'))
+c.fixed("T11", lambda: eq(title_case('élan vital'), 'Élan Vital'))
+c.prop("T12", T, lambda s: len(title_case(s)) == len(s))
+c.fixed("T13", lambda: eq(strip_accents('Ação'), 'Acao'))
+c.fixed("T14", lambda: eq(strip_accents('ø'), 'o'))
+c.fixed("T15", lambda: eq(pad_left('7', 3, '0'), '007'))
+c.prop("T16", TN, lambda s, n: len(pad_left(s, n)) == max(len(s), n))
+c.fixed("T17", lambda: eq(is_palindrome(''), True))
+c.fixed("T18", lambda: eq(is_palindrome('A man, a plan, a canal: Panama'), True))
+c.prop("T19", T, lambda s: is_palindrome(s) == is_palindrome(s[::-1]))
+c.finish()

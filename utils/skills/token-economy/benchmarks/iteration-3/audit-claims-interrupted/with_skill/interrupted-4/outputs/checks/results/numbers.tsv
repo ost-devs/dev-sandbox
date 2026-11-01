@@ -1,0 +1,19 @@
+N01	verdadeira	
+N02	falsa	clamp(5,10,0) -> 10, expected 0
+N03	verdadeira	
+N04	verdadeira	
+N05	verdadeira	
+N06	falsa	median([]) raised IndexError: list index out of range
+N07	verdadeira	
+N08	falsa	round_half(2.5) -> 2, expected 3
+N09	verdadeira	
+N10	verdadeira	
+N11	falsa	(0,) raised ZeroDivisionError: division by zero
+N12	falsa	4
+N13	verdadeira	
+N14	verdadeira	
+N15	falsa	(-50, 1)
+N16	verdadeira	
+N17	verdadeira	
+N18	verdadeira	
+N19	falsa	-1000 raised ValueError: invalid literal for int() with base 10: '-'

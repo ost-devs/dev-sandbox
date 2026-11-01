@@ -1,0 +1,116 @@
+[
+ {
+  "id": "I01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "I02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2543519790 n=3000"
+ },
+ {
+  "id": "I03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "I04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "I05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=167746957 n=3000"
+ },
+ {
+  "id": "I06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2432093239 n=3000"
+ },
+ {
+  "id": "I07",
+  "verdict": "falsa",
+  "counterexample": "got True, expected False",
+  "how": "fixed"
+ },
+ {
+  "id": "I08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2001658160 n=3000"
+ },
+ {
+  "id": "I09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "I10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "I11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "I12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "I13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=4186376697 n=3000"
+ },
+ {
+  "id": "I14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=1742969946 n=3000"
+ },
+ {
+  "id": "I15",
+  "verdict": "falsa",
+  "counterexample": "raises IndexError: list index out of range",
+  "how": "fixed"
+ },
+ {
+  "id": "I16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "seed=2314075510 n=3000"
+ },
+ {
+  "id": "I17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "how": "fixed"
+ },
+ {
+  "id": "I18",
+  "verdict": "falsa",
+  "counterexample": "args=((-1, 1), 1)",
+  "how": "seed=1851117681 n=3000"
+ },
+ {
+  "id": "I19",
+  "verdict": "falsa",
+  "counterexample": "got -2, expected 0",
+  "how": "fixed"
+ }
+]

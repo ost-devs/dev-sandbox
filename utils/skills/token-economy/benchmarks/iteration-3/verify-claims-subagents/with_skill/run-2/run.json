@@ -1,0 +1,63 @@
+{
+ "case": "verify-claims-subagents",
+ "config": "with_skill",
+ "model": "claude-sonnet-5-5",
+ "session_id": "219580b1-e11d-402d-9b30-e5f9dabade6d",
+ "work_dir": "/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5fede0cf",
+ "interrupt_units": null,
+ "phases": [
+  {
+   "seconds": 76.0,
+   "exit": 0,
+   "killed": false,
+   "reported_cost_usd": 0.3218158,
+   "subtype": "success",
+   "is_error": false,
+   "usage_after": {
+    "units": 165991,
+    "tokens": 478300,
+    "input_tokens": 54,
+    "cache_creation_input_tokens": 58334,
+    "cache_read_input_tokens": 409498,
+    "output_tokens": 10414,
+    "by_model": {
+     "claude-sonnet-5-5": {
+      "input_tokens": 54,
+      "cache_creation_input_tokens": 58334,
+      "cache_read_input_tokens": 409498,
+      "output_tokens": 10414
+     }
+    },
+    "messages": 25
+   }
+  }
+ ],
+ "usage": {
+  "units": 165991,
+  "tokens": 478300,
+  "input_tokens": 54,
+  "cache_creation_input_tokens": 58334,
+  "cache_read_input_tokens": 409498,
+  "output_tokens": 10414,
+  "by_model": {
+   "claude-sonnet-5-5": {
+    "input_tokens": 54,
+    "cache_creation_input_tokens": 58334,
+    "cache_read_input_tokens": 409498,
+    "output_tokens": 10414
+   }
+  },
+  "messages": 25
+ },
+ "skill_calls": [
+  "token-economy",
+  "read:/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5fede0cf/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5fede0cf/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5fede0cf/claims.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5fede0cf/calc/textutil.py",
+  "read:/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5fede0cf/checks/harness.py",
+  "read:/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5fede0cf/checks/CARD.md",
+  "read:/tmp/dev-home/.cache/token-economy-runs/verify-claims-subagents-with_skill-5fede0cf/checks/CARD.md"
+ ],
+ "subagents": 4
+}

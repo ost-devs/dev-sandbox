@@ -1,0 +1,116 @@
+[
+ {
+  "id": "I01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "I02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: todos pares de (s,e) com s,e em 0..5, incluindo invertidos/vazios; nenhum contraexemplo achado"
+ },
+ {
+  "id": "I03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "I04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "I05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: inteiros 0..5, listas ate 3 intervalos + 2000 listas amostradas com semente 12345 (ate 8, valores -20..30); nenhum contraexemplo achado"
+ },
+ {
+  "id": "I06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: inteiros 0..5, listas ate 3 intervalos + 2000 listas amostradas com semente 12345 (ate 8, valores -20..30); nenhum contraexemplo achado"
+ },
+ {
+  "id": "I07",
+  "verdict": "falsa",
+  "counterexample": "contains((0,5),5) -> True (esperado False)",
+  "note": "execucao unica"
+ },
+ {
+  "id": "I08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: todos intervalos validos em 0..5; nenhum contraexemplo achado"
+ },
+ {
+  "id": "I09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "I10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "I11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "I12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "I13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: inteiros 0..5, listas ate 3 intervalos + 2000 listas amostradas com semente 12345 (ate 8, valores -20..30); nenhum contraexemplo achado"
+ },
+ {
+  "id": "I14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: pares validos que se sobrepoem em 0..5; nenhum contraexemplo achado"
+ },
+ {
+  "id": "I15",
+  "verdict": "falsa",
+  "counterexample": "merge([]) -> excecao IndexError: list index out of range (esperado [])",
+  "note": "execucao unica"
+ },
+ {
+  "id": "I16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo: todos intervalos validos em 0..5; nenhum contraexemplo achado"
+ },
+ {
+  "id": "I17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "I18",
+  "verdict": "falsa",
+  "counterexample": "a=(0, 0), x=0: contains=True, overlaps(a,(x,x+1))=False",
+  "note": "exaustivo: a com s,e em 0..5 (todos), x em -2..7; contraexemplo encontrado"
+ },
+ {
+  "id": "I19",
+  "verdict": "falsa",
+  "counterexample": "length((3,1)) -> -2 (esperado 0)",
+  "note": "execucao unica"
+ }
+]

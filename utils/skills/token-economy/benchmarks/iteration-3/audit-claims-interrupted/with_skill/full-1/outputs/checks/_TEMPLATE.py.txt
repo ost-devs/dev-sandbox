@@ -1,0 +1,16 @@
+# Template for checks/<module>/checks.py
+import os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from _lib import claim, rng, rand_str, main
+from kit.text import slugify
+
+@claim("T02")
+def t02():
+    r = rng("T02")
+    for s in ["", "-", " a "] + [rand_str(r) for _ in range(2000)]:
+        out = slugify(s)
+        if out.startswith("-") or out.endswith("-"):
+            return f"slugify({s!r}) = {out!r}"
+
+if __name__ == "__main__":
+    main()

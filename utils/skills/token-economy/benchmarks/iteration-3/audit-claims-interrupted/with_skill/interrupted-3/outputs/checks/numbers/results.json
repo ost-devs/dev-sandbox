@@ -1,0 +1,116 @@
+[
+ {
+  "id": "N01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "720 inputs"
+ },
+ {
+  "id": "N02",
+  "verdict": "falsa",
+  "counterexample": "got 10, expected 0",
+  "note": null
+ },
+ {
+  "id": "N03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N06",
+  "verdict": "falsa",
+  "counterexample": "raised IndexError: list index out of range",
+  "note": null
+ },
+ {
+  "id": "N07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "904 inputs"
+ },
+ {
+  "id": "N08",
+  "verdict": "falsa",
+  "counterexample": "got 2, expected 3",
+  "note": null
+ },
+ {
+  "id": "N09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N11",
+  "verdict": "falsa",
+  "counterexample": "input 0 raised ZeroDivisionError: division by zero",
+  "note": null
+ },
+ {
+  "id": "N12",
+  "verdict": "falsa",
+  "counterexample": "input 4",
+  "note": null
+ },
+ {
+  "id": "N13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N15",
+  "verdict": "falsa",
+  "counterexample": "input (-50, 1)",
+  "note": null
+ },
+ {
+  "id": "N16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "123 inputs"
+ },
+ {
+  "id": "N18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "N19",
+  "verdict": "falsa",
+  "counterexample": "input -1 raised ValueError: invalid literal for int() with base 10: '-'",
+  "note": null
+ }
+]

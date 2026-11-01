@@ -1,0 +1,8 @@
+[
+ {
+  "id": "N19",
+  "verdict": "falsa",
+  "counterexample": "digits_sum(-1) -> raised ValueError: invalid literal for int() with base 10: '-'",
+  "note": "contraexemplo encontrado"
+ }
+]

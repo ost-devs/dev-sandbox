@@ -1,0 +1,116 @@
+[
+ {
+  "id": "R01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R04",
+  "verdict": "falsa",
+  "counterexample": "parse_kv('a=1;flag') -> excecao ValueError: dictionary update sequence element #1 has length 1; 2 is required",
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "bordas manuais + amostragem semeada (SEED=20240607, N=3000); nenhum contraexemplo achado"
+ },
+ {
+  "id": "R06",
+  "verdict": "falsa",
+  "counterexample": "entrada {'a;b': 'c'} -> excecao ValueError: dictionary update sequence element #0 has length 1; 2 is required",
+  "note": "bordas manuais + amostragem semeada (SEED=20240607, N=3000); contraexemplo encontrado"
+ },
+ {
+  "id": "R07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "bordas manuais + amostragem semeada (SEED=20240607, N=3000); nenhum contraexemplo achado"
+ },
+ {
+  "id": "R09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R10",
+  "verdict": "falsa",
+  "counterexample": "rename({'a': 1, 'b': 2}, {'a': 'b'}) = {'b': 2}",
+  "note": "bordas manuais + amostragem semeada (SEED=20240607, N=3000); contraexemplo encontrado"
+ },
+ {
+  "id": "R11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "bordas manuais + amostragem semeada (SEED=20240607, N=3000); nenhum contraexemplo achado"
+ },
+ {
+  "id": "R13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "bordas manuais + amostragem semeada (SEED=20240607, N=3000); nenhum contraexemplo achado"
+ },
+ {
+  "id": "R14",
+  "verdict": "falsa",
+  "counterexample": "sort_by([{'n': 2}, {'x': 1}, {'n': 1}], 'n') -> excecao KeyError: 'n'",
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R17",
+  "verdict": "falsa",
+  "counterexample": "deep_get({'a':[1,2]},'a.0') -> None (esperado 1)",
+  "note": "execucao unica da entrada literal"
+ },
+ {
+  "id": "R18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "bordas manuais + amostragem semeada (SEED=20240607, N=3000); nenhum contraexemplo achado"
+ },
+ {
+  "id": "R19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica da entrada literal"
+ }
+]

@@ -1,0 +1,6 @@
+C1	VERDADEIRA	
+C2	VERDADEIRA	
+C3	FALSA	args=(None,) violated
+C4	FALSA	args=([], -1) violated
+C5	FALSA	args=({'a': 0}, {'a': 1}) violated
+C6	VERDADEIRA	

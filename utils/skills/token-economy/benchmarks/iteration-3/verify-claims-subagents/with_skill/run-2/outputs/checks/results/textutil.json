@@ -1,0 +1,35 @@
+{
+ "seed": 20261101,
+ "results": [
+  {
+   "id": "T1",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  },
+  {
+   "id": "T2",
+   "verdict": "falsa",
+   "counterexample": "slugify('Café Noir') = 'caf-noir'"
+  },
+  {
+   "id": "T3",
+   "verdict": "falsa",
+   "counterexample": "truncate('a', 0) = '…' (len 1)"
+  },
+  {
+   "id": "T4",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  },
+  {
+   "id": "T5",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  },
+  {
+   "id": "T6",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  }
+ ]
+}

@@ -1,0 +1,19 @@
+{"id": "N01", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N01"}
+{"id": "N02", "verdict": "falsa", "counterexample": "clamp(5, 10, 0) -> 10; expected 0", "command": "python3 checks/check_numbers.py N02"}
+{"id": "N03", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N03"}
+{"id": "N04", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N04"}
+{"id": "N05", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N05"}
+{"id": "N06", "verdict": "falsa", "counterexample": "median([]) -> None IndexError: list index out of range; expected None", "command": "python3 checks/check_numbers.py N06"}
+{"id": "N07", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N07"}
+{"id": "N08", "verdict": "falsa", "counterexample": "round_half(2.5) -> 2; expected 3", "command": "python3 checks/check_numbers.py N08"}
+{"id": "N09", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N09"}
+{"id": "N10", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N10"}
+{"id": "N11", "verdict": "falsa", "counterexample": "percent(0, 0) -> None ZeroDivisionError: division by zero; expected 0.0", "command": "python3 checks/check_numbers.py N11"}
+{"id": "N12", "verdict": "falsa", "counterexample": "is_prime(4) -> True; expected False (18 wrong values in 0..1000, first [4, 6, 8, 9, 15])", "command": "python3 checks/check_numbers.py N12"}
+{"id": "N13", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N13"}
+{"id": "N14", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N14"}
+{"id": "N15", "verdict": "falsa", "counterexample": "gcd(-50,1) -> 1 ; gcd(1,-50) -> -1 ", "command": "python3 checks/check_numbers.py N15"}
+{"id": "N16", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N16"}
+{"id": "N17", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N17"}
+{"id": "N18", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_numbers.py N18"}
+{"id": "N19", "verdict": "falsa", "counterexample": "digits_sum(-1) -> None ValueError: invalid literal for int() with base 10: '-'; expected non-negative int", "command": "python3 checks/check_numbers.py N19"}

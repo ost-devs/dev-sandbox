@@ -1,0 +1,19 @@
+{"id": "T01", "verdict": "falsa", "counterexample": "slugify('Café Noir',) -> 'caf-noir', expected 'cafe-noir'", "command": "python3 checks/check_text.py T01"}
+{"id": "T02", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T02"}
+{"id": "T03", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T03"}
+{"id": "T04", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T04"}
+{"id": "T05", "verdict": "falsa", "counterexample": "truncate('abcdef', 2) -> 'abcde...' (len 8 > 2)", "command": "python3 checks/check_text.py T05"}
+{"id": "T06", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T06"}
+{"id": "T07", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T07"}
+{"id": "T08", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T08"}
+{"id": "T09", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T09"}
+{"id": "T10", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T10"}
+{"id": "T11", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T11"}
+{"id": "T12", "verdict": "falsa", "counterexample": "input='ß' -> 'SS' len 2 vs 1", "command": "python3 checks/check_text.py T12"}
+{"id": "T13", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T13"}
+{"id": "T14", "verdict": "falsa", "counterexample": "strip_accents('ø',) -> 'ø', expected 'o'", "command": "python3 checks/check_text.py T14"}
+{"id": "T15", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T15"}
+{"id": "T16", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T16"}
+{"id": "T17", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T17"}
+{"id": "T18", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T18"}
+{"id": "T19", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_text.py T19"}

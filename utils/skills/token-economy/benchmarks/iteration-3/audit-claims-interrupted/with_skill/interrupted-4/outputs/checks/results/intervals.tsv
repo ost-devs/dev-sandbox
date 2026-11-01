@@ -1,0 +1,19 @@
+I01	verdadeira	
+I02	verdadeira	
+I03	verdadeira	
+I04	verdadeira	
+I05	verdadeira	
+I06	verdadeira	
+I07	falsa	contains((0,5),5) -> True, expected False
+I08	verdadeira	
+I09	verdadeira	
+I10	verdadeira	
+I11	verdadeira	
+I12	verdadeira	
+I13	verdadeira	
+I14	verdadeira	
+I15	falsa	merge([]) raised IndexError: list index out of range
+I16	verdadeira	
+I17	verdadeira	
+I18	falsa	((-3, -3), -3)
+I19	falsa	length((3,1)) -> -2, expected 0

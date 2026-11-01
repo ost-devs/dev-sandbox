@@ -1,0 +1,97 @@
+[
+ {
+  "id": "I01",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I02",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I03",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I04",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I05",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I06",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I07",
+  "verdict": "falsa",
+  "counterexample": "actual=True expected=False"
+ },
+ {
+  "id": "I08",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I09",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I10",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I11",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I12",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I13",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I14",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I15",
+  "verdict": "falsa",
+  "counterexample": "IndexError: list index out of range"
+ },
+ {
+  "id": "I16",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I17",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "I18",
+  "verdict": "falsa",
+  "counterexample": "args=((8, 10), 10)"
+ },
+ {
+  "id": "I19",
+  "verdict": "falsa",
+  "counterexample": "actual=-2 expected=0"
+ }
+]

@@ -1,0 +1,35 @@
+{
+ "seed": 20261101,
+ "results": [
+  {
+   "id": "C1",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  },
+  {
+   "id": "C2",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  },
+  {
+   "id": "C3",
+   "verdict": "falsa",
+   "counterexample": "flatten([[1, [2]], [3]])=[1, [2], 3]"
+  },
+  {
+   "id": "C4",
+   "verdict": "falsa",
+   "counterexample": "top_n([],-2)=[] (len 0, expected -2)"
+  },
+  {
+   "id": "C5",
+   "verdict": "falsa",
+   "counterexample": "merge_dicts({'k': 1},{'k': 2})={'k': 2}"
+  },
+  {
+   "id": "C6",
+   "verdict": "verdadeira",
+   "counterexample": ""
+  }
+ ]
+}

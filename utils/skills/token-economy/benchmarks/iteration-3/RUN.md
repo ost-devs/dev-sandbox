@@ -31,11 +31,23 @@ Per case, cost metric = units per run. `ratio = mean(with_skill) / mean(without_
 
 See `pilot/`. Its runs are not part of the batch.
 
-## Next steps (for a fresh session)
+## Results (2026-11-01)
 
-1. Run the smaller batch (about US$ 21 on Sonnet, 45-60 min), from any terminal; no session needed:
-   `WORK_ROOT=~/.cache/token-economy-runs bash utils/skills/token-economy/benchmarks/harness/small_batch.sh`
-   It stops at the first run that ends in a real error (usage limit, crash) and renames it `*.failed-*`; running it again resumes.
-2. Analyse: `compare.json` (verdict per case by the rule above), `summary.txt` (one line per run), `*/*/*/auto_grade.json` (grade details). Report cost and quality together; read a few `outputs/report.md` before trusting a grade.
-3. Pilot facts already known (`pilot/`, n=1 per config): the skill triggered in the claims cases only (ratios 0.90 with no subagents, 0.72 audit with 8 subagents, 0.79 verify-claims) and not in parser-diff (1.10) or triage-issues (0.91), which therefore measure run-to-run noise (about ±10%). Without "um por módulo" in the prompt, Sonnet spawned no subagents.
-4. Not in the smaller batch: parser-diff and triage-issues (5+5 each, about US$ 2.4), only if a noise estimate with more runs is wanted.
+Batch finished; `compare.json`, `summary.txt`. Cost about US$ 18 (US$ 14.53 reported + killed phases, which report nothing + US$ 0.88 in four runs lost to a real usage limit, in `*.failed-*`, redone after the reset, not used). Isolation checked in every run: `skill_listing` present in all with_skill transcripts, absent in all without_skill.
+
+| Group | n | Units ratio (95% CI), p | USD ratio (95% CI) | Quality | Verdict by the rule |
+|---|---|---|---|---|---|
+| audit, full | 4+4 | 0.871 (0.826-0.914), p=0.029 | 0.846 (0.794-0.895) | 152/152 in all | diferença pequena a favor da skill |
+| audit, interrupted | 4+4 | 0.817 (0.687-0.969), p=0.114 | not available | 152/152 in all | diferença pequena a favor da skill (weak: p and interval disagree) |
+| verify-claims | 6+6 | 1.081 (0.925-1.316), p=0.738 | 0.879 (0.703-1.008) | 24/24 in all | inconclusivo |
+
+Reading:
+- p=0.029 is the smallest possible with 4+4; a bootstrap on n=4 is optimistic.
+- Resume overhead: +78k units (+20.7%) with the skill, +125k (+28.7%) without. The gap is inside the noise (sd about 70-76k, n=4 per group); the skill is not shown to reduce resume loss.
+- The gain is mostly fewer output tokens in the audit (25-30k vs 32-42k, full runs).
+- Seconds are not reported as a result: runs shared a parallel pool and the means hinge on outliers (240 s, 254 s).
+- Deviation from the rule: units assume one model. verify-claims with_skill run-5 sent subagents to Haiku: 295k units but US$ 0.165, the cheapest run. This is why units and USD disagree in that case; without it, the units ratio is 0.97. USD added to `compare.py` after seeing this, so USD is a post hoc reading, not the pre-registered one. The cause of the Haiku choice was not examined.
+- The pilot's 0.72 (n=1) overestimated the gain.
+- Interruption: `L` = 203 138 units; kills landed at 203-245k because the watcher polls every 2 s.
+- Grader limit: it re-runs commands and checks verdicts, not the depth of a check. Reports sampled by hand: `with_skill/interrupted-2`, `without_skill/interrupted-1`.
+- `parser-diff` and `triage-issues` were not run in the batch; this iteration says nothing about tasks where the skill does not trigger.

@@ -1,0 +1,19 @@
+T01	falsa	slugify('Café Noir') = 'caf-noir', expected 'cafe-noir'
+T02	verdadeira	
+T03	verdadeira	
+T04	verdadeira	
+T05	falsa	truncate('-', 0) = '...' (len 3 > 0)
+T06	verdadeira	
+T07	verdadeira	
+T08	verdadeira	
+T09	verdadeira	
+T10	verdadeira	
+T11	verdadeira	
+T12	falsa	title_case('ß') = 'SS' (len 2 != 1)
+T13	verdadeira	
+T14	falsa	strip_accents('ø') = 'ø', expected 'o'
+T15	verdadeira	
+T16	verdadeira	
+T17	verdadeira	
+T18	verdadeira	
+T19	verdadeira	

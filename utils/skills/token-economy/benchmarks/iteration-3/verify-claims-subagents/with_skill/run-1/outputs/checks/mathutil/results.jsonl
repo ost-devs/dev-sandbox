@@ -1,0 +1,6 @@
+{"id": "M1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "M2", "verdict": "falsa", "counterexample": "exception ZeroDivisionError: division by zero", "seed": 20261101}
+{"id": "M3", "verdict": "falsa", "counterexample": "round_half(2.5) -> 2, expected 3", "seed": 20261101}
+{"id": "M4", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "M5", "verdict": "falsa", "counterexample": "is_prime(4) -> True, expected False (first of 18 wrong: [4, 6, 8, 9, 15, 25])", "seed": 20261101}
+{"id": "M6", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}

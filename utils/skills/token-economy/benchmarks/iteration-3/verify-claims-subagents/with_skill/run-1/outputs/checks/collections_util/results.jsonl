@@ -1,0 +1,6 @@
+{"id": "C1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "C2", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "C3", "verdict": "falsa", "counterexample": "flatten([[1, [2]], [3]]) -> [1, [2], 3] expected [1, 2, 3]", "seed": 20261101}
+{"id": "C4", "verdict": "falsa", "counterexample": "top_n([1, 2],-1) -> [2] (len 1) expected len -1", "seed": 20261101}
+{"id": "C5", "verdict": "falsa", "counterexample": "merge_dicts({'k': 'a'},{'k': 'b'}) -> {'k': 'b'} expected {'k': 'a'}", "seed": 20261101}
+{"id": "C6", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}

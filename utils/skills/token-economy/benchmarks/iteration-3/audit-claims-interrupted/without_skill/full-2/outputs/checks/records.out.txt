@@ -1,0 +1,19 @@
+R01	verdadeira	
+R02	verdadeira	
+R03	verdadeira	
+R04	falsa	parse_kv('a=1;flag') -> exceção ValueError: dictionary update sequence element #1 has length 1; 2 is required vs. esperado {'a': '1', 'flag': ''}
+R05	verdadeira	
+R06	falsa	d={'a=b': 'c'}: to_kv='a=b=c' -> {'a': 'b=c'} vs. {'a=b': 'c'}
+R07	verdadeira	
+R08	verdadeira	
+R09	verdadeira	
+R10	falsa	rename({'a': 1, 'b': 2},{'a': 'b'}) -> {'b': 2} len 1 vs. 2
+R11	verdadeira	
+R12	verdadeira	
+R13	verdadeira	
+R14	falsa	sort_by([{'n': 2}, {'x': 1}, {'n': 1}],'n') -> exceção KeyError: 'n' vs. linha sem 'n' no fim
+R15	verdadeira	
+R16	verdadeira	
+R17	falsa	deep_get({'a':[1,2]},'a.0') -> None vs. esperado 1
+R18	verdadeira	
+R19	verdadeira	

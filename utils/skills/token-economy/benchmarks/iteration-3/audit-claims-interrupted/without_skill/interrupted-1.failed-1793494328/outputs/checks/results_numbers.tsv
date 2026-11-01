@@ -1,0 +1,20 @@
+id	verdict	counterexample	command
+N01	verdadeira		python3 -I checks/check_numbers.py N01
+N02	falsa	('clamp', (5, 10, 0), 'actual', 10, 'expected', 0)	python3 -I checks/check_numbers.py N02
+N03	verdadeira		python3 -I checks/check_numbers.py N03
+N04	verdadeira		python3 -I checks/check_numbers.py N04
+N05	verdadeira		python3 -I checks/check_numbers.py N05
+N06	falsa	('median([])', 'actual', "IndexError('list index out of range')", 'expected', None)	python3 -I checks/check_numbers.py N06
+N07	verdadeira		python3 -I checks/check_numbers.py N07
+N08	falsa	('round_half', (2.5,), 'actual', 2, 'expected', 3)	python3 -I checks/check_numbers.py N08
+N09	verdadeira		python3 -I checks/check_numbers.py N09
+N10	verdadeira		python3 -I checks/check_numbers.py N10
+N11	falsa	((0, 0), 'actual', "ZeroDivisionError('division by zero')", 'expected', 0.0)	python3 -I checks/check_numbers.py N11
+N12	falsa	(4, 'actual', True, 'expected', False)	python3 -I checks/check_numbers.py N12
+N13	verdadeira		python3 -I checks/check_numbers.py N13
+N14	verdadeira		python3 -I checks/check_numbers.py N14
+N15	falsa	((-50, 1), 'gcd(a,b)', 1, 'gcd(b,a)', -1)	python3 -I checks/check_numbers.py N15
+N16	verdadeira		python3 -I checks/check_numbers.py N16
+N17	verdadeira		python3 -I checks/check_numbers.py N17
+N18	verdadeira		python3 -I checks/check_numbers.py N18
+N19	falsa	(-200, 'actual', 'ValueError("invalid literal for int() with base 10: \'-\'")', 'expected non-negative int')	python3 -I checks/check_numbers.py N19

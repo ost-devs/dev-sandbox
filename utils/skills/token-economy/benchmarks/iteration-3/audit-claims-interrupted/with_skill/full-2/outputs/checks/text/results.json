@@ -1,0 +1,97 @@
+[
+ {
+  "id": "T01",
+  "verdict": "falsa",
+  "counterexample": "assertion failed: got 'caf-noir', expected 'cafe-noir'"
+ },
+ {
+  "id": "T02",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T03",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T04",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T05",
+  "verdict": "falsa",
+  "counterexample": "args=('CzpXbh', 0)"
+ },
+ {
+  "id": "T06",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T07",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T08",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T09",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T10",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T11",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T12",
+  "verdict": "falsa",
+  "counterexample": "args=('ßłõà',)"
+ },
+ {
+  "id": "T13",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T14",
+  "verdict": "falsa",
+  "counterexample": "assertion failed: got 'ø', expected 'o'"
+ },
+ {
+  "id": "T15",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T16",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T17",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T18",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ },
+ {
+  "id": "T19",
+  "verdict": "verdadeira",
+  "counterexample": ""
+ }
+]

@@ -1,0 +1,78 @@
+{
+ "M01": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M02": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M03": {
+  "verdict": "falsa",
+  "counterexample": "got -50, claim says -150"
+ },
+ "M04": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M05": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M06": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M07": {
+  "verdict": "falsa",
+  "counterexample": "got 'R$ -2,50', claim says 'R$ -1,50'"
+ },
+ "M08": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M09": {
+  "verdict": "falsa",
+  "counterexample": "args=(5, 29)"
+ },
+ "M10": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M11": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M12": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M13": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M14": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M15": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M16": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M17": {
+  "verdict": "falsa",
+  "counterexample": "got 114, claim says 115"
+ },
+ "M18": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ },
+ "M19": {
+  "verdict": "verdadeira",
+  "counterexample": null
+ }
+}

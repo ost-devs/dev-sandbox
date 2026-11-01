@@ -1,0 +1,116 @@
+[
+ {
+  "id": "P01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P02",
+  "verdict": "falsa",
+  "counterexample": "got 'usr/bin', expected '/usr/bin'",
+  "note": null
+ },
+ {
+  "id": "P03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P05",
+  "verdict": "falsa",
+  "counterexample": "got 'd/arquivo', expected ''",
+  "note": null
+ },
+ {
+  "id": "P06",
+  "verdict": "falsa",
+  "counterexample": "got 'bashrc', expected ''",
+  "note": null
+ },
+ {
+  "id": "P07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P10",
+  "verdict": "falsa",
+  "counterexample": "got 'x', expected '../x'",
+  "note": null
+ },
+ {
+  "id": "P11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "5037 inputs"
+ },
+ {
+  "id": "P12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": null
+ },
+ {
+  "id": "P17",
+  "verdict": "falsa",
+  "counterexample": "got '', expected '/'",
+  "note": null
+ },
+ {
+  "id": "P18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "names taken as non-empty (letters/digits)"
+ },
+ {
+  "id": "P19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "225 inputs"
+ }
+]

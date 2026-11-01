@@ -1,0 +1,116 @@
+[
+ {
+  "id": "N01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo lo,hi,x em [-12,12] + 2000 casos semente 12345; nenhum contraexemplo"
+ },
+ {
+  "id": "N02",
+  "verdict": "falsa",
+  "counterexample": "clamp(5, 10, 0) -> 10; esperado 0",
+  "note": "contraexemplo encontrado; caso unico"
+ },
+ {
+  "id": "N03",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N06",
+  "verdict": "falsa",
+  "counterexample": "median([]) -> raised IndexError: list index out of range",
+  "note": "contraexemplo encontrado; esperado None"
+ },
+ {
+  "id": "N07",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo listas ate 5 elems em [-2,2] + 3000 aleatorias semente 12345; nenhum contraexemplo"
+ },
+ {
+  "id": "N08",
+  "verdict": "falsa",
+  "counterexample": "round_half(2.5) -> 2; esperado 3",
+  "note": "contraexemplo encontrado; caso unico"
+ },
+ {
+  "id": "N09",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N11",
+  "verdict": "falsa",
+  "counterexample": "percent(0, 0) -> raised ZeroDivisionError: division by zero",
+  "note": "contraexemplo encontrado"
+ },
+ {
+  "id": "N12",
+  "verdict": "falsa",
+  "counterexample": "is_prime(4) -> True; correto False",
+  "note": "contraexemplo encontrado"
+ },
+ {
+  "id": "N13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N15",
+  "verdict": "falsa",
+  "counterexample": "gcd(-1,1)=('ok', 1); gcd(1,-1)=('ok', -1)",
+  "note": "contraexemplo encontrado"
+ },
+ {
+  "id": "N16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N17",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo -1000..1000 + 1000 grandes semente 12345; nenhum contraexemplo"
+ },
+ {
+  "id": "N18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "caso unico"
+ },
+ {
+  "id": "N19",
+  "verdict": "falsa",
+  "counterexample": "digits_sum(-1) -> raised ValueError: invalid literal for int() with base 10: '-'",
+  "note": "contraexemplo encontrado"
+ }
+]

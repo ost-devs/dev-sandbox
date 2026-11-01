@@ -1,0 +1,116 @@
+[
+ {
+  "id": "M01",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "M02",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "M03",
+  "verdict": "falsa",
+  "counterexample": "to_cents('-1,50') -> -50 (esperado -150)",
+  "note": "execucao unica"
+ },
+ {
+  "id": "M04",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "M05",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "M06",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "M07",
+  "verdict": "falsa",
+  "counterexample": "format_brl(-150) -> 'R$ -2,50' (esperado 'R$ -1,50')",
+  "note": "execucao unica"
+ },
+ {
+  "id": "M08",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo c=0..1000000"
+ },
+ {
+  "id": "M09",
+  "verdict": "falsa",
+  "counterexample": "split_bill(1, 2) = [0, 0] (soma 0)",
+  "note": "exaustivo total<60 x k<15 + bordas + 20000 amostras semente 20240607"
+ },
+ {
+  "id": "M10",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "M11",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo total<60 x k<15 + bordas + 20000 amostras semente 20240607; nenhum contraexemplo achado"
+ },
+ {
+  "id": "M12",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo total<60 x k<15 + bordas + 20000 amostras semente 20240608; nenhum contraexemplo achado"
+ },
+ {
+  "id": "M13",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "M14",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "execucao unica"
+ },
+ {
+  "id": "M15",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo c=0..1000000"
+ },
+ {
+  "id": "M16",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo c<=3000 x p=0..100; todos c=0..1e6 para p em {0,1,5,10,33,50,99,100}; bordas; 20000 amostras semente 20240609; nenhum contraexemplo achado"
+ },
+ {
+  "id": "M17",
+  "verdict": "falsa",
+  "counterexample": "add_tax(100, 0.15) -> 114 (esperado 115)",
+  "note": "execucao unica"
+ },
+ {
+  "id": "M18",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "exaustivo c=0..1000000 (taxa inteira 0)"
+ },
+ {
+  "id": "M19",
+  "verdict": "verdadeira",
+  "counterexample": null,
+  "note": "c<=2000 e bordas x taxas {k/100,k/1000,bordas} + 20000 amostras (c, r aleatorio em [0,1)) semente 20240610; nenhum contraexemplo achado"
+ }
+]

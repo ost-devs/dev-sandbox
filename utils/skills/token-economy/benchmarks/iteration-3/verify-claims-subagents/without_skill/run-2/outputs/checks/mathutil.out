@@ -1,0 +1,6 @@
+M1 TRUE -
+M2 FALSE 'raises ZeroDivisionError'
+M3 FALSE 'round_half(2.5)=2'
+M4 TRUE -
+M5 FALSE 'n=4 got True (first of 18 wrong: [4, 6, 8, 9, 15, 25, 35, 49])'
+M6 TRUE -

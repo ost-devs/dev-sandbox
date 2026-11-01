@@ -1,0 +1,19 @@
+D01	verdadeira	
+D02	falsa	add_months(datetime.date(2000, 2, 29), 12) -> datetime.date(2001, 2, 28) vs. esperado mesmo dia/mes em 2001
+D03	falsa	add_months(add_months(datetime.date(2000, 1, 30),1),-1) -> datetime.date(2000, 1, 29) vs. esperado datetime.date(2000, 1, 30)
+D04	falsa	days_between(datetime.date(2024, 1, 2), datetime.date(2024, 1, 1)) -> -1 vs. esperado >= 0
+D05	verdadeira	
+D06	verdadeira	
+D07	verdadeira	
+D08	verdadeira	
+D09	verdadeira	
+D10	verdadeira	
+D11	verdadeira	
+D12	verdadeira	
+D13	verdadeira	
+D14	falsa	iso_week(date(2021,1,1)) -> 53 vs. esperado 1
+D15	verdadeira	
+D16	falsa	parse_br('1/2/2024') -> datetime.date(2024, 2, 1) (sem ValueError) vs. esperado ValueError
+D17	verdadeira	
+D18	verdadeira	
+D19	verdadeira	

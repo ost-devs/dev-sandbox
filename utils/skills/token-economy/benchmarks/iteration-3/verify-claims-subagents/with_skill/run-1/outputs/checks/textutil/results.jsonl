@@ -1,0 +1,6 @@
+{"id": "T1", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "T2", "verdict": "falsa", "counterexample": "slugify('Café Noir') -> 'caf-noir', expected 'cafe-noir'", "seed": 20261101}
+{"id": "T3", "verdict": "falsa", "counterexample": "truncate('x', 0) -> '…' (len 1) > 0", "seed": 20261101}
+{"id": "T4", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "T5", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}
+{"id": "T6", "verdict": "verdadeira", "counterexample": null, "seed": 20261101}

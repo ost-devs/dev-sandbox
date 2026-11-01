@@ -1,0 +1,19 @@
+{"id": "I01", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I01"}
+{"id": "I02", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I02"}
+{"id": "I03", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I03"}
+{"id": "I04", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I04"}
+{"id": "I05", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I05"}
+{"id": "I06", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I06"}
+{"id": "I07", "verdict": "falsa", "counterexample": "got True, expected False", "command": "python3 checks/check_intervals.py I07"}
+{"id": "I08", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I08"}
+{"id": "I09", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I09"}
+{"id": "I10", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I10"}
+{"id": "I11", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I11"}
+{"id": "I12", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I12"}
+{"id": "I13", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I13"}
+{"id": "I14", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I14"}
+{"id": "I15", "verdict": "falsa", "counterexample": "raised IndexError('list index out of range'), expected []", "command": "python3 checks/check_intervals.py I15"}
+{"id": "I16", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I16"}
+{"id": "I17", "verdict": "verdadeira", "counterexample": null, "command": "python3 checks/check_intervals.py I17"}
+{"id": "I18", "verdict": "falsa", "counterexample": "a=(0, 5), x=5: contains=True, overlaps(a, (x, x+1))=False", "command": "python3 checks/check_intervals.py I18"}
+{"id": "I19", "verdict": "falsa", "counterexample": "got -2, expected 0", "command": "python3 checks/check_intervals.py I19"}

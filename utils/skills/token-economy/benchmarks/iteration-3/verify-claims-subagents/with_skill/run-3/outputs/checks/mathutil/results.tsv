@@ -1,0 +1,6 @@
+M1	VERDADEIRA	
+M2	FALSA	mean([]) raises ZeroDivisionError: division by zero
+M3	FALSA	round_half(2.5)=2
+M4	VERDADEIRA	
+M5	FALSA	smallest is_prime(4)=True, expected False (18 wrong in 0..1000)
+M6	VERDADEIRA	

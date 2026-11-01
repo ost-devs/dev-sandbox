@@ -1,0 +1,19 @@
+P01	verdadeira	
+P02	falsa	join('/usr','bin') -> 'usr/bin', expected '/usr/bin'
+P03	verdadeira	
+P04	verdadeira	
+P05	falsa	ext('dir.d/arquivo') -> 'd/arquivo', expected ''
+P06	falsa	ext('.bashrc') -> 'bashrc', expected ''
+P07	verdadeira	
+P08	verdadeira	
+P09	verdadeira	
+P10	falsa	normalize('../x') -> 'x', expected '../x'
+P11	verdadeira	
+P12	verdadeira	
+P13	verdadeira	
+P14	verdadeira	
+P15	verdadeira	
+P16	verdadeira	
+P17	falsa	parent('/a') -> '', expected '/'
+P18	verdadeira	
+P19	verdadeira	
