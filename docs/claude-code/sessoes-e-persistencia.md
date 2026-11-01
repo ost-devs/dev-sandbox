@@ -84,11 +84,14 @@ continuava apontando para a versão gravada na imagem. Resultado: **baixava,
 ocupava espaço (836 MB num caso real) e nunca usava**.
 
 Na v0.2 o auto-update está desligado na imagem (`DISABLE_AUTOUPDATER=1`) e a
-atualização é por rebuild, só da camada dos agentes:
+atualização é por rebuild:
 
 ```bash
 sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .
 ```
+
+Com o cache de build presente, só os agentes são refeitos. Como conferir o
+resultado: [guia de atualização](../guias/atualizacao.md#2-só-os-agentes).
 
 Para recuperar o espaço das versões órfãs (no host):
 

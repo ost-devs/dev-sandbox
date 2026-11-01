@@ -33,11 +33,12 @@ cd ~/dev-sandbox
 sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .
 ```
 
-Os agentes ficam nas últimas camadas do `Dockerfile`, então só elas são refeitas:
-leva 1 ou 2 minutos, e as camadas anteriores aparecem como `CACHED` no log. Se
-nada aparecer como `CACHED`, o cache foi apagado (por exemplo, por um
-[`docker builder prune`](filosofia-da-imagem.md#onde-a-imagem-ocupa-espaço-no-seu-disco))
-e o Docker refaz a imagem toda. Leva mais tempo, mas o resultado serve do mesmo jeito.
+Os agentes ficam nas últimas camadas do `Dockerfile`, então, com o cache de build
+presente, só elas são refeitas: leva minutos, e as camadas anteriores aparecem
+como `CACHED` no log. Se nada aparecer como `CACHED`, o cache não existe mais
+(por [`docker builder prune`](filosofia-da-imagem.md#onde-a-imagem-ocupa-espaço-no-seu-disco)
+ou limpeza automática do Docker) e a imagem é refeita inteira. Leva mais tempo,
+mas o resultado serve do mesmo jeito.
 
 O auto-update do Claude Code fica desligado de propósito
 (`DISABLE_AUTOUPDATER=1`), porque baixava versões que nunca eram usadas
