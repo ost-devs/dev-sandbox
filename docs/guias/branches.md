@@ -19,8 +19,8 @@ merge.
 
 **Por que não commitar direto na `main`, então?** Porque a `main` é o que você
 **revisou**, e a `claude` é o que o agente fez e você ainda não olhou. A
-fronteira entre as duas é a sua revisão. Ela também protege o `git push`: só a
-`main` vai para o GitHub.
+fronteira entre as duas é a sua revisão. As duas podem estar no GitHub, mas só a
+`main` conta como revisada.
 
 ## O ciclo do dia a dia
 
@@ -32,7 +32,7 @@ fronteira entre as duas é a sua revisão. Ela também protege o `git push`: só
 | 4. Ver o que ainda não foi revisado | Você | `git log --oneline main..claude` e `git diff main..claude` |
 | 5. Desfazer um commit de que não gostou | Você ou agente | `git revert <commit>` (na `claude`) |
 | 6. Juntar na `main` | Você | `git switch main && git merge --ff-only claude && git switch claude` |
-| 7. Publicar | Você, **no host** | `git push` (na `main`) |
+| 7. Publicar | Você, **no host** | `git push origin main claude` |
 
 Os passos 1 a 6 funcionam dentro do container. O passo 7, não: as chaves SSH
 não entram no container ([por quê](./seguranca.md)).
@@ -40,8 +40,10 @@ não entram no container ([por quê](./seguranca.md)).
 Se o `merge --ff-only` recusar, é porque a `main` tem commits que a `claude` não
 tem. Rode `git merge main` na `claude` (passo 2) e tente de novo.
 
-A `claude` **não vai para o GitHub**. Como o `.git/config` é somente leitura
-dentro do container, um `git push -u` daqui falharia de qualquer forma.
+Um `git push` sem nomes envia só a branch atual. Nomeando as duas, a `claude`
+também fica no GitHub: serve de backup e de ponto de encontro para agentes que
+rodem na nuvem. Dentro do container, nem a `claude` nem a `main` podem ser
+enviadas, porque as chaves SSH ficam de fora.
 
 ## Quando abrir outra branch
 
