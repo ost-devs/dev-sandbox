@@ -5,47 +5,80 @@ faz, quando ela entra, como instalar e como ajustá-la ao seu projeto.
 A história de como ela foi feita e testada, com todos os números, está em
 [Como a `token-economy` foi feita e testada](./economia-de-tokens-o-experimento.md).
 
+## Resumo honesto
+
+Sem a skill, o Claude já faz bem o trabalho. Nos testes com execução real, ele
+dividiu a tarefa entre subagentes, rodou o código e acertou todas as afirmações,
+**com ou sem ela**. A skill não melhorou o resultado medido: só reduziu um pouco
+o custo em tarefa grande com vários subagentes.
+
+Não espere um salto. Espere uns **15% a menos** nesse tipo de tarefa e nenhuma
+diferença clara em tarefa menor. Os números estão em
+[Quanto economiza](#quanto-economiza).
+
 ## O que ela faz
 
-Ela muda **como** o Claude organiza um trabalho grande, não **o que** ele
-entrega. O resultado é fixo: o que você pediu, com a qualidade que você
-espera. O que varia é quantos tokens se gastam para chegar lá.
+Ela orienta **como** o Claude organiza um trabalho grande, não **o que** ele
+entrega. O resultado continua sendo o que você pediu; a skill busca o caminho
+que chega lá gastando menos.
 
-Ela evita dois erros opostos:
+Ela nomeia dois erros opostos, para que fugir de um não empurre para o outro:
 
 | Erro | Exemplo | Por que sai caro |
 |---|---|---|
 | Economizar cortando o resultado | Pular os testes, ler menos do que a tarefa precisa, usar um modelo fraco demais | O retrabalho custa mais que a economia |
 | Gastar por garantia | Rodar cada checagem 3 vezes "para ter certeza", ler tudo "por via das dúvidas", abrir mais agentes do que o trabalho se divide | Custo sem resultado |
 
-E procura economia onde ela não tira nada do resultado:
+E aponta onde costuma dar para economizar:
 
-| Onde | O que o Claude faz |
+| Onde | O que ela pede ao Claude |
 |---|---|
-| Trabalho feito duas vezes | Antes de abrir vários subagentes, monta **uma vez** o que todos precisam (gerador de entradas, executor, comparador, um cartão curto de instruções). Cada um só faz a sua parte |
-| Evidência que se roda de novo | Entradas geradas com semente registrada; cada checagem é um script. Rodar um script de novo não gasta tokens; reler para conferir gasta |
-| Saída que ninguém lê | Logs e relatórios longos vão para arquivo; a conversa recebe só o que a próxima decisão precisa |
-| Tamanho medido | Roda uma parte primeiro, vê quanto custou, e só então divide o resto |
-| Trabalho que uma falha perderia | Os agentes gravam o resultado aos poucos: se bater o limite de uso, perde-se o item em andamento, não a rodada |
-| Checagens pelo que rendem | Se uma checagem gasta muito e acha pouco, ele **te avisa** e propõe reduzir. Não corta sozinho |
+| Trabalho feito duas vezes | Antes de abrir vários subagentes, montar **uma vez** o que todos precisam (ajudantes e um cartão curto de instruções) |
+| Evidência que se roda de novo | Usar entradas com semente registrada e fazer cada checagem como script: rodar um script de novo não gasta tokens |
+| Saída que ninguém lê | Mandar logs e relatórios longos para arquivo |
+| Tamanho medido | Rodar uma parte primeiro, ver quanto custou e só então dividir o resto |
+| Trabalho que uma falha perderia | Gravar o resultado aos poucos, para perder menos se bater o limite de uso |
+| Checagens pelo que rendem | Se uma checagem gasta muito e acha pouco, **avisar você** e propor reduzir, sem cortar sozinho |
 
-Escolhas que trocam resultado por tokens ficam com você: ele diz quanto cada
-caminho custa e o que perde.
+Isso é o que a skill pede, não o que foi provado. O efeito medido foi só o do
+conjunto. Nem o ganho contra perda por limite de uso ficou demonstrado.
+
+Escolhas que trocam resultado por tokens ficam com você: ele deve dizer quanto
+cada caminho custa e o que perde.
 
 ## Quanto economiza
 
-No teste com execução real (conferir 24 afirmações sobre um pacote Python
-pequeno, com um subagente por módulo, 2 rodadas de cada lado):
+Teste com o Sonnet em tarefas reais, cada grupo rodado várias vezes:
 
-| | Com a skill | Sem a skill |
-|---|---|---|
-| Vereditos certos | 24/24 nas duas | 24/24 nas duas |
-| Custo | US$ 0,75 e 0,67 | US$ 1,22 e 1,09 |
-| Tokens de saída | 17 mil e 16 mil | 27 mil e 25 mil |
+| Tarefa | Execuções | Custo médio com a skill | Custo médio sem a skill | Veredito |
+|---|---|---|---|---|
+| Conferir 152 afirmações em 8 módulos, com 8 subagentes | 4 de cada lado | US$ 0,72 | US$ 0,85 | Diferença pequena: cerca de 15% mais barato |
+| A mesma tarefa, parando no meio por limite de uso simulado | 4 de cada lado | só em unidades | só em unidades | Cerca de 18% menos, com evidência fraca |
+| Conferir 24 afirmações em 4 módulos, com 4 subagentes | 6 de cada lado | US$ 0,31 | US$ 0,36 | Inconclusivo: pode não haver diferença |
 
-Cerca de **39% mais barato com o mesmo resultado**. É um caso só e pequeno:
-mostra a direção, não é prova. Detalhes, limites e como repetir no
-[artigo do experimento](./economia-de-tokens-o-experimento.md).
+A qualidade foi igual em todas: **todas as execuções acertaram tudo**.
+
+O que isso quer dizer na prática:
+
+- **Tarefa grande com muitos subagentes:** economia pequena, mas real.
+- **Tarefa pequena:** não conte com economia.
+- **Tarefas sem subagentes ou que não acionam a skill:** não medimos o suficiente.
+- **Tarefas abertas, como arquitetura ou decisões de produto:** não testamos.
+  Estes testes são objetivos e lógicos, com resposta certa que se confere
+  rodando código. É o tipo de trabalho em que o Claude costuma ir bem sozinho.
+  Por isso, eles não dizem se a skill ajuda mais ou menos em tarefas abertas.
+
+Um teste anterior deu "39% mais barato", mas com só 2 rodadas de cada lado e
+subagentes em modelos diferentes. Esse número não vale mais. Detalhes e limites
+no [artigo do experimento](./economia-de-tokens-o-experimento.md).
+
+## Vale instalar?
+
+| Seu caso | Sugestão |
+|---|---|
+| Roda com frequência tarefas grandes com vários subagentes | Vale: custa quase nada de contexto e rende uns 15% nesse tipo de tarefa |
+| Bate no limite de uso nesse tipo de tarefa | Vale testar, sabendo que o ganho é pequeno |
+| Faz tarefas pequenas e médias no dia a dia | Pode ignorar: não vai mudar sua conta |
 
 ## Instalar
 

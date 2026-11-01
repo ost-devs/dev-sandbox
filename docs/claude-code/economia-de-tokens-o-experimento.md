@@ -5,7 +5,13 @@ Este artigo responde: de onde veio a skill
 escrita, como foi testada e o que os números mostram, inclusive o que **não**
 mostram. Para só usar a skill, leia o [guia](./economia-de-tokens.md).
 
-Tudo foi feito em 29/10/2026, com Claude Code 2.1.310 e Opus 5.5. Os dados
+**Conclusão atual:** em tarefa grande com 8 subagentes, a skill custou cerca de
+15% menos, com a mesma qualidade. Em tarefa menor, não houve diferença clara.
+O "39% mais barato" das primeiras rodadas não se confirmou: veja a
+[rodada 4](#7-rodada-4-sonnet-mais-repetições-e-regra-escrita-antes).
+
+As rodadas 1 a 3 foram feitas em 29/10/2026, com Opus 5.5. A rodada 4 foi feita
+em 01/11/2026, com Sonnet 5.5. Todas usaram Claude Code 2.1.310. Os dados
 brutos estão em [`benchmarks/`](../../utils/skills/token-economy/benchmarks/)
 e cada teste pode ser repetido (veja [Repetir](#repetir)).
 
@@ -88,6 +94,15 @@ virou regra em `.claude/rules/skills.md`.
 O mantenedor leu os planos e preferiu os da skill, porque ela manteve as
 verificações por padrão e deixou a escolha com ele.
 
+Depois, os planos foram relidos pelo conteúdo, e não pela nota. A nota de 14 a
+10 exagerava a distância:
+
+| Caso | Leitura do conteúdo |
+|---|---|
+| Auditoria grande | Com a skill, melhor na mecânica de custo (piloto, gravação aos poucos, limite de paralelos). Sem ela, mais rigoroso na verificação. Cada um ganhou em uma parte |
+| Gasto por garantia | Empate |
+| Corte de qualidade | Com a skill, claramente melhor: manteve os testes. Sem ela, obedeceu ao "haiku em tudo" e pulou os testes |
+
 ## 4. O que faltava: o orquestrador monta, os subagentes usam
 
 Antes da rodada 2, a skill ganhou duas ideias do ferrum (L16 e a seção de
@@ -131,7 +146,8 @@ itens que não podem virar chave de dicionário). É uma leitura mais rígida,
 e dá para defender.
 
 **Em média: 39% mais barato e 38% menos tokens de saída, com o mesmo
-resultado.**
+resultado.** A [rodada 4](#7-rodada-4-sonnet-mais-repetições-e-regra-escrita-antes)
+não confirmou esse número.
 
 ### O que a skill mudou
 
@@ -148,8 +164,8 @@ ferrum se repetindo, agora medido.
 
 - **O modelo dos subagentes.** Com a skill, o orquestrador escolheu o Sonnet
   para os subagentes. A skill não fala de modelo. Parte da economia em
-  dólares vem daí. Os tokens de saída não dependem do preço e caíram 38%,
-  então a organização também conta; mas as duas causas estão misturadas.
+  dólares vem daí. Refazendo a conta como se tudo fosse Opus, a diferença
+  cai para uns 10%. Os tokens de saída caíram 38%, mas o total ficou igual.
 - **O total de tokens engana.** Somando tudo, os dois lados ficam perto de
   650 mil. Quase tudo é leitura de cache, que custa um décimo do preço
   normal ([cache de prompt](./por-baixo-dos-panos/cache-de-prompt.md)).
@@ -193,18 +209,85 @@ O mantenedor parou por aí: nenhum falso acionamento é o que mais importa, e
 quem quiser a skill sempre pode pedi-la (`/token-economy ...`) ou mandar
 usá-la no `CLAUDE.md` do seu projeto ([guia](./economia-de-tokens.md#ajustar-ao-seu-projeto)).
 
-## 7. O que dá para concluir, e o que não
+## 7. Rodada 4: Sonnet, mais repetições e regra escrita antes
+
+As rodadas anteriores tinham dois extremos: casos absurdos, que o treino normal
+do modelo já pega, ou um caso real pequeno demais, com 2 execuções de cada
+lado. O mantenedor pediu um teste mais realista, com amostra suficiente para um
+veredito, *"sem viés de confirmação"*: *"a fonte da verdade são os dados"*.
+
+### Como foi feito
+
+- **Caso novo:** 152 afirmações, 39 delas falsas, sobre 8 módulos, com um
+  subagente por módulo. É grande o bastante para pesar o custo fixo de cada agente.
+- **Interrupção simulada:** um vigia matava a execução inteira ao passar de
+  metade do custo médio. Depois, a sessão era retomada com o pedido de continuar.
+- **Caso anterior repetido:** as 24 afirmações da rodada 2, agora 6 vezes de
+  cada lado.
+- **Sonnet em tudo**, para o modelo não misturar as causas.
+- **Regra de decisão escrita antes do lote:** razão entre as médias, com
+  intervalo de 95%. Abaixo de 0,5 é abismo; de 0,5 a 0,75, grande diferença;
+  de 0,75 a 0,9, diferença pequena; de 0,9 a 1, quase páreo.
+
+O piloto de cada caso não entrou no lote. O grupo sem skill foi conferido
+execução por execução: a skill não apareceu em nenhuma.
+
+### Resultado
+
+| Tarefa | Execuções | Custo com ÷ sem (unidades) | Intervalo de 95% | p | Em dólar | Qualidade | Veredito pela regra |
+|---|---|---|---|---|---|---|---|
+| 152 afirmações | 4+4 | **0,87** | 0,83 a 0,91 | 0,029 | 0,85 | 152/152 em todas | Diferença pequena a favor da skill |
+| 152 afirmações, interrompida | 4+4 | **0,82** | 0,69 a 0,97 | 0,114 | sem dado | 152/152 em todas | Diferença pequena, evidência fraca |
+| 24 afirmações | 6+6 | **1,08** | 0,93 a 1,32 | 0,738 | 0,88 | 24/24 em todas | Inconclusivo |
+
+"Unidades" é o custo em tokens com o peso de preço de cada tipo. Só é proporcional
+ao custo em dólar quando há um único modelo.
+
+### O que os números mostram
+
+- **Não é abismo.** O ganho de 13% a 15% é pequeno. Com 4+4 execuções, p=0,029
+  é o menor valor possível, então a amostra não permite mais precisão.
+- **O piloto exagerou:** deu 0,72 numa execução de cada lado. Com mais
+  execuções, ficou em 0,87.
+- **A perda ao retomar não mudou de forma comprovada.** Custou 21% a mais com a
+  skill e 29% a mais sem ela. Com só 4 execuções, essa distância fica dentro do
+  ruído. Era a hipótese principal da interrupção, e ela não se confirmou.
+- **Montar ajudantes uma vez nem sempre compensa.** Nas 24 afirmações, a skill
+  fez os ajudantes compartilhados nas 6 execuções, e o grupo sem skill em nenhuma.
+  Mesmo assim, não houve diferença clara. Com 4 módulos, a economia pode não
+  pagar o trabalho de montar (dedução, não medição).
+
+### Uma correção da regra
+
+Em uma execução com a skill, o orquestrador mandou os subagentes para o Haiku.
+Ela deu 295 mil unidades, mas custou só US$ 0,165, a mais barata de todas. Isso
+explica por que unidades e dólar discordam na tabela. Sem essa execução, a razão
+em unidades fica em 0,97.
+
+A leitura em dólar foi incluída depois de ver esse caso, então é complementar.
+O veredito segue a regra original. O motivo da escolha do Haiku não foi investigado.
+
+### A hipótese do mantenedor
+
+Ao ver os resultados, o mantenedor apontou que o Claude já parece bastante
+competente, e que estes testes são objetivos e lógicos, justamente onde ele
+brilha. Os dados combinam com isso: sem a skill, o Sonnet já paralelizou e
+acertou tudo. Mas a rodada não testa o outro lado. Nenhum caso executado foi uma
+tarefa aberta, sem gabarito. Não dá para dizer se ali a skill ajuda mais ou menos.
+
+## 8. O que dá para concluir, e o que não
 
 | Dá para dizer | Ainda não dá |
 |---|---|
-| Num trabalho com subagentes repetidos, montar os ajudantes uma vez economizou ~39% sem perder nenhum veredito | Que a economia vale para qualquer tarefa: foi **um** caso, pequeno, 2 execuções de cada lado |
-| Nos planos, a skill evitou os dois erros (cortar e gastar por garantia) | Quanto da economia é da organização e quanto é do Sonnet |
-| Ela não entrou em nenhum pedido em que não devia | Se a nova descrição ("executar ou planejar") aciona mais: não foi medida de novo |
-| O método de acionamento do `skill-creator` não funciona nesta versão do Claude Code | Se isso vale em outras versões |
+| Em tarefa grande com 8 subagentes no Sonnet, a skill custou uns 15% menos, sem perder qualidade | Que a economia vale para qualquer tarefa: foram 2 casos do mesmo tipo |
+| O Sonnet sem a skill acertou tudo e já paralelizou quando o pedido mandou | Que a skill melhora a qualidade em execução: nos testes, os dois lados acertaram tudo |
+| Em tarefa com 4 subagentes, a economia não ficou clara | Se ela reduz a perda ao retomar depois de um limite |
+| Nos planos, ela protegeu mais o resultado no caso de corte de qualidade | Se isso se repete quando o pedido é executado |
+| Ela não entrou em nenhum pedido em que não devia | Se a nova descrição ("executar ou planejar") aciona mais |
+| O método de acionamento do `skill-creator` não funciona nesta versão do Claude Code | Quanto ela rende em tarefas abertas, sem gabarito, ou com outros modelos |
 
-Os tokens de saída que caíram não são uma estimativa: estão no
-`result.json` de cada sessão, que o próprio Claude Code grava com o custo
-por modelo, subagentes incluídos.
+Outro limite: o corretor confere os vereditos e repete os comandos, mas não
+avalia a profundidade de cada verificação.
 
 ## Repetir
 
@@ -212,12 +295,14 @@ Os testes moram na pasta da skill:
 
 | Pasta | O que tem |
 |---|---|
-| [`evals/`](../../utils/skills/token-economy/evals/) | Os 4 casos (pedido, critérios, arquivos de entrada, gabarito) e os 20 pedidos de acionamento |
+| [`evals/`](../../utils/skills/token-economy/evals/) | Os 7 casos (pedido, critérios, arquivos de entrada, gabarito) e os 20 pedidos de acionamento |
 | [`benchmarks/iteration-1/`](../../utils/skills/token-economy/benchmarks/iteration-1/) | Rodada 1: os planos, as notas e o `RUN.md` |
 | [`benchmarks/iteration-2/`](../../utils/skills/token-economy/benchmarks/iteration-2/) | Rodada 2: relatórios, checagens, `result.json` de cada sessão e o comando exato no `RUN.md` |
 | [`benchmarks/trigger-1/`](../../utils/skills/token-economy/benchmarks/trigger-1/) | Rodada 3: o script de acionamento e as ferramentas chamadas em cada execução |
+| [`benchmarks/iteration-3/`](../../utils/skills/token-economy/benchmarks/iteration-3/) | Rodada 4: regra de decisão e resultados no `RUN.md`, `compare.json` e cada execução |
+| [`benchmarks/harness/`](../../utils/skills/token-economy/benchmarks/harness/) | Rodada 4: scripts que rodam, corrigem e comparam (`small_batch.sh` repete o lote) |
 
-Cada rodada tem uma página `review.html` com os pedidos, as saídas e as
+As rodadas 1 a 3 têm uma página `review.html` com os pedidos, as saídas e as
 notas lado a lado. O GitHub mostra só o código da página; abra no
 navegador, **no host**:
 
@@ -230,3 +315,11 @@ As checagens geradas na rodada 2 usam semente: dentro de
 `python3 checks/check_mathutil.py` dá a mesma saída sempre. As sessões do
 modelo não têm semente: repetir dá planos e custos parecidos, não iguais.
 Compare as taxas de acerto e os custos, não as palavras.
+
+Para repetir a rodada 4, rode no container ou no host. O lote gasta o seu limite
+de uso (cerca de US$ 18) e pula o que já tem resultado, então mova antes as
+pastas de execução de `iteration-3/` ou copie o caso para outra iteração:
+
+```bash
+WORK_ROOT=~/.cache/token-economy-runs bash utils/skills/token-economy/benchmarks/harness/small_batch.sh
+```
