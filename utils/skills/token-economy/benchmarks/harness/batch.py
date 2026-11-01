@@ -70,6 +70,7 @@ def main():
     with ThreadPoolExecutor(a.parallel) as ex:
         for line in ex.map(lambda j: job(a.it_dir.resolve(), a.work_root.resolve(), j), jobs):
             print(line, flush=True)
+    sys.exit(1 if STOP.is_set() else 0)
 
 
 if __name__ == "__main__":
