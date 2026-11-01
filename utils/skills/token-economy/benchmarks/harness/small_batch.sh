@@ -2,7 +2,7 @@
 # Iteration 3, smaller batch: audit-claims-interrupted (4+4 full, 4+4 interrupted) and
 # verify-claims-subagents (6+6). The interruption limit is half the mean units of the
 # full audit runs, computed after them. Re-running resumes: finished runs are skipped.
-set -eu
+set -euo pipefail
 H=$(cd "$(dirname "$0")" && pwd)
 IT=$H/../iteration-3
 WORK=${WORK_ROOT:?set WORK_ROOT to a scratch folder}
