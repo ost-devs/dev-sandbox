@@ -27,7 +27,7 @@ simplesmente não excluiu nada.
 1. Filtros do Timeshift: `/var/lib/containerd/**` (sem espaço!).
 2. Local dos snapshots mudado para a partição da `/home` (que tinha 264 GB livres).
 3. Snapshot novo criado antes de apagar os antigos; depois, os 5 antigos apagados.
-4. `sudo docker builder prune --filter until=96h`.
+4. `sudo docker builder prune --filter until=96h`. Esse filtro só guarda o cache usado nas últimas 96 horas: se o último build for mais antigo, o próximo refaz a imagem inteira ([cuidado no guia](../guias/filosofia-da-imagem.md#onde-a-imagem-ocupa-espaço-no-seu-disco)).
 
 Resultado: de 8,4 GB para 58 GB livres na raiz.
 

@@ -58,12 +58,18 @@ sudo du -sh /var/lib/containerd /var/lib/docker
 ```
 
 O que mais cresce costuma ser o **cache de build**, não a imagem. Limpe o
-cache antigo sem perder o atual:
+que não foi usado nos últimos 4 dias (96 horas):
 
 ```bash
 sudo docker builder prune --filter until=96h
 sudo docker image prune        # imagens sem nome (<none>) de builds anteriores
 ```
+
+**Cuidado:** se o último build foi há mais de 4 dias, isso apaga também o cache
+da imagem atual. A imagem continua funcionando, mas o próximo build refaz tudo,
+até quando você só queria
+[atualizar os agentes](atualizacao.md#2-só-os-agentes). Num caso real foram 7
+minutos em vez de 1 ou 2. Para evitar, limpe logo depois de um build.
 
 ### Se o Timeshift estiver ligado: exclua o Docker dele
 

@@ -33,12 +33,29 @@ cd ~/dev-sandbox
 sudo docker build --build-arg AGENTS_REFRESH=$(date +%s) -t dev-sandbox .
 ```
 
-Os agentes ficam na última camada do `Dockerfile`, então só ela é refeita: leva
-minutos. O auto-update do Claude Code fica desligado de propósito
+Os agentes ficam nas últimas camadas do `Dockerfile`, então só elas são refeitas:
+leva 1 ou 2 minutos, e as camadas anteriores aparecem como `CACHED` no log. Se
+nada aparecer como `CACHED`, o cache foi apagado (por exemplo, por um
+[`docker builder prune`](filosofia-da-imagem.md#onde-a-imagem-ocupa-espaço-no-seu-disco))
+e o Docker refaz a imagem toda. Leva mais tempo, mas o resultado serve do mesmo jeito.
+
+O auto-update do Claude Code fica desligado de propósito
 (`DISABLE_AUTOUPDATER=1`), porque baixava versões que nunca eram usadas
 ([aprendizado](../aprendizados/2026-10-claude-autoupdate-orfao.md)).
 
-Para conferir, abra uma sessão e rode `claude --version` (ou `codex --version`).
+Para conferir, abra uma sessão **nova** e rode, dentro do container:
+
+```bash
+which claude         # o certo é /root/.local/bin/claude
+claude --version     # ou: codex --version
+```
+
+Se o `which` mostrar `/tmp/dev-home/.local/bin/claude`, uma cópia antiga na sua
+home está escondendo a da imagem. Apague esse link, no host:
+
+```bash
+rm ~/.cache/dev-sandbox/home/.local/bin/claude
+```
 
 ## 3. A imagem inteira
 

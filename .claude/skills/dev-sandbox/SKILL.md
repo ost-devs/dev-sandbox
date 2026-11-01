@@ -32,6 +32,7 @@ costs more (silent workarounds, tokens, errors) than disk
 ## Decisions that look wrong but are not
 | Decision | Reason | Where |
 |---|---|---|
+| `$HOME/.local/bin`, if on `PATH`, goes last | `$HOME` persists and is agent-writable: first, a stale `claude` there hides the image's and survives rebuilds | `docs/aprendizados/2026-10-claude-autoupdate-orfao.md` |
 | `--user UID:GID` | Core fix: bind mounts keep UIDs, root-owned files break host tools | `DOCUMENTACAO.md#o-problema-de-fundo-bind-mount-e-uid` |
 | No `docker` group, `sudo` every time | The group is passwordless root | `DOCUMENTACAO.md#por-que-nao-usar-o-grupo-docker` |
 | Project at its host path | Claude keys memory/`--resume` by path; v0.1 `/workspace` mixed all projects | `docs/aprendizados/2026-10-memoria-misturada-entre-projetos.md` |
