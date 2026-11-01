@@ -60,7 +60,7 @@ def skill_calls(sid):
         for b in m["content"]:
             if b.get("type") == "tool_use" and b.get("name") == "Skill":
                 out.append(b.get("input", {}).get("skill"))
-            if b.get("type") == "tool_use" and b.get("name") == "Read" and "token-economy" in str(b.get("input")):
+            if b.get("type") == "tool_use" and b.get("name") == "Read" and "skills/token-economy" in str(b.get("input")):
                 out.append("read:" + str(b["input"].get("file_path")))
     return out
 

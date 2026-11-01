@@ -30,7 +30,7 @@ def runs(cfg_dir):
                     "seconds": sum(p["seconds"] for p in d["phases"]),
                     "usd": sum(p["reported_cost_usd"] or 0 for p in d["phases"]) if all(p["reported_cost_usd"] for p in d["phases"]) else None,
                     "pass_rate": g["summary"]["pass_rate"] if g else None,
-                    "skill_used": bool(d.get("skill_calls")), "subagents": d.get("subagents"), "grade": a})
+                    "skill_used": "token-economy" in (d.get("skill_calls") or []), "subagents": d.get("subagents"), "grade": a})
     return out
 
 
@@ -87,7 +87,7 @@ def main():
         res = {}
         for gname, (gw, gwo) in groups.items():
             res[gname] = {
-                "units": compare(gw, gwo, "units"), "seconds": compare(gw, gwo, "seconds"),
+                "units": compare(gw, gwo, "units"), "usd": compare(gw, gwo, "usd"), "seconds": compare(gw, gwo, "seconds"),
                 "pass_rate": {"with": [x["pass_rate"] for x in gw], "without": [x["pass_rate"] for x in gwo]},
                 "skill_used": [x["skill_used"] for x in gw], "subagents": {"with": [x["subagents"] for x in gw], "without": [x["subagents"] for x in gwo]},
                 "units_raw": {"with": [x["units"] for x in gw], "without": [x["units"] for x in gwo]},
