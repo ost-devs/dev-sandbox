@@ -55,8 +55,12 @@ general part and keep a short local memory with the rest, linking
 
 ## Review notes
 
-The user reviews memories in their own language in notes beside `groups.json`
-(`~/.claude/shared-memories/`), which `status` and the hooks check:
+The user reviews memories in notes beside `groups.json`
+(`~/.claude/shared-memories/`), which `status` and the hooks check. Notes use
+one language: the one the user writes in, unless they ask for another (some
+review in English to practice it). `nota.md` states it in its first lines
+(`Idioma: português`, `Language: English`); project notes follow it. When the
+user asks to change it, rewrite every note and that line.
 
 - `nota.md`: one `#` section per group, one `##` entry per shared memory, then
   `# Candidatas` with the proposals.
@@ -67,10 +71,11 @@ The user reviews memories in their own language in notes beside `groups.json`
 Each entry is a `##` heading ending in the file in backticks, which is how the
 script matches it: `` `<group>/<file>.md` `` for shared, `` `<project folder>/<file>.md` ``
 for a candidate, `` `<file>.md` `` in a project note. Under it: where it came
-from (project and date), a faithful translation of the whole memory (the file
+from (project and date), the whole memory in the note's language (a faithful
+translation, or the text itself when it is already in that language; the file
 keeps its language), and your opinion in one or two lines (keep, move, delete,
 and why). A candidate also names the suggested group, and the rewritten text
-with its translation if you propose one.
+(translated likewise) if you propose one.
 
 When a hook says a note must be added to or updated, do it in the same turn.
 When the user decides on an entry, apply it and update the note. When `status`
@@ -81,7 +86,8 @@ lists notes out of date, fix them.
 Memories are written for the model. When you show one to the user (a rewrite,
 a conflict, a review they asked for) and it is in another language than the
 one they write in, show a faithful translation next to it, unless they said
-they don't want one. The file keeps its language.
+they don't want one (e.g. their notes are in English for practice). The file
+keeps its language.
 
 ## Commands
 

@@ -590,7 +590,7 @@ def cmd_hook(env, args):
             if any(r[3] for r in report) else []
         ref = f"{path.parent.name}/{path.name}"
         if ref in note_refs(note_path(env)):
-            notes.append(f"Shared memory `{ref}` changed: update its translation in {note_path(env)}.")
+            notes.append(f"Shared memory `{ref}` changed: update its entry in {note_path(env)}, in the language the note states at its top.")
         if notes:
             context(event, "\n\n".join(notes))
         return
@@ -616,7 +616,7 @@ def cmd_hook(env, args):
     if project_note.exists():
         notes.append(f"This project has a review note, {project_note}: "
                      f"{'add' if path.name not in note_refs(project_note) else 'update'} `{path.name}` there "
-                     f"with a faithful translation (share-memories skill).")
+                     f"in the note's language (share-memories skill).")
     if notes:
         context(event, "\n\n".join(notes))
 

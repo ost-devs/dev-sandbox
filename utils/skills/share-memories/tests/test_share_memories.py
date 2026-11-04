@@ -289,7 +289,7 @@ class Notes(Base):
         self.note("nota.md", "## Regra — `dev/regra.md`\n\n# Candidatas\n\n## Local — `-a/local.md`\n")
         self.note("nota-a.md", "## Local — `local.md`\n")
         ctx = self.nudge(self.store / "dev" / "regra.md")
-        self.assertIn("update its translation", ctx)
+        self.assertIn("update its entry", ctx)
         ctx = self.nudge(self.mem("-a") / "local.md")
         self.assertIn("Candidate memory `-a/local.md` changed", ctx)
         self.assertIn("update `local.md`", ctx)

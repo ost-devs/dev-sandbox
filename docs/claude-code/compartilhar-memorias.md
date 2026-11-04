@@ -16,8 +16,8 @@ O nome e os comandos são em inglês ([glossário](../ingles-para-devs/glossario
 ```text
 ~/.claude/shared-memories/
 ├── groups.json                ← quais projetos estão em cada grupo e a linha de cada memória
-├── nota.md                    ← para você: as compartilhadas e as candidatas, traduzidas
-├── nota-ferrum.md             ← opcional: as memórias só do ferrum, traduzidas
+├── nota.md                    ← para você: as compartilhadas e as candidatas, no seu idioma
+├── nota-ferrum.md             ← opcional: as memórias só do ferrum, no seu idioma
 └── dev/
     └── review-in-pt.md        ← a única cópia da memória
 
@@ -36,7 +36,7 @@ O nome e os comandos são em inglês ([glossário](../ingles-para-devs/glossario
   (projetos novos entram sozinhos).
 - **O Claude propõe, você decide.** Quando nasce uma memória num projeto que está num grupo, o
   hook avisa o Claude. Ele deixa a memória no projeto (o normal) ou, se acha que serve a outros
-  projetos, a põe como **candidata** no `nota.md`, traduzida e com o grupo sugerido, e só te
+  projetos, a põe como **candidata** no `nota.md`, no seu idioma e com o grupo sugerido, e só te
   avisa numa linha, sem pergunta. Ele nunca compartilha sozinho: você revisa as candidatas quando
   quiser, de uma vez, e diz o que fazer.
 
@@ -95,14 +95,14 @@ Um projeto é a pasta dele em `~/.claude/projects/` (`-ferrum`) ou o caminho
 | Desfazer, deixando uma cópia num projeto | "tire dev/x.md do grupo e deixe só no ferrum" | `... unshare dev/x.md --keep -ferrum` |
 | Desfazer e apagar | `/share-memories unshare dev/x.md` | `... unshare dev/x.md` |
 | Revisar as memórias de um grupo | "mostre as memórias do grupo dev" | `... status` |
-| Revisar em português | abra `~/.claude/shared-memories/nota.md` | — |
+| Revisar no seu idioma | abra `~/.claude/shared-memories/nota.md` | — |
 | Revisar as memórias só de um projeto | "crie a nota de revisão do ferrum" | — |
 | Consertar depois de mexer à mão | `/share-memories sync` | `... sync` |
 
-### Revisar em português
+### Revisar no seu idioma
 
 As memórias são escritas para o Claude, quase sempre em inglês. Para você revisar sem depender do
-inglês, o Claude mantém notas traduzidas ao lado do `groups.json`:
+inglês, o Claude mantém notas no seu idioma ao lado do `groups.json`:
 
 - **`nota.md`:** uma seção `#` por grupo, com cada memória compartilhada traduzida, de onde veio e
   a opinião dele (manter, mudar de grupo, apagar). No fim, `# Candidatas`: o que ele propõe
@@ -111,16 +111,23 @@ inglês, o Claude mantém notas traduzidas ao lado do `groups.json`:
 - **`nota-<projeto>.md`:** as memórias que só existem naquele projeto (`nota-ferrum.md`). Só
   existe para os projetos que você pedir.
 
-Elas não se atualizam sozinhas (a tradução é do Claude), mas não ficam para trás sem aviso: os
+O idioma das notas é o que você usa para escrever ao Claude. Quer outro? Peça, por exemplo,
+"quero as notas em inglês" (bom para treinar o inglês). O Claude reescreve as notas e anota o
+idioma nas primeiras linhas da `nota.md` (`Idioma: português`, `Language: English`). É essa linha
+que as próximas sessões seguem. Se o idioma escolhido for o mesmo das memórias, a nota traz o
+texto delas como está, sem tradução.
+
+Elas não se atualizam sozinhas (quem escreve é o Claude), mas não ficam para trás sem aviso: os
 hooks lembram o Claude de atualizar a nota quando uma memória listada nela muda ou nasce, e o
 `/share-memories status` lista o que falta ou sobra em cada nota.
 
 As notas não custam contexto: ficam fora da pasta `memory/` e do `MEMORY.md`, então nenhuma sessão
 as carrega. O custo aparece só quando nasce ou muda uma memória listada numa nota: o Claude lê a
-nota e escreve a tradução, uns 3 mil tokens numa nota de 10 memórias, uma vez.
+nota e escreve a entrada, uns 3 mil tokens numa nota de 10 memórias, uma vez.
 
 Fora das notas, quando o Claude te mostra uma memória (para resolver um conflito, por exemplo),
-mostra a tradução junto, a não ser que você diga que não quer.
+mostra a tradução junto, a não ser que você diga que não quer (por exemplo, porque suas notas
+estão em inglês).
 
 Não edite o bloco `share-memories` do `MEMORY.md`: ele é refeito. Edite a memória.
 
