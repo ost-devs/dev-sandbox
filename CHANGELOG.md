@@ -10,7 +10,7 @@ fontes externas copiadas para o projeto, guias escritos a partir delas e conferi
 oficial. Nada muda na imagem.
 
 - `dev-docker --atalho meu-site` cria também `dd-meu-site`, nome curto para o mesmo atalho.
-  Atalhos antigos ganham o nome curto ao rodar `--atalho` de novo
+  `dev-docker --atalhos` cria o nome curto que faltar nos atalhos antigos
   ([atalhos](DOCUMENTACAO.md#projeto-com-nome)).
 
 - [`/mirrors`](utils/skills/mirrors/SKILL.md) copia três tipos de fonte para `mirrors/`, só

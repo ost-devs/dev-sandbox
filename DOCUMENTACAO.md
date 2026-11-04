@@ -190,8 +190,8 @@ isso o script:
 **Corrigir, listar, apagar.** Errou a pasta: rode de novo o mesmo
 `dev-docker --atalho meu-site` na pasta certa. Ver todos:
 `dev-docker --atalhos`. Apagar: `rm ~/.local/bin/dev-docker-meu-site ~/.local/bin/dd-meu-site`.
-Atalho criado antes do `dd-`: rode de novo `dev-docker --atalho meu-site` na
-pasta do projeto para ganhar o nome curto. Moveu ou
+Atalhos criados antes do `dd-`: rode `dev-docker --atalhos` uma vez; ele lista
+e cria o `dd-` que faltar em todos (marca `(novo)` nos que criou). Moveu ou
 renomeou a pasta do projeto (ou a do dev-sandbox): crie o atalho de novo.
 
 **Nome ou caminho do host?**

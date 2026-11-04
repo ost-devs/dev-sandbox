@@ -4,6 +4,7 @@ set -euo pipefail
 # Uso: dev-docker [--nome NOME] [caminho-do-repo]
 #      dev-docker --atalho NOME [caminho-do-repo]   cria o comando dev-docker-NOME (e dd-NOME)
 #      dev-docker --atalhos                         lista os atalhos e as pastas deles
+#                                                   (e cria o dd-NOME que faltar)
 #
 #   --nome NOME   monta o projeto em /NOME em vez do caminho do host: caminho curto e
 #                 memória do Claude com nome estável (~/.claude/projects/-NOME/)
@@ -49,11 +50,26 @@ valida_nome() {
 # pasta errada (a home inteira, uma subpasta, outro projeto).
 pasta_do_atalho() { sed -n 's/^# pasta: //p' "$1"; }
 
+# dd-NOME: nome curto, link para dev-docker-NOME (apagar um não apaga o outro).
+# Só cria se o lugar está livre ou já é o nosso link; falha sem mexer em nada.
+cria_curto() {
+  local curto="$HOME/.local/bin/dd-$1"
+  if { [ ! -e "$curto" ] && [ ! -L "$curto" ]; } || [ "$(readlink "$curto" 2>/dev/null || true)" = "dev-docker-$1" ]; then
+    ln -sfn "dev-docker-$1" "$curto"
+  else
+    return 1
+  fi
+}
+
+# Listar também completa o dd-NOME dos atalhos criados antes dele existir.
 if [ "$LISTAR" = "1" ]; then
   achou=0
   for f in "$HOME"/.local/bin/dev-docker-*; do
     [ -f "$f" ] && grep -q "gerado por dev-docker --atalho" "$f" || continue
-    printf '  %-28s → %s\n' "$(basename "$f")" "$(pasta_do_atalho "$f")"; achou=1
+    nome="${f##*/dev-docker-}"
+    novo=""; [ -L "$HOME/.local/bin/dd-$nome" ] || novo=" (novo)"
+    if cria_curto "$nome"; then curto="dd-$nome$novo"; else curto="(dd-$nome ocupado)"; fi
+    printf '  %-28s %-24s → %s\n' "dev-docker-$nome" "$curto" "$(pasta_do_atalho "$f")"; achou=1
   done
   [ "$achou" = "1" ] || echo "Nenhum atalho criado ainda (dev-docker --atalho NOME)."
   exit 0
@@ -86,14 +102,10 @@ if [ -n "$ATALHO" ]; then
   printf '#!/bin/bash\n# gerado por dev-docker --atalho %s\n# pasta: %s\nexec %q --nome %q %q "$@"\n' \
     "$ATALHO" "$REPO_PATH" "$(realpath "$0")" "$ATALHO" "$REPO_PATH" > "$DEST"
   chmod +x "$DEST"
-  # dd-NOME: nome curto, link para o mesmo script (apagar um não apaga o outro).
-  # Só cria se o lugar está livre ou já é o nosso link.
-  CURTO="$HOME/.local/bin/dd-$ATALHO"
-  if { [ ! -e "$CURTO" ] && [ ! -L "$CURTO" ]; } || [ "$(readlink "$CURTO" 2>/dev/null)" = "dev-docker-$ATALHO" ]; then
-    ln -sfn "dev-docker-$ATALHO" "$CURTO"
+  if cria_curto "$ATALHO"; then
     OU_CURTO="  (ou dd-$ATALHO)"
   else
-    echo "Aviso: $CURTO já existe e não foi criado pelo dev-docker; só dev-docker-$ATALHO foi criado." >&2
+    echo "Aviso: ~/.local/bin/dd-$ATALHO já existe e não foi criado pelo dev-docker; só dev-docker-$ATALHO foi criado." >&2
     OU_CURTO=""
   fi
   echo "Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-$ATALHO$OU_CURTO"
