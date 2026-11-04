@@ -7,8 +7,8 @@ git) guarda de onde vem cada cópia.
 
 Guias completos: [repositórios](../../../docs/claude-code/mirrors.md),
 [sites de documentação](../../../docs/claude-code/mirrors-de-sites.md) e
-[artigos da web](../../../docs/claude-code/mirrors-de-artigos.md) (este
-precisa de `npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts`).
+[artigos da web](../../../docs/claude-code/mirrors-de-artigos.md).
+Instalar: `utils/skills/install-skill.sh mirrors` ([como](../README.md#instalar)).
 
 ### Repositórios git
 

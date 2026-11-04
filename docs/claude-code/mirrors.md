@@ -41,29 +41,16 @@ projetos. Rode **no host**, trocando `~/dev-sandbox` pelo lugar onde você
 clonou o dev-sandbox:
 
 ```bash
-mkdir -p ~/.claude/skills
-cp -r ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
+~/dev-sandbox/utils/skills/install-skill.sh mirrors
 ```
 
-A pasta leva o `SKILL.md` e o script, que a IA usa, e um `README.md` curto
-para você consultar sem abrir o dev-sandbox. O Claude não carrega o README:
-ele só entra no contexto se o Claude decidir abrir o arquivo.
+Vai só o que o Claude usa: o `SKILL.md`, os scripts e o Defuddle, que
+captura artigos da web ([detalhes](./mirrors-de-artigos.md#1-o-defuddle-vem-com-a-skill)).
+Os testes e o [README com as tabelas de uso](../../utils/skills/mirrors/README.md)
+ficam no dev-sandbox.
 
-Para capturar artigos da web, instale também o Defuddle ([detalhes](./mirrors-de-artigos.md#1-instalar-o-defuddle-uma-vez-só)):
-
-```bash
-npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts
-```
-
-Para atualizar depois de um `git pull` no dev-sandbox, rode no host. A
-última linha só se você usa a captura de artigos: o `rm -rf` apaga o
-Defuddle junto.
-
-```bash
-rm -rf ~/.claude/skills/mirrors
-cp -r ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
-npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts
-```
+Para atualizar depois de um `git pull` no dev-sandbox, rode o mesmo comando
+de novo.
 
 Conferir: abra uma sessão nova do Claude em qualquer projeto e digite
 `/mirr`. A skill deve aparecer na lista.

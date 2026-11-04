@@ -61,10 +61,11 @@ isso a decisão é sua. O critério que ele usa para propor:
 
 ## Instalar
 
-1. Copie a skill (no host; vale dentro e fora do container, porque o `~/.claude` é o mesmo):
+1. Instale a skill (no host; vale dentro e fora do container, porque o `~/.claude` é o mesmo).
+   Vai só o que o Claude usa; os testes ficam no dev-sandbox. Para atualizar, rode de novo:
 
    ```bash
-   cp -r ~/dev-sandbox/utils/skills/share-memories ~/.claude/skills/
+   ~/dev-sandbox/utils/skills/install-skill.sh share-memories
    ```
 
 2. Numa sessão nova do Claude, em qualquer projeto, peça: **"instale a share-memories e crie o

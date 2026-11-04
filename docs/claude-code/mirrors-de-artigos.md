@@ -23,35 +23,20 @@ transforma em Markdown com título, autor e datas no topo.
 Artigos quase sempre têm todos os direitos reservados. A cópia fica só na sua
 máquina; os seus textos citam a fonte e dizem com as suas palavras.
 
-## 1. Instalar o Defuddle (uma vez só)
+## 1. O Defuddle vem com a skill
 
-Precisa de Node.js: a imagem do dev-sandbox já tem. Rode **você mesmo**, no
-terminal do host ou do container:
+O [instalador da skill](./mirrors.md#1-instalar-a-skill-uma-vez-só) já
+instala o Defuddle junto, nas versões exatas do `package-lock.json` da skill
+(Defuddle 0.19.5 e 26 dependências), com `--ignore-scripts`: nenhum pacote
+roda código na instalação.
 
-```bash
-npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts
-```
+Ele precisa de Node.js onde você roda o instalador (a imagem do dev-sandbox
+já tem). Sem Node.js, o instalador avisa e instala o resto: só a captura de
+artigos fica fora. Instale o Node.js e rode o instalador de novo.
 
-Pedir ao Claude também funciona, mas no modo automático ele pode ser
-barrado por instalar código de fora. É de propósito: liberar é decisão sua.
-Para liberar só este comando, acrescente em `.claude/settings.local.json` do
-projeto (fica fora do git):
-
-```json
-{ "permissions": { "allow": ["Bash(npm ci --prefix * --ignore-scripts)"] } }
-```
-
-Depois de cada atualização da skill (`rm -rf` + `cp -r`), rode o `npm ci`
-de novo: o `rm -rf` apaga o Defuddle junto.
-
-No próprio dev-sandbox, a skill roda de `utils/skills/mirrors/`. Lá, rode
-`npm ci --prefix utils/skills/mirrors --ignore-scripts` na raiz do
+No próprio dev-sandbox, a skill roda da bancada, `utils/skills/mirrors/`.
+Lá, rode `npm ci --prefix utils/skills/mirrors --ignore-scripts` na raiz do
 repositório (a `node_modules/` fica fora do git).
-
-O `npm ci` instala as versões exatas do `package-lock.json` que vem com a
-skill (Defuddle 0.19.5 e 26 dependências), e o `--ignore-scripts` impede que
-qualquer pacote rode código na instalação. Sem o Defuddle, só a captura de
-artigos fica fora; o resto da skill funciona.
 
 ## 2. Capturar
 

@@ -88,18 +88,11 @@ no [artigo do experimento](./economia-de-tokens-o-experimento.md).
 No **host**, trocando `~/dev-sandbox` pelo lugar onde você clonou o repositório:
 
 ```bash
-mkdir -p ~/.claude/skills
-cp -r ~/dev-sandbox/utils/skills/token-economy ~/.claude/skills/
+~/dev-sandbox/utils/skills/install-skill.sh token-economy
 ```
 
-A pasta traz junto os testes e resultados (`evals/`, `benchmarks/`). O Claude
-só lê o `SKILL.md`; o resto não gasta contexto. Para uma cópia enxuta, copie
-só ele:
-
-```bash
-mkdir -p ~/.claude/skills/token-economy
-cp ~/dev-sandbox/utils/skills/token-economy/SKILL.md ~/.claude/skills/token-economy/
-```
+Vai só o `SKILL.md`, que é o que o Claude usa. Os testes e resultados
+(`evals/`, `benchmarks/`) ficam no dev-sandbox. Para atualizar, rode de novo.
 
 Conferir: numa sessão nova, digite `/token` e a skill deve aparecer. Skills
 em `~/.claude/skills/` valem em todos os projetos, e o Claude só lê o

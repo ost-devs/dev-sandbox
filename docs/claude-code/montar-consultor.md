@@ -30,8 +30,8 @@ projetos. Rode **no host**, trocando `~/dev-sandbox` pelo lugar onde você
 clonou o dev-sandbox:
 
 ```bash
-mkdir -p ~/.claude/skills
-cp -r ~/dev-sandbox/utils/skills/montar-consultor ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
+~/dev-sandbox/utils/skills/install-skill.sh montar-consultor
+~/dev-sandbox/utils/skills/install-skill.sh mirrors
 ```
 
 A skill [`mirrors`](./mirrors.md) é opcional, mas
@@ -40,12 +40,8 @@ para `mirrors/dev-sandbox/` no seu projeto e o usa como exemplo pronto (sempre
 na versão mais nova do GitHub). Ele pergunta antes. Sem ela, os modelos
 bastam.
 
-Para atualizar depois de um `git pull` no dev-sandbox, rode no host:
-
-```bash
-rm -rf ~/.claude/skills/montar-consultor ~/.claude/skills/mirrors
-cp -r ~/dev-sandbox/utils/skills/montar-consultor ~/dev-sandbox/utils/skills/mirrors ~/.claude/skills/
-```
+Para atualizar depois de um `git pull` no dev-sandbox, rode os mesmos
+comandos de novo.
 
 Conferir: abra uma sessão nova do Claude em qualquer projeto e digite
 `/montar`. A skill deve aparecer na lista.

@@ -102,7 +102,7 @@ também versões traduzidas, inclusive `pt-br`
 A skill [`/estudar`](../../utils/skills/estudar/SKILL.md) faz o ciclo inteiro
 a partir de artigos da web. Ela usa a `mirrors` para capturar, e as duas
 precisam estar instaladas lado a lado em `~/.claude/skills/` (instalação em
-[`utils/README.md`](../../utils/README.md#instalar)).
+[`utils/skills/README.md`](../../utils/skills/README.md#instalar)).
 
 ```text
 /estudar https://exemplo.com/artigo

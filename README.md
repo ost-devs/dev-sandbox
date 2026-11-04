@@ -133,7 +133,7 @@ ferramentas que faltam. Ele vai para dentro da imagem.
 ## Kit para qualquer projeto
 
 Skills do Claude Code que você instala uma vez, na sua pasta pessoal, e usa
-em todos os projetos ([instalação](utils/README.md#instalar)):
+em todos os projetos ([instalação](utils/skills/README.md#instalar)):
 
 | Skill | Para quê | Guia |
 |---|---|---|

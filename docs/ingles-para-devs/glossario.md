@@ -3,6 +3,16 @@
 Nomes e comandos em inglês das skills do dev-sandbox. A pronúncia é aproximada, escrita como se
 lê em português.
 
+## install-skill
+
+Script que [instala uma skill pronta](../../utils/skills/README.md#instalar) no seu `.claude`.
+
+| Inglês | Pronúncia | Significa | No script |
+|---|---|---|---|
+| **install** | *ins-tól* | instalar | o que ele faz: copia a skill e as dependências dela |
+| **skill** | *skíl* | habilidade | um conjunto de instruções (e scripts) que o Claude usa quando precisa |
+| **install-skill** | *ins-tól skíl* | instalar skill | o nome do script: `utils/skills/install-skill.sh mirrors` |
+
 ## share-memories
 
 Skill que [compartilha memórias entre projetos](../claude-code/compartilhar-memorias.md).

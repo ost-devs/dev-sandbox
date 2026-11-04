@@ -9,8 +9,12 @@ O dev-sandbox passa a ser também um **kit para trabalhar com o Claude Code em q
 fontes externas copiadas para o projeto, guias escritos a partir delas e conferidos na documentação
 oficial. Nada muda na imagem.
 
-- `dev-docker --atalho meu-site` cria também `dd-meu-site`, nome curto para o mesmo atalho.
+- `dev-docker --atalho meu-site` cria também `dd-meu-site`, nome curto para o mesmo atalho
   ([atalhos](DOCUMENTACAO.md#projeto-com-nome)).
+- [`utils/skills/install-skill.sh <nome>`](utils/skills/README.md#instalar) instala a skill pronta: só o que o
+  Claude usa (sem testes, evals, benchmarks e README) e as dependências dela, como o Defuddle da
+  `mirrors`. Rodar de novo atualiza; com `.claude/skills`, instala num repositório. Os guias deixam
+  de ensinar `cp -r` da pasta inteira e o `npm ci` à parte.
 
 - [`/mirrors`](utils/skills/mirrors/SKILL.md) copia três tipos de fonte para `mirrors/`, só
   leitura e fora do git: repositórios git ([guia](docs/claude-code/mirrors.md)), sites de
@@ -47,7 +51,7 @@ oficial. Nada muda na imagem.
   `robots.txt` do Python tratava um 403 como "tudo proibido".
 
 **Ao atualizar da v0.4:** `git pull` e copie as skills de novo para `~/.claude/skills/`
-([como](utils/README.md#instalar)). Para capturar artigos da web, rode também
+([como](utils/skills/README.md#instalar)). Para capturar artigos da web, rode também
 `npm ci --prefix ~/.claude/skills/mirrors --ignore-scripts` (precisa de Node.js). Não precisa
 reconstruir a imagem.
 
