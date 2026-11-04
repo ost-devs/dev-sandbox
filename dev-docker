@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Uso: dev-docker [--nome NOME] [caminho-do-repo]
-#      dev-docker --atalho NOME [caminho-do-repo]   cria o comando dev-docker-NOME
+#      dev-docker --atalho NOME [caminho-do-repo]   cria o comando dev-docker-NOME (e dd-NOME)
 #      dev-docker --atalhos                         lista os atalhos e as pastas deles
 #
 #   --nome NOME   monta o projeto em /NOME em vez do caminho do host: caminho curto e
@@ -86,7 +86,17 @@ if [ -n "$ATALHO" ]; then
   printf '#!/bin/bash\n# gerado por dev-docker --atalho %s\n# pasta: %s\nexec %q --nome %q %q "$@"\n' \
     "$ATALHO" "$REPO_PATH" "$(realpath "$0")" "$ATALHO" "$REPO_PATH" > "$DEST"
   chmod +x "$DEST"
-  echo "Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-$ATALHO"
+  # dd-NOME: nome curto, link para o mesmo script (apagar um não apaga o outro).
+  # Só cria se o lugar está livre ou já é o nosso link.
+  CURTO="$HOME/.local/bin/dd-$ATALHO"
+  if { [ ! -e "$CURTO" ] && [ ! -L "$CURTO" ]; } || [ "$(readlink "$CURTO" 2>/dev/null)" = "dev-docker-$ATALHO" ]; then
+    ln -sfn "dev-docker-$ATALHO" "$CURTO"
+    OU_CURTO="  (ou dd-$ATALHO)"
+  else
+    echo "Aviso: $CURTO já existe e não foi criado pelo dev-docker; só dev-docker-$ATALHO foi criado." >&2
+    OU_CURTO=""
+  fi
+  echo "Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-$ATALHO$OU_CURTO"
   echo "Dentro do container o projeto fica em /$ATALHO. Ver todos: dev-docker --atalhos"
   exit 0
 fi

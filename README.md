@@ -98,6 +98,8 @@ digitar `s`. A partir daí, de qualquer lugar no terminal, sem precisar usar `cd
 dev-docker-meu-site
 ```
 
+ou, mais curto, `dd-meu-site` (é o mesmo comando).
+
 Cuidados, como corrigir e o efeito na memória do Claude: [atalhos](DOCUMENTACAO.md#projeto-com-nome).
 
 | Quero... | Como |

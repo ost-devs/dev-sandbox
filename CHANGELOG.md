@@ -7,7 +7,11 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
 
 O dev-sandbox passa a ser também um **kit para trabalhar com o Claude Code em qualquer projeto**:
 fontes externas copiadas para o projeto, guias escritos a partir delas e conferidos na documentação
-oficial. Nada muda na imagem nem no `dev-docker`.
+oficial. Nada muda na imagem.
+
+- `dev-docker --atalho meu-site` cria também `dd-meu-site`, nome curto para o mesmo atalho.
+  Atalhos antigos ganham o nome curto ao rodar `--atalho` de novo
+  ([atalhos](DOCUMENTACAO.md#projeto-com-nome)).
 
 - [`/mirrors`](utils/skills/mirrors/SKILL.md) copia três tipos de fonte para `mirrors/`, só
   leitura e fora do git: repositórios git ([guia](docs/claude-code/mirrors.md)), sites de

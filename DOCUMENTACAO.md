@@ -158,6 +158,9 @@ deveria esconder.
 do host. O jeito prático de usar isso é o **atalho**:
 `dev-docker --atalho meu-site` cria o comando `dev-docker-meu-site`, um script
 de três linhas em `~/.local/bin/` que chama `dev-docker --nome meu-site <a pasta>`.
+Junto vem `dd-meu-site`, um nome curto que roda o mesmo script (é um link para
+ele). Se já existir um `dd-meu-site` que não foi o dev-docker que criou, ele
+fica como está e só o `dev-docker-meu-site` é criado.
 
 **Criar.** Rode uma vez, num terminal aberto na pasta do projeto. Sem caminho,
 ele usa a pasta onde o terminal está; também dá para passar o caminho:
@@ -168,7 +171,7 @@ $ dev-docker --atalho meu-site
 O comando dev-docker-meu-site vai abrir sempre esta pasta:
     /home/ana/Projetos/meu-site
 Confirma? Digite 's' para criar: s
-Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-meu-site
+Pronto. De qualquer terminal, em qualquer pasta, digite:  dev-docker-meu-site  (ou dd-meu-site)
 ```
 
 **Cuidado com a pasta.** O atalho guarda a pasta para sempre: confira se é a
@@ -186,7 +189,9 @@ isso o script:
 
 **Corrigir, listar, apagar.** Errou a pasta: rode de novo o mesmo
 `dev-docker --atalho meu-site` na pasta certa. Ver todos:
-`dev-docker --atalhos`. Apagar: `rm ~/.local/bin/dev-docker-meu-site`. Moveu ou
+`dev-docker --atalhos`. Apagar: `rm ~/.local/bin/dev-docker-meu-site ~/.local/bin/dd-meu-site`.
+Atalho criado antes do `dd-`: rode de novo `dev-docker --atalho meu-site` na
+pasta do projeto para ganhar o nome curto. Moveu ou
 renomeou a pasta do projeto (ou a do dev-sandbox): crie o atalho de novo.
 
 **Nome ou caminho do host?**
