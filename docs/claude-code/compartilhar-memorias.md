@@ -115,6 +115,10 @@ Elas não se atualizam sozinhas (a tradução é do Claude), mas não ficam para
 hooks lembram o Claude de atualizar a nota quando uma memória listada nela muda ou nasce, e o
 `/share-memories status` lista o que falta ou sobra em cada nota.
 
+As notas não custam contexto: ficam fora da pasta `memory/` e do `MEMORY.md`, então nenhuma sessão
+as carrega. O custo aparece só quando nasce ou muda uma memória listada numa nota: o Claude lê a
+nota e escreve a tradução, uns 3 mil tokens numa nota de 10 memórias, uma vez.
+
 Fora das notas, quando o Claude te mostra uma memória (para resolver um conflito, por exemplo),
 mostra a tradução junto, a não ser que você diga que não quer.
 
