@@ -31,7 +31,7 @@ Goal: a fresh session must be as precise as this one without reading it.
 | How <project> works, a decision and its reason, where a topic lives | `.claude/skills/<project>/SKILL.md`, if it isn't already in a doc it can point to |
 | Non-obvious discovery others could hit | `<docs folder for learnings, or the map's Decisions table>` |
 | Verified <domain> fact | Memory of `<researcher agent>` |
-| Unfinished work | Commit it on its branch and keep one project memory: branch, next step, date. Delete it when done |
+| Unfinished work, pending items, next step | Commit the work on its branch. State goes to the progress file the instructions name, if any; else one project memory: branch, next step, date. Never both. Delete it when done |
 
 4. Show the user a table: item → where it went. Ask before committing if the user has not authorized commits.
 5. Tell the user it is safe to `/clear`.

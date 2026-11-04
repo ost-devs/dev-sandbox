@@ -16,6 +16,7 @@ proveito dele. Valem também, em boa parte, fora do Docker.
 | [Memória e instruções](./memoria-e-instrucoes.md) | O que é a memória automática, como difere de `CLAUDE.md`/`AGENTS.md`/rules, como fica separada por projeto no container |
 | [Limite de uso](./limite-de-uso.md) | Qual limite eu atingi, o que devolve o acesso, o que não adianta, e a armadilha da chave de API esquecida |
 | [Sessões e persistência](./sessoes-e-persistencia.md) | O que sobrevive ao `exit`, a pasta `/tmp/claude-*`, como retomar trabalho depois do limite de uso, atualizações |
+| [Estado entre sessões](./estado-entre-sessoes.md) | Onde guardar pendências e próximo passo para a próxima sessão: memória de projeto ou arquivo de progresso, e como não ter duas fontes |
 | [Trabalhar por projeto](./projetos.md) | O que é um projeto para o Claude, o que é guardado por projeto, projetos com vários repositórios, onde pôr cada instrução, o ciclo da memória, sessões longas |
 | [Preservar conversas](./preservar-conversas.md) | O que o Claude apaga e quando, como guardar sessões valiosas (nome, `/export`, PKM) e um hook que arquiva tudo |
 | [Migrar memórias](./migrar-memorias.md) | Levar memórias de uma pasta de projeto para outra (saída da v0.1, uso de `--nome`, projeto movido) |

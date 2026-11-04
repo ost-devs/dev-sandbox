@@ -69,7 +69,7 @@ buscar lá dentro, o caminho é dado explicitamente.
 | `~/.claude/CLAUDE.md` | preferência sua para todos os projetos | carrega em toda sessão, de todo projeto |
 | `CLAUDE.md` ou `AGENTS.md` do repositório | regra que vale em toda tarefa do projeto | carrega em toda sessão e volta depois de cada compactação; **mantenha abaixo de ~200 linhas**, porque ocupa contexto em toda mensagem e, longo demais, é menos seguido |
 | `.claude/rules/x.md` com `paths:` | regra de uma parte do código (só o Rust, só os testes) | carrega só quando o Claude mexe nesses arquivos |
-| Um documento comum (`docs/...`) citado nas instruções | procedimento longo de uma fase ou tarefa | lido quando preciso, sem limite de tamanho. Cuidado: depois de uma compactação, um arquivo lido com mais de ~5.000 tokens volta **só como caminho**; deixe escrito num arquivo de progresso o que reler |
+| Um documento comum (`docs/...`) citado nas instruções | procedimento longo de uma fase ou tarefa | lido quando preciso, sem limite de tamanho. Cuidado: depois de uma compactação, um arquivo lido com mais de ~5.000 tokens volta **só como caminho**; deixe o que reler numa memória de projeto ou no arquivo de progresso ([estado entre sessões](./estado-entre-sessoes.md)) |
 | Skill (`.claude/skills/<nome>/SKILL.md`) | um fluxo que você dispara (`/nome`) | o corpo só carrega quando usado |
 | Hook (`.claude/settings.json`) | algo que **tem** de acontecer sempre | é executado pelo Claude Code, não depende do modelo obedecer |
 
@@ -102,9 +102,11 @@ memória detalhada só é lida quando o assunto aparece.
   `claude --resume`. `claude --continue` retoma a última do projeto.
 - **`/clear` entre tarefas sem relação.** Contexto velho atrapalha e gasta
   tokens em toda mensagem.
-- **Estado em arquivos, não na conversa.** Peça ao agente para manter um
-  arquivo de progresso (feito, falta, próximo passo) e commitar antes de
-  parar. Qualquer sessão nova continua dali.
+- **Estado fora da conversa.** Pendências e próximo passo ficam numa memória
+  de projeto, que o Claude mantém sozinho; um arquivo de progresso no
+  repositório só quando outra ferramenta ou pessoa precisa ler. Commite o
+  trabalho antes de parar e rode `/consolidar`. Como escolher:
+  [estado entre sessões](./estado-entre-sessoes.md).
 - **Limite de uso no meio de uma tarefa longa:** o Claude continua sozinho
   quando o limite volta, **mas só numa sessão interativa que continua
   aberta**, com assinatura, e sozinho só se o limite volta em até 24 horas
