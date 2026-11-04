@@ -34,6 +34,10 @@ BLOCK_START = "<!-- share-memories:start (generated; edit the memories, not thes
 BLOCK_END = "<!-- share-memories:end -->"
 BLOCK_RE = re.compile(r"\n*<!-- share-memories:start[^\n]*-->\n.*?<!-- share-memories:end -->\n?", re.S)
 HOOK_EVENTS = {"PostToolUse": "Write|Edit", "SessionStart": None}
+NOTE_NAME = "nota.md"
+# A memory in a review note is a level-2 heading ending in its file in backticks:
+# `<group>/<file>.md` (shared), `<project folder>/<file>.md` (candidate) or `<file>.md` (project note).
+NOTE_REF = re.compile(r"^##\s.*`([^`\s]+\.md)`\s*$", re.M)
 
 
 def claude_dir():
@@ -228,6 +232,49 @@ def add_local_line(index, line):
     write_atomic(index, (f"{head}\n" if head else "") + f"{line}\n" + (f"\n{rest}" if rest else ""))
 
 
+def note_path(env, slug=None):
+    """The user's review note: nota.md for the shared memories and candidates, nota-<project>.md per project."""
+    return env.store / (NOTE_NAME if slug is None else f"nota-{slug.lstrip('-')}.md")
+
+
+def note_refs(path):
+    return set(NOTE_REF.findall(path.read_text(encoding="utf-8"))) if path.exists() else set()
+
+
+def local_memories(env, slug):
+    mem = env.projects / slug / "memory"
+    return {p.name for p in mem.glob("*.md") if not p.is_symlink() and p.name != "MEMORY.md"}
+
+
+def note_drift(env):
+    """Where the review notes no longer match the memories (the notes are written by Claude, in the user's language)."""
+    out = []
+    groups = env.groups()
+    note = note_path(env)
+    if note.exists():
+        refs = note_refs(note)
+        shared = {f"{g}/{f.name}" for g in groups if (env.store / g).is_dir() for f in (env.store / g).glob("*.md")}
+        out += [f"{NOTE_NAME}: missing shared memory {r}" for r in sorted(shared - refs)]
+        projects = set(env.with_memory())
+        for r in sorted(refs - shared):
+            head, _, fname = r.partition("/")
+            if head in groups:
+                out.append(f"{NOTE_NAME}: {r} is no longer shared")
+            elif head in projects:
+                if fname not in local_memories(env, head):
+                    out.append(f"{NOTE_NAME}: candidate {r} is gone or already shared")
+            else:
+                out.append(f"{NOTE_NAME}: {r} is neither a group's memory nor a project's")
+    for slug in env.with_memory():
+        note = note_path(env, slug)
+        if not note.exists():
+            continue
+        refs, local = note_refs(note), local_memories(env, slug)
+        out += [f"{note.name}: missing {f}" for f in sorted(local - refs)]
+        out += [f"{note.name}: {f} is no longer a local memory of {slug}" for f in sorted(refs - local)]
+    return out
+
+
 def reconcile_all(env, slugs=None):
     return [(s, *reconcile(env, s)) for s in (slugs or env.with_memory())]
 
@@ -413,6 +460,11 @@ def cmd_status(env, args):
     print("\npending (run sync):" if pending else "\nnothing pending")
     for line in pending:
         print(f"  {line}")
+    drift = note_drift(env)
+    if drift:
+        print(f"\nreview notes out of date (update them in {env.store}):")
+        for line in drift:
+            print(f"  {line}")
     if not hooks_installed(load_settings(env)):
         print("\nwarning: hooks not installed, nothing syncs on its own (run install)")
 
@@ -534,25 +586,39 @@ def cmd_hook(env, args):
         env = Env(path.parent.parent.parent)
         with env.lock():
             report = reconcile_all(env, env.members(path.parent.name))
-        conflicts = [c for r in report for c in r[3]]
-        if conflicts:
-            context(event, "share-memories conflicts:\n" + "\n".join(conflicts))
+        notes = [f"share-memories conflicts:\n" + "\n".join(c for r in report for c in r[3])] \
+            if any(r[3] for r in report) else []
+        ref = f"{path.parent.name}/{path.name}"
+        if ref in note_refs(note_path(env)):
+            notes.append(f"Shared memory `{ref}` changed: update its translation in {note_path(env)}.")
+        if notes:
+            context(event, "\n\n".join(notes))
         return
     if path.parent.name != "memory" or path.parent.parent.parent.name != "projects":
         return
     env = Env(path.parent.parent.parent.parent)
     slug = path.parent.parent.name
     groups = env.groups_of(slug)
-    if not groups:
-        return
     if path.name == "MEMORY.md":
-        with env.lock():
-            reconcile(env, slug)  # puts the block back if a rewrite dropped it
+        if groups:
+            with env.lock():
+                reconcile(env, slug)  # puts the block back if a rewrite dropped it
         return
-    if data.get("tool_name") == "Write" and (data.get("tool_response") or {}).get("type") == "create":
-        context(event, f"New memory `{path.name}`. This project is in the shared-memory groups "
-                       f"{', '.join(groups)}. Once the memory and its index line are written, apply the "
-                       f"share-memories skill: keep it local (do nothing) or share it with a group.")
+    created = data.get("tool_name") == "Write" and (data.get("tool_response") or {}).get("type") == "create"
+    notes = []
+    if groups and created:
+        notes.append(f"New memory `{path.name}`. This project is in the shared-memory groups {', '.join(groups)}. "
+                     f"Once the memory and its index line are written, apply the share-memories skill: if it would "
+                     f"serve other projects, add it as a candidate to {note_path(env)}; never share it unless the user asks.")
+    elif f"{slug}/{path.name}" in note_refs(note_path(env)):
+        notes.append(f"Candidate memory `{slug}/{path.name}` changed: update it in {note_path(env)}.")
+    project_note = note_path(env, slug)
+    if project_note.exists():
+        notes.append(f"This project has a review note, {project_note}: "
+                     f"{'add' if path.name not in note_refs(project_note) else 'update'} `{path.name}` there "
+                     f"with a faithful translation (share-memories skill).")
+    if notes:
+        context(event, "\n\n".join(notes))
 
 
 def main():

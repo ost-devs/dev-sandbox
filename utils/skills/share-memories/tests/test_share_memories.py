@@ -221,6 +221,8 @@ class Hooks(Base):
         self.put("-b", "nova.md", memory("nova", "d"))
         self.assertIn("New memory `nova.md`", self.nudge("-b"))
         self.assertIn("dev", self.nudge("-b"))
+        self.assertIn("candidate", self.nudge("-b"))
+        self.assertIn("never share it unless the user asks", self.nudge("-b"))
         self.assertIsNone(self.nudge("-b", kind="update"))
         self.assertIsNone(self.nudge("-b", kind=None, tool="Edit"))
 
@@ -233,6 +235,77 @@ class Hooks(Base):
         self.assertIsNone(self.hook({"hook_event_name": "PostToolUse", "tool_name": "Write",
                                      "tool_input": {"file_path": "/x/src/main.rs"},
                                      "tool_response": {"type": "create"}}))
+
+
+class Notes(Base):
+    """The user's review notes: nota.md (shared + candidates) and nota-<project>.md."""
+
+    def note(self, name, text):
+        (self.store / name).write_text(text)
+
+    def drift(self):
+        out = self.run_script("status").stdout
+        return out.split("review notes out of date", 1)[1] if "review notes out of date" in out else ""
+
+    def nudge(self, path, tool="Edit", kind=None):
+        return self.hook({"hook_event_name": "PostToolUse", "tool_name": tool,
+                          "tool_input": {"file_path": str(path)}, "tool_response": {"type": kind}})
+
+    def test_no_notes_no_drift(self):
+        self.share()
+        self.assertEqual(self.drift(), "")
+
+    def test_shared_note_missing_stale_and_candidates(self):
+        self.share()
+        self.note("nota.md", "# Todos\n\n## Velha — `dev/velha.md`\n\nmentions `CLAUDE.md` in text\n\n"
+                             "# Candidatas\n\n## Local — `-a/local.md`\n\n## Sumiu — `-a/sumiu.md`\n")
+        d = self.drift()
+        self.assertIn("missing shared memory dev/regra.md", d)
+        self.assertIn("dev/velha.md is no longer shared", d)
+        self.assertIn("candidate -a/sumiu.md is gone", d)
+        self.assertNotIn("-a/local.md", d)
+        self.assertNotIn("CLAUDE.md", d)
+
+    def test_complete_notes_are_quiet(self):
+        self.share()
+        self.note("nota.md", "## Regra — `dev/regra.md`\n")
+        self.note("nota-a.md", "## Local — `local.md`\n")
+        self.assertEqual(self.drift(), "")
+
+    def test_project_note_missing_and_stale(self):
+        self.share()
+        self.note("nota-a.md", "## Regra — `regra.md`\n")
+        d = self.drift()
+        self.assertIn("nota-a.md: missing local.md", d)
+        self.assertIn("nota-a.md: regra.md is no longer a local memory of -a", d)
+
+    def test_project_without_note_is_not_checked(self):
+        self.put("-b", "solta.md", memory("solta", "d"))
+        self.note("nota-a.md", "## Local — `local.md`\n## Regra — `regra.md`\n")
+        self.assertEqual(self.drift(), "")
+
+    def test_edits_nudge_the_notes_that_list_them(self):
+        self.share()
+        self.note("nota.md", "## Regra — `dev/regra.md`\n\n# Candidatas\n\n## Local — `-a/local.md`\n")
+        self.note("nota-a.md", "## Local — `local.md`\n")
+        ctx = self.nudge(self.store / "dev" / "regra.md")
+        self.assertIn("update its translation", ctx)
+        ctx = self.nudge(self.mem("-a") / "local.md")
+        self.assertIn("Candidate memory `-a/local.md` changed", ctx)
+        self.assertIn("update `local.md`", ctx)
+        self.put("-a", "nova.md", memory("nova", "d"))
+        ctx = self.nudge(self.mem("-a") / "nova.md", tool="Write", kind="create")
+        self.assertIn("add `nova.md`", ctx)
+        # projects without a note and memories not in nota.md stay quiet on edit
+        self.put("-b", "outra.md", memory("outra", "d"))
+        self.assertIsNone(self.nudge(self.mem("-b") / "outra.md"))
+
+    def test_project_note_works_outside_groups(self):
+        (self.root / "projects" / "-solto" / "memory").mkdir(parents=True)
+        self.put("-solto", "x.md", memory("x", "d"))
+        self.note("nota-solto.md", "")
+        self.assertIn("add `x.md`", self.nudge(self.mem("-solto") / "x.md", tool="Write", kind="create"))
+        self.assertIn("nota-solto.md: missing x.md", self.drift())
 
 
 class Unshare(Base):

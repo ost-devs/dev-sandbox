@@ -3,7 +3,7 @@
 Leva uma memória do Claude para um grupo de projetos (todos, uma lista ou uma
 categoria como `dev`) e a mantém igual em todos. Fica uma cópia só, em
 `~/.claude/shared-memories/<grupo>/`, com um link em cada projeto. O Claude
-decide o que é geral; você aprova quando ele quer reescrever uma memória.
+propõe o que é geral numa nota em português ao lado do `groups.json` (`nota.md`); você decide.
 
 Guia completo: [compartilhar memórias](../../../docs/claude-code/compartilhar-memorias.md).
 Nomes em inglês: [glossário](../../../docs/ingles-para-devs/glossario.md#share-memories).
@@ -24,4 +24,6 @@ Um projeto é a pasta dele em `~/.claude/projects/` (`-ferrum`) ou o caminho
 | Desfazer, deixando uma cópia num projeto | "tire dev/x.md do grupo e deixe só no ferrum" | `... unshare dev/x.md --keep -ferrum` |
 | Desfazer e apagar | `/share-memories unshare dev/x.md` | `... unshare dev/x.md` |
 | Revisar as memórias de um grupo | "mostre as memórias do grupo dev" | `... status` |
+| Revisar em português | abra `~/.claude/shared-memories/nota.md` | — |
+| Revisar as memórias só de um projeto | "crie a nota de revisão do ferrum" | — |
 | Consertar depois de mexer à mão | `/share-memories sync` | `... sync` |

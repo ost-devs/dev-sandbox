@@ -7,7 +7,8 @@ ensina a mesma coisa em cada projeto.
 
 A skill [`/share-memories`](../../utils/skills/share-memories/SKILL.md) leva uma memória para um
 **grupo** de projetos (todos, uma lista, ou uma categoria como `dev`) e a mantém igual em todos
-eles. Ela não muda como nem quando o Claude cria memórias: age depois, a cada memória nova.
+eles. Ela não muda como nem quando o Claude cria memórias: age depois, a cada memória nova, e
+quem decide o destino é você.
 O nome e os comandos são em inglês ([glossário](../ingles-para-devs/glossario.md#share-memories)).
 
 ## Como funciona
@@ -15,6 +16,8 @@ O nome e os comandos são em inglês ([glossário](../ingles-para-devs/glossario
 ```text
 ~/.claude/shared-memories/
 ├── groups.json                ← quais projetos estão em cada grupo e a linha de cada memória
+├── nota.md                    ← para você: as compartilhadas e as candidatas, traduzidas
+├── nota-ferrum.md             ← opcional: as memórias só do ferrum, traduzidas
 └── dev/
     └── review-in-pt.md        ← a única cópia da memória
 
@@ -31,23 +34,26 @@ O nome e os comandos são em inglês ([glossário](../ingles-para-devs/glossario
   `MEMORY.md` de todos os projetos e põe o bloco de volta se o Claude reescreveu o índice.
   No início de cada sessão, o outro liga as memórias do grupo num projeto que ainda não as tem
   (projetos novos entram sozinhos).
-- **O Claude decide, você aprova as edições.** Quando nasce uma memória num projeto que está num
-  grupo, o hook avisa o Claude. Ele deixa a memória no projeto (o normal), compartilha como está
-  e te avisa numa linha, ou, se a lição é geral mas o texto fala só deste projeto, **te mostra**
-  uma versão reescrita e só a grava com o seu "sim".
+- **O Claude propõe, você decide.** Quando nasce uma memória num projeto que está num grupo, o
+  hook avisa o Claude. Ele deixa a memória no projeto (o normal) ou, se acha que serve a outros
+  projetos, a põe como **candidata** no `nota.md`, traduzida e com o grupo sugerido, e só te
+  avisa numa linha, sem pergunta. Ele nunca compartilha sozinho: você revisa as candidatas quando
+  quiser, de uma vez, e diz o que fazer.
 
 ### O que fica no projeto
 
 Uma memória compartilhada custa uma linha no índice de **toda** sessão de **todo** projeto do
 grupo, e uma memória lida onde não se aplica atrapalha. Por isso a skill só compartilha o que
-seria usado na maioria dos projetos do grupo:
+seria usado na maioria dos projetos do grupo. Mesmo assim ele erra: onde uma memória vale é
+critério seu (uma liberdade que você deu num projeto de estudo pode não servir nos outros). Por
+isso a decisão é sua. O critério que ele usa para propor:
 
 | Memória | Destino |
 |---|---|
 | "Os testes de API precisam do Redis", "o deploy é sexta" | Fica no projeto |
-| "Reviso em português; escreva os arquivos para IA em inglês" | Grupo |
-| Lição geral escrita com nomes deste projeto | Grupo, reescrita com a sua permissão (mantém um exemplo concreto) |
-| Regra curta que vale sempre, em todo lugar | `~/.claude/CLAUDE.md`, que carrega inteiro; memória só carrega quando lembrada |
+| "Reviso em português; escreva os arquivos para IA em inglês" | Candidata a grupo |
+| Lição geral escrita com nomes deste projeto | Candidata, com uma versão reescrita (mantém um exemplo concreto) |
+| Regra curta que vale sempre, em todo lugar | Candidata, com a sugestão de ir para o `~/.claude/CLAUDE.md`, que carrega inteiro; memória só carrega quando lembrada |
 
 > Por que não usar a opção nativa `autoMemoryDirectory`, apontando vários projetos para a mesma
 > pasta? Porque ela mistura **todas** as memórias, inclusive as específicas: é o problema da
@@ -70,7 +76,8 @@ seria usado na maioria dos projetos do grupo:
 
 ## Usar
 
-Na maior parte do tempo, nada: o Claude decide a cada memória nova. Para agir você mesmo:
+Na maior parte do tempo, nada além de revisar o `nota.md` de vez em quando (próxima seção).
+Para agir você mesmo:
 
 Um projeto é a pasta dele em `~/.claude/projects/` (`-ferrum`) ou o caminho
 (`/home/voce/Dev/*`).
@@ -88,11 +95,28 @@ Um projeto é a pasta dele em `~/.claude/projects/` (`-ferrum`) ou o caminho
 | Desfazer, deixando uma cópia num projeto | "tire dev/x.md do grupo e deixe só no ferrum" | `... unshare dev/x.md --keep -ferrum` |
 | Desfazer e apagar | `/share-memories unshare dev/x.md` | `... unshare dev/x.md` |
 | Revisar as memórias de um grupo | "mostre as memórias do grupo dev" | `... status` |
+| Revisar em português | abra `~/.claude/shared-memories/nota.md` | — |
+| Revisar as memórias só de um projeto | "crie a nota de revisão do ferrum" | — |
 | Consertar depois de mexer à mão | `/share-memories sync` | `... sync` |
 
-As memórias são escritas para o Claude, quase sempre em inglês. Quando ele te mostra uma (para
-revisar, reescrever ou resolver um conflito), mostra a tradução junto, a não ser que você diga
-que não quer.
+### Revisar em português
+
+As memórias são escritas para o Claude, quase sempre em inglês. Para você revisar sem depender do
+inglês, o Claude mantém notas traduzidas ao lado do `groups.json`:
+
+- **`nota.md`:** uma seção `#` por grupo, com cada memória compartilhada traduzida, de onde veio e
+  a opinião dele (manter, mudar de grupo, apagar). No fim, `# Candidatas`: o que ele propõe
+  compartilhar. Você lê e pede, por exemplo, "compartilhe a candidata Delegar com o grupo dev" ou
+  "deixe todos/x.md só no borrow-checked".
+- **`nota-<projeto>.md`:** as memórias que só existem naquele projeto (`nota-ferrum.md`). Só
+  existe para os projetos que você pedir.
+
+Elas não se atualizam sozinhas (a tradução é do Claude), mas não ficam para trás sem aviso: os
+hooks lembram o Claude de atualizar a nota quando uma memória listada nela muda ou nasce, e o
+`/share-memories status` lista o que falta ou sobra em cada nota.
+
+Fora das notas, quando o Claude te mostra uma memória (para resolver um conflito, por exemplo),
+mostra a tradução junto, a não ser que você diga que não quer.
 
 Não edite o bloco `share-memories` do `MEMORY.md`: ele é refeito. Edite a memória.
 
@@ -116,7 +140,7 @@ essa marca é o único sinal, para o Claude, de que uma edição vale em outros 
   outro caminho é outro membro (use os dois nomes no grupo).
 - **Testado em parte numa sessão real.** Em 28/10/2026 o hook `PostToolUse` disparou e o aviso
   de memória nova chegou ao Claude; o `SessionStart` ainda não foi observado. O script e os
-  hooks também são testados com a entrada que a documentação descreve (30 testes em
+  hooks também são testados com a entrada que a documentação descreve (37 testes em
   [`tests/`](../../utils/skills/share-memories/tests/test_share_memories.py)).
 
 Fontes: <https://code.claude.com/docs/en/memory> (pasta da memória, `autoMemoryDirectory`) e
