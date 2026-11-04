@@ -44,6 +44,7 @@ costs more (silent workarounds, tokens, errors) than disk
 | Playwright needs `executablePath` | It reads no env var for the browser | `docs/aprendizados/2026-10-playwright-ignora-chromium-da-imagem.md` |
 | Security by mechanism, not prose | Instructions are not locks; mounts, deny rules and the exit report are | `docs/guias/seguranca.md`, `docs/claude-code/instrucao-ou-mecanismo.md` |
 | Container-only facts (e.g. host path translation) go in `sandbox/AGENTS.md`, not `~/.claude/rules` | Host `~/.claude` is mounted in, so its rules also load in host sessions, where they are wrong | `docs/claude-code/instrucao-ou-mecanismo.md` |
+| `/consolidar` stays a project skill; no generic personal one | Its value is routing to the consultant's pieces, which exist only where `/montar-consultor` ran; elsewhere auto memory already covers it. A personal skill would also shadow the project one (personal > project) | this table |
 | Scratchpad not mounted at its host path | Only fixes displayed temp paths; plans live in `~/.claude/plans`, so the path line is still needed | this table |
 
 ## Known open gaps
