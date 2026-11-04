@@ -88,6 +88,8 @@ Nesses casos:
    as concluídas.
 2. **Antes de `/clear` ou de parar uma sessão longa**, rode `/consolidar`. Ele
    confere o que ainda está só na conversa e manda cada item para o seu lugar.
+   O `/clear` não apaga a conversa: abre uma nova, e a anterior continua no
+   `/resume`. Só que a nova não lê a anterior, por isso o `/consolidar` vem antes.
    A skill `/montar-consultor` instala o `/consolidar` em qualquer projeto
    ([montar o consultor](./montar-consultor.md)).
 3. **Você revisa** de vez em quando com `/memory`. Se usa a skill

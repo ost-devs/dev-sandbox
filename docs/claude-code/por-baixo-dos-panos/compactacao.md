@@ -69,7 +69,7 @@ esperar a automática disparar no meio de uma tarefa.
 
 | | `/compact` | `/clear` |
 |---|---|---|
-| Continuidade | Mantém um resumo | Começa do zero |
+| Continuidade | Mantém um resumo | Abre uma conversa nova, com contexto vazio; a anterior continua no `/resume` |
 | Custo | Um pedido grande | Nada |
 | Use quando | Vai seguir no mesmo assunto | Vai mudar de assunto |
 

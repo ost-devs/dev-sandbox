@@ -125,7 +125,7 @@ descrição, até ser usado).
 |---|---|
 | Cada assunto novo | Abra uma conversa nova. Se a resposta parecer genérica, digite `/<projeto>` para carregar o mapa |
 | Antes de encerrar uma conversa longa | `/consolidar`. Ele mostra o que guardou e onde |
-| Depois do `/consolidar` | `/clear` sem medo |
+| Depois do `/consolidar` | `/clear` sem medo: abre uma conversa nova, e a anterior continua no `/resume` |
 | Mudou algo grande no projeto | Atualize o mapa no mesmo commit (a rule de cada parte lembra disso) |
 | De tempos em tempos | `/montar-consultor auditar` |
 

@@ -16,7 +16,8 @@ Uma conversa longa guarda o conhecimento **no contexto**, e o contexto:
 
 - vai inteiro a cada pedido, então cada mensagem fica mais cara ([por quê](./por-baixo-dos-panos/a-cada-mensagem-o-contexto-vai-junto.md));
 - é resumido quando enche, e "instruções detalhadas do começo podem se perder" ([compactação](./por-baixo-dos-panos/compactacao.md));
-- morre com `/clear` ou numa conversa nova.
+- não passa para a próxima conversa. O `/clear` não apaga nada: ele abre uma conversa nova, com
+  o contexto vazio, e a anterior continua guardada. Mas a conversa nova não lê a anterior.
 
 A conversa não é memória. O que vale guardar precisa sair dela.
 
@@ -67,7 +68,10 @@ conversa trabalha → /consolidar guarda nos arquivos → /clear
 1. **Uma conversa nova para cada assunto.** Se a resposta parecer genérica, digite `/<projeto>` para carregar o mapa.
 2. **Dúvida sobre a fonte externa:** *"pergunte ao pesquisador"*, ou deixe o Claude delegar sozinho (a descrição do agente pede isso).
 3. **Antes de encerrar uma conversa longa:** `/consolidar`. O Claude lista o que a conversa descobriu, descarta o que dá para deduzir dos arquivos e põe cada item no lugar certo. Mostra uma tabela e pergunta antes de commitar.
-4. **Depois:** `/clear` sem medo.
+4. **Depois:** `/clear` sem medo. Ele não apaga a conversa, só abre uma nova. A anterior continua
+   na lista do `/resume`, se você precisar voltar (`/clear nome` dá um nome a ela antes; doc oficial
+   de [comandos](https://code.claude.com/docs/en/commands)). O Claude Code guarda as conversas por 30 dias, por padrão
+   ([preservar conversas](./preservar-conversas.md)).
 
 ## Regras de manutenção
 
