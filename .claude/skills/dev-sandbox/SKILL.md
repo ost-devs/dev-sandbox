@@ -18,7 +18,7 @@ costs more (silent workarounds, tokens, errors) than disk
 
 ## How it works
 - `dev-docker` (bash, runs on the HOST, symlinked from `~/.local/bin`):
-  1. Parses `--nome NOME`, `--atalho NOME [path]` (writes `~/.local/bin/dev-docker-NOME` plus symlink `dd-NOME`, skipped if a foreign `dd-NOME` exists; no bare `dd` alias, it would shadow coreutils `dd`), `--atalhos` (lists, and creates missing `dd-NOME` links).
+  1. Parses `--nome NOME`, `--atalho NOME [path]` (writes `~/.local/bin/dev-docker-NOME` plus symlink `dd-NOME`, skipped if a foreign `dd-NOME` exists; no bare `dd` alias, it would shadow coreutils `dd`), `--atalhos`.
   2. Mount path = host path. `/workspace` for system dirs and for `/` or `$HOME` (asks `sim` first). `/NOME` with `--nome`.
   3. Unless `DEV_GIT_RW=1`: `.git/hooks` and `.git/config` bind-mounted read-only for repos up to 2 levels below the mount, plus their submodules (`.git/modules/*`).
   4. `DEV_PORTS="5173 8090:8080"` → `-p 127.0.0.1:host:container`. None by default.
