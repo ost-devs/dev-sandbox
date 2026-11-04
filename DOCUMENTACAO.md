@@ -429,6 +429,25 @@ Os binários ficam em `~/.cache/dev-sandbox/home/.cargo-install/bin` no host.
 Depois de uma imagem nova com outro Rust, um binário antigo pode quebrar:
 reinstale com `cargo install --force`.
 
+**O temporário do Claude Code acumula.** Num Linux comum ele fica em `/tmp`,
+que costuma ser limpo quando o computador reinicia. Aqui ele fica na home
+montada para o scratchpad sobreviver entre sessões, e por isso nada é apagado
+sozinho. O Claude Code cria uma pasta por projeto, com o caminho do projeto
+como nome (`/dev-sandbox` vira `-dev-sandbox`), e dentro dela uma pasta por
+sessão. Se um `claude` for aberto dentro de uma pasta temporária (testes de
+skill, por exemplo), cada subpasta vira um "projeto" com nome longo
+começando por `-tmp-dev-home-...`. Isso é normal e não ocupa quase nada.
+O que pesa são as pastas de sessão dos projetos reais (centenas de MB depois
+de algumas semanas). Para apagar as sessões com mais de 30 dias, no **host**:
+
+```bash
+find ~/.cache/dev-sandbox/home/.cache/claude-tmp/claude-* -mindepth 2 -maxdepth 2 -type d -mtime +30 -exec rm -rf {} +
+```
+
+Quem retomar uma sessão antiga com `claude --resume` perde só os arquivos
+temporários dela, não a conversa (que fica em `~/.claude/projects`).
+Observado no Claude Code 2.1.316, em 11/2026.
+
 **Como confirmar isso na prática** (sem depender só da teoria):
 
 ```bash
