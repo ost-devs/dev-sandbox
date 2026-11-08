@@ -81,6 +81,12 @@ When a hook says a note must be added to or updated, do it in the same turn.
 When the user decides on an entry, apply it and update the note. When `status`
 lists notes out of date, fix them.
 
+After writing or checking an entry against its memory's whole text, run
+`noted <note> <entry>` (no entry: the whole note). It records a hash of the
+memory's text, so `status` reports the entry again when the memory changes,
+by any route (another session, the shell, a hook that missed). Run it only
+after reading the memory: it is your word that the entry matches.
+
 ## Showing memories to the user
 
 Memories are written for the model. When you show one to the user (a rewrite,
@@ -98,6 +104,7 @@ keeps its language.
 | Unshare: delete, or keep a plain copy in one project | `unshare <group>/<file>.md... [--keep <project folder>]` |
 | Move to another group | `move <new group> <group>/<file>.md...` |
 | Show or change a shared memory's MEMORY.md line | `line <group>/<file>.md [--title <text>] [--summary <text>]` |
+| Record that note entries match their memories now | `noted <nota.md or nota-<project>.md> [<entry>...]` |
 | Show a group; create it or change its members | `group <name> [--add <entry>...] [--remove <entry>...]` |
 | Delete an empty group | `group <name> --delete` |
 | Repair links and blocks (after a manual change) | `sync [--project <project folder>]` |

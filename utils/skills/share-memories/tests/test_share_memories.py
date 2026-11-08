@@ -259,6 +259,7 @@ class Notes(Base):
         self.share()
         self.note("nota.md", "# Todos\n\n## Velha — `dev/velha.md`\n\nmentions `CLAUDE.md` in text\n\n"
                              "# Candidatas\n\n## Local — `-a/local.md`\n\n## Sumiu — `-a/sumiu.md`\n")
+        self.run_script("noted", "nota.md", "-a/local.md")
         d = self.drift()
         self.assertIn("missing shared memory dev/regra.md", d)
         self.assertIn("dev/velha.md is no longer shared", d)
@@ -270,7 +271,46 @@ class Notes(Base):
         self.share()
         self.note("nota.md", "## Regra — `dev/regra.md`\n")
         self.note("nota-a.md", "## Local — `local.md`\n")
+        self.run_script("noted", "nota.md")
+        self.run_script("noted", "nota-a.md")
         self.assertEqual(self.drift(), "")
+
+    def test_memory_changed_after_its_entry(self):
+        self.share()
+        self.put("-a", "cand.md", memory("cand", "d", "Candidate."))
+        self.note("nota.md", "## Regra — `dev/regra.md`\n\n# Candidatas\n\n## Cand — `-a/cand.md`\n")
+        self.note("nota-a.md", "## Local — `local.md`\n## Cand — `cand.md`\n")
+        d = self.drift()
+        self.assertIn("nota.md: dev/regra.md not yet checked", d)
+        self.assertIn("nota-a.md: local.md not yet checked", d)
+        self.run_script("noted", "nota.md")
+        self.run_script("noted", "nota-a.md", "local.md", "cand.md")
+        self.assertEqual(self.drift(), "")
+        # frontmatter churn is not a change; the text is
+        shared = self.store / "dev" / "regra.md"
+        shared.write_text(shared.read_text().replace("description: Rule for all dev", "description: new"))
+        self.assertEqual(self.drift(), "")
+        shared.write_text(shared.read_text().replace("Body.", "Body, edited."))
+        self.put("-a", "cand.md", memory("cand", "d", "Candidate, edited."))
+        d = self.drift()
+        self.assertIn("nota.md: dev/regra.md changed after its entry was written (then: noted nota.md dev/regra.md)", d)
+        self.assertIn("nota.md: -a/cand.md changed", d)
+        self.assertIn("nota-a.md: cand.md changed", d)
+        self.assertNotIn("local.md", d)
+        self.run_script("noted", "nota.md", "dev/regra.md")
+        self.assertNotIn("dev/regra.md", self.drift())
+
+    def test_noted_rejects_unknown_note_or_entry(self):
+        self.note("nota.md", "## Local — `-a/local.md`\n")
+        self.assertIn("no review note", self.run_script("noted", "nota-x.md", ok=False).stderr)
+        self.assertIn("not an entry", self.run_script("noted", "nota.md", "-a/x.md", ok=False).stderr)
+
+    def test_noted_drops_entries_that_left_the_note(self):
+        self.note("nota.md", "## Local — `-a/local.md`\n")
+        self.run_script("noted", "nota.md")
+        self.note("nota.md", "# Candidatas\n")
+        self.run_script("noted", "nota.md")
+        self.assertNotIn("noted", json.loads((self.store / "groups.json").read_text()))
 
     def test_project_note_missing_and_stale(self):
         self.share()
@@ -282,6 +322,7 @@ class Notes(Base):
     def test_project_without_note_is_not_checked(self):
         self.put("-b", "solta.md", memory("solta", "d"))
         self.note("nota-a.md", "## Local — `local.md`\n## Regra — `regra.md`\n")
+        self.run_script("noted", "nota-a.md")
         self.assertEqual(self.drift(), "")
 
     def test_edits_nudge_the_notes_that_list_them(self):
@@ -290,6 +331,7 @@ class Notes(Base):
         self.note("nota-a.md", "## Local — `local.md`\n")
         ctx = self.nudge(self.store / "dev" / "regra.md")
         self.assertIn("update its entry", ctx)
+        self.assertIn("noted nota.md dev/regra.md", ctx)
         ctx = self.nudge(self.mem("-a") / "local.md")
         self.assertIn("Candidate memory `-a/local.md` changed", ctx)
         self.assertIn("update `local.md`", ctx)
