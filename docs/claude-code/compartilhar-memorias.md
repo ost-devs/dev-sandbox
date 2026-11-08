@@ -120,7 +120,10 @@ texto delas como está, sem tradução.
 
 Elas não se atualizam sozinhas (quem escreve é o Claude), mas não ficam para trás sem aviso: os
 hooks lembram o Claude de atualizar a nota quando uma memória listada nela muda ou nasce, e o
-`/share-memories status` lista o que falta ou sobra em cada nota.
+`/share-memories status` lista o que falta ou sobra em cada nota. O `status` também avisa quando o
+texto de uma memória mudou depois que o Claude conferiu a entrada dela: ao terminar uma entrada, o
+Claude roda `noted` e o script guarda uma impressão digital (hash) do texto. Uma mudança feita por
+outra sessão ou pelo terminal, que os hooks não veem, aparece no próximo `status`.
 
 As notas não custam contexto: ficam fora da pasta `memory/` e do `MEMORY.md`, então nenhuma sessão
 as carrega. O custo aparece só quando nasce ou muda uma memória listada numa nota: o Claude lê a

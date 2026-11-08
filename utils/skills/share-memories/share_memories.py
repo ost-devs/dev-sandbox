@@ -13,6 +13,8 @@ Groups are in <claude>/shared-memories/groups.json:
 An entry is a project folder name under <claude>/projects/ or a project path,
 both with optional * globs. "lines" keeps the title and summary of Claude's own
 MEMORY.md line, taken at share time; without one, name and description are used.
+"noted" keeps, per review note and entry, a hash of the memory's text when Claude
+last confirmed the entry against it (command noted), so status sees later edits.
 The key is <group>/<file> on purpose: the file's folder already says where the
 memory lives, so nothing else records it, and unshare drops the entry because
 the line goes back to the project's MEMORY.md, where Claude keeps editing it.
@@ -21,6 +23,7 @@ the line goes back to the project's MEMORY.md, where Claude keeps editing it.
 import argparse
 import fcntl
 import fnmatch
+import hashlib
 import json
 import os
 import re
@@ -63,14 +66,21 @@ class Env:
         """{"<group>/<file>": {"title": ..., "summary": ...}} for the shared memories' index lines."""
         return dict(self.data().get("lines", {}))
 
-    def save(self, groups=None, lines=None):
+    def noted(self):
+        """{"<note file>": {"<entry ref>": "<hash of the memory's text>"}}"""
+        return {n: dict(v) for n, v in self.data().get("noted", {}).items()}
+
+    def save(self, groups=None, lines=None, noted=None):
         data = self.data()
         if groups is not None:
             data["groups"] = groups
         if lines is not None:
             data["lines"] = dict(sorted(lines.items()))
-        if not data.get("lines"):
-            data.pop("lines", None)
+        if noted is not None:
+            data["noted"] = {n: dict(sorted(v.items())) for n, v in sorted(noted.items()) if v}
+        for key in ("lines", "noted"):
+            if not data.get(key):
+                data.pop(key, None)
         self.store.mkdir(parents=True, exist_ok=True)
         write_atomic(self.config, json.dumps(data, indent=2, ensure_ascii=False) + "\n")
 
@@ -246,9 +256,45 @@ def local_memories(env, slug):
     return {p.name for p in mem.glob("*.md") if not p.is_symlink() and p.name != "MEMORY.md"}
 
 
+def body_hash(path):
+    """Hash of a memory's text without its frontmatter (the notes translate the text; metadata churns)."""
+    text = path.read_text(encoding="utf-8")
+    if text.startswith("---"):
+        parts = text.split("\n---", 1)
+        text = parts[1].split("\n", 1)[1] if len(parts) == 2 and "\n" in parts[1] else ""
+    return hashlib.sha256(text.strip().encode("utf-8")).hexdigest()[:16]
+
+
+def review_notes(env):
+    """[(note path, project folder or None)] for the review notes that exist."""
+    out = [(note_path(env), None)] if note_path(env).exists() else []
+    return out + [(note_path(env, s), s) for s in env.with_memory() if note_path(env, s).exists()]
+
+
+def entry_file(env, ref, slug):
+    """The memory file an entry of a note is about, or None."""
+    if slug is not None:
+        p = env.projects / slug / "memory" / ref
+    else:
+        head, _, fname = ref.partition("/")
+        p = env.store / head / fname if head in env.groups() else env.projects / head / "memory" / fname
+    return p if p.is_file() else None
+
+
 def note_drift(env):
     """Where the review notes no longer match the memories (the notes are written by Claude, in the user's language)."""
     out = []
+    noted = env.noted()
+    for note, slug in review_notes(env):
+        seen = noted.get(note.name, {})
+        for ref in sorted(note_refs(note)):
+            f = entry_file(env, ref, slug)
+            if f is None:
+                continue  # reported below as missing or stale
+            if ref not in seen:
+                out.append(f"{note.name}: {ref} not yet checked against the memory (then: noted {note.name} {ref})")
+            elif seen[ref] != body_hash(f):
+                out.append(f"{note.name}: {ref} changed after its entry was written (then: noted {note.name} {ref})")
     groups = env.groups()
     note = note_path(env)
     if note.exists():
@@ -430,6 +476,32 @@ def cmd_group(env, args):
         print_report(reconcile_all(env))
 
 
+def cmd_noted(env, args):
+    """Record that the entries now match their memories: status stays quiet until a memory changes."""
+    found = [(n, s) for n, s in review_notes(env) if n.name == args.note]
+    if not found:
+        sys.exit(f"error: no review note {args.note} in {env.store}")
+    note, slug = found[0]
+    refs = note_refs(note)
+    wanted = args.entries or sorted(refs)
+    unknown = [r for r in wanted if r not in refs]
+    if unknown:
+        sys.exit(f"error: not an entry of {note.name}: {', '.join(unknown)}")
+    with env.lock():
+        noted = env.noted()
+        # drop entries that left the note
+        seen = {r: h for r, h in noted.get(note.name, {}).items() if r in refs}
+        for ref in wanted:
+            f = entry_file(env, ref, slug)
+            if f is None:
+                print(f"skipped  {ref} (no such memory)")
+                continue
+            seen[ref] = body_hash(f)
+            print(f"noted    {note.name}: {ref}")
+        noted[note.name] = seen
+        env.save(noted=noted)
+
+
 def cmd_sync(env, args):
     with env.lock():
         if args.project:
@@ -590,7 +662,8 @@ def cmd_hook(env, args):
             if any(r[3] for r in report) else []
         ref = f"{path.parent.name}/{path.name}"
         if ref in note_refs(note_path(env)):
-            notes.append(f"Shared memory `{ref}` changed: update its entry in {note_path(env)}, in the language the note states at its top.")
+            notes.append(f"Shared memory `{ref}` changed: update its entry in {note_path(env)}, in the language the note "
+                         f"states at its top, then run noted {NOTE_NAME} {ref}.")
         if notes:
             context(event, "\n\n".join(notes))
         return
@@ -611,12 +684,13 @@ def cmd_hook(env, args):
                      f"Once the memory and its index line are written, apply the share-memories skill: if it would "
                      f"serve other projects, add it as a candidate to {note_path(env)}; never share it unless the user asks.")
     elif f"{slug}/{path.name}" in note_refs(note_path(env)):
-        notes.append(f"Candidate memory `{slug}/{path.name}` changed: update it in {note_path(env)}.")
+        notes.append(f"Candidate memory `{slug}/{path.name}` changed: update it in {note_path(env)}, "
+                     f"then run noted {NOTE_NAME} {slug}/{path.name}.")
     project_note = note_path(env, slug)
     if project_note.exists():
         notes.append(f"This project has a review note, {project_note}: "
                      f"{'add' if path.name not in note_refs(project_note) else 'update'} `{path.name}` there "
-                     f"in the note's language (share-memories skill).")
+                     f"in the note's language, then run noted {project_note.name} {path.name} (share-memories skill).")
     if notes:
         context(event, "\n\n".join(notes))
 
@@ -643,6 +717,9 @@ def main():
     s.add_argument("--add", action="append", default=[], metavar="ENTRY", help="project folder or path (* allowed); repeatable")
     s.add_argument("--remove", action="append", default=[], metavar="ENTRY")
     s.add_argument("--delete", action="store_true")
+    s = sub.add_parser("noted", help="record that review-note entries match their memories now")
+    s.add_argument("note", help="nota.md or nota-<project>.md")
+    s.add_argument("entries", nargs="*", help="entries as in their headings (default: all of the note)")
     s = sub.add_parser("sync", help="repair links and index blocks")
     s.add_argument("--project", metavar="FOLDER", help="only this project folder (creates memory/ if needed)")
     s = sub.add_parser("install", help="add the two hooks to settings.json and create groups.json")
@@ -651,12 +728,15 @@ def main():
     args = ap.parse_args(protect(sys.argv[1:]))
     env = Env(claude_dir())
     {"status": cmd_status, "share": cmd_share, "unshare": cmd_unshare, "move": cmd_move,
-     "line": cmd_line, "group": cmd_group, "sync": cmd_sync, "install": cmd_install, "hook": cmd_hook}[args.cmd](env, args)
+     "line": cmd_line, "group": cmd_group, "noted": cmd_noted, "sync": cmd_sync, "install": cmd_install, "hook": cmd_hook}[args.cmd](env, args)
 
 
 def protect(argv):
     """Project folders start with "-" (-dev-sandbox) and argparse would take them for
-    options, so values become --flag=value: one for --keep/--project, each for --add/--remove."""
+    options, so values become --flag=value: one for --keep/--project, each for --add/--remove.
+    noted takes entries like -ferrum/x.md as positionals: they go after "--"."""
+    if argv[:1] == ["noted"]:
+        return argv[:2] + ["--"] + argv[2:]
     out, flag, got = [], None, False
     for a in argv:
         if a in ("--keep", "--project", "--add", "--remove"):
