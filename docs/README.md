@@ -13,6 +13,7 @@ script e do `Dockerfile` está em [`DOCUMENTACAO.md`](../DOCUMENTACAO.md).
 | [Filosofia da imagem](./guias/filosofia-da-imagem.md) | Entender o tamanho da imagem, adicionar linguagens, liberar disco |
 | [Atualização](./guias/atualizacao.md) | Atualizar agentes, imagem e host, e voltar atrás se algo quebrar |
 | [Branches](./guias/branches.md) | Trabalhar com agentes numa branch `claude` só e saber quando abrir outra |
+| [Usar na nuvem](./guias/nuvem.md) | Ter o mesmo ambiente sem Docker, numa VM da Anthropic, abrindo pelo navegador ou pelo celular (claude.ai/code) |
 
 ## Claude Code
 

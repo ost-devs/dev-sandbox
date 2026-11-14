@@ -53,3 +53,4 @@ Link para o commit/arquivo, ou "nada: só documentação".
 | 2026-10 | [Os comentários HTML do `MEMORY.md` não chegam ao Claude](./2026-10-comentarios-do-memory-md-nao-chegam-ao-claude.md) |
 | 2026-10 | [O teste de acionamento do `skill-creator` dá zero mesmo quando a skill aciona](./2026-10-teste-de-acionamento-do-skill-creator-da-zero.md) |
 | 2026-11 | [Um bom comportamento do Claude nem sempre vem das memórias](./2026-11-bom-comportamento-nem-sempre-vem-da-memoria.md) |
+| 2026-11 | [Na nuvem do Claude, copiar a configuração de navegador do Docker atrapalha](./2026-11-nuvem-ja-traz-o-navegador.md) |

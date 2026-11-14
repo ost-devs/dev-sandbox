@@ -4,6 +4,7 @@ paths:
   - "Dockerfile"
   - "sandbox/**"
   - "extras/**"
+  - "nuvem/**"
 ---
 
 # Changing the script, the image or the agent instructions
@@ -18,6 +19,7 @@ paths:
 |---|---|
 | Mount, env var, flag or protection in `dev-docker` | `DOCUMENTACAO.md` (its section, the security summary table, troubleshooting), `docs/guias/seguranca.md` if it opens or closes a bridge, `README.md` table if user-facing, `CHANGELOG.md` |
 | Package, ENV or layer in `Dockerfile` | `README.md` image table, `sandbox/AGENTS*.md` if agents should act differently, `CHANGELOG.md` with the rebuild needed |
+| `nuvem/setup.sh` (runs in the claude.ai/code VM; test it there for real: `bash nuvem/setup.sh`) | `docs/guias/nuvem.md`, `CHANGELOG.md`; its embedded CLAUDE.md mirrors `sandbox/AGENTS.md` where the cloud allows |
 | `sandbox/AGENTS.md` | Same change in `sandbox/AGENTS-completo.md` when it applies; takes effect only after a rebuild |
 | How the pieces fit, or a decision and its reason | `.claude/skills/dev-sandbox/SKILL.md` |
 | Non-obvious discovery | `docs/aprendizados/` + its index |
