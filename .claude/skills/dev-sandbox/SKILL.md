@@ -68,6 +68,7 @@ levels or created in-session get only the exit warning; nested sandboxes
 | Real problems and their causes | `docs/aprendizados/README.md` (index) |
 | Shareable skills/agents not tied to dev-sandbox (`montar-consultor`, `mirrors`, `estudar`, `share-memories`, `token-economy`; what `estudar` learned: `docs/claude-code/estudar-calibracao.md`; how `token-economy` was tested, evals in its folder: `docs/claude-code/economia-de-tokens-o-experimento.md`; rules for writing any SKILL.md: `.claude/rules/skills.md`). "Not tied" means no examples that only make sense inside this repo, not a ban on dev-sandbox examples | `utils/` (index: `utils/README.md`; skills: `utils/skills/README.md`). Each `utils/skills/<name>/` is the workbench; `utils/skills/install-skill.sh <name> [dir]` ships only what Claude uses (drops tests, evals, benchmarks, README; runs `npm ci` if `package.json`). Guides install through it, never `cp -r` |
 | English names of skills and commands, for readers who don't read English | `docs/ingles-para-devs/` |
+| Cloud option (claude.ai/code VM, no Docker): `nuvem/setup.sh` installs only what the cloud image lacks and writes `/root/.claude/CLAUDE.md` (the cloud's `sandbox/AGENTS.md`); no browser download, the image ships Playwright + Chrome | `docs/guias/nuvem.md`, `docs/aprendizados/2026-11-nuvem-ja-traz-o-navegador.md` |
 | Missing tools reported by agents | host `~/.cache/dev-sandbox/home/.dev-sandbox/feedback.md` |
 
 ## Claude Code questions

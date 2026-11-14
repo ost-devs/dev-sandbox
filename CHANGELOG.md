@@ -9,6 +9,11 @@ O dev-sandbox passa a ser também um **kit para trabalhar com o Claude Code em q
 fontes externas copiadas para o projeto, guias escritos a partir delas e conferidos na documentação
 oficial. Nada muda na imagem.
 
+- **Na nuvem do Claude (claude.ai/code):** [`nuvem/setup.sh`](nuvem/setup.sh) monta um ambiente
+  equivalente à imagem numa VM da Anthropic, aberta pelo navegador ou pelo celular, sem Docker.
+  Só instala o que falta lá; não baixa navegador, porque a nuvem já traz Playwright e Chrome
+  ([guia](docs/guias/nuvem.md), [aprendizado](docs/aprendizados/2026-11-nuvem-ja-traz-o-navegador.md)).
+
 - `dev-docker --atalho meu-site` cria também `dd-meu-site`, nome curto para o mesmo atalho
   ([atalhos](DOCUMENTACAO.md#projeto-com-nome)).
 - [`utils/skills/install-skill.sh <nome>`](utils/skills/README.md#instalar) instala a skill pronta: só o que o
