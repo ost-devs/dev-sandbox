@@ -1,10 +1,11 @@
 # dev-sandbox
 
-Duas coisas num repositório só:
+Duas coisas num repositório só (o sandbox também roda na nuvem do Claude):
 
 | Parte | O que é | Precisa de Docker? |
 |---|---|---|
 | **O sandbox** | Ambiente Docker para rodar agentes de IA de programação (Claude Code, Codex, Antigravity CLI) **isolados do seu sistema** | Sim |
+| **[O sandbox na nuvem](docs/guias/nuvem.md)** | O mesmo ambiente numa VM da Anthropic, pelo claude.ai/code: abre no navegador, no app do celular ou do PC, sem Docker (só Claude Code) | Não |
 | **[O kit para qualquer projeto](#kit-para-qualquer-projeto)** | Skills e guias para trabalhar melhor com o Claude Code: fazer uma conversa nova já saber o projeto, trazer documentação e artigos para dentro dele, e escrever guias conferidos na fonte oficial | Não: funciona dentro ou fora do container |
 
 ## O sandbox
@@ -129,6 +130,15 @@ ferramentas que faltam. Ele vai para dentro da imagem.
   ```markdown
   If the environment variable DEV_SANDBOX is 1, read /etc/dev-sandbox/AGENTS.md before starting any task.
   ```
+
+### Na nuvem, sem Docker
+
+Para usar o Claude Code pelo navegador ou pelo celular, numa VM da Anthropic,
+com as mesmas ferramentas da imagem: crie um ambiente em
+[claude.ai/code](https://claude.ai/code) com o setup script
+[`nuvem/setup.sh`](nuvem/setup.sh). O passo a passo (script, rede, variáveis)
+e as diferenças em relação ao Docker estão no guia
+[Usar na nuvem](docs/guias/nuvem.md).
 
 ## Kit para qualquer projeto
 

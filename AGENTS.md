@@ -16,6 +16,7 @@ Audience: Brazilian developers, including beginners ("vibe coders").
 - Commit on branch `claude` (create it from `main` if missing; `git merge main` first if `main` moved). Never commit on `main`.
 - Separate branch only for throwaway experiments, parallel sessions, long work that must not block `claude`, or work needing a host test before merge (`docs/guias/branches.md`). Ask if unsure.
 - Commit after each logical change, without asking first, so the maintainer or another agent can review, revert, or continue. Never push.
+- In a Claude Code cloud session (`CLAUDE_CODE_REMOTE=true`), use and push the branch the session assigns instead of `claude`; `docker` works there after `service docker start`.
 - You usually run *inside* the sandbox: you cannot run `docker` here. Validate scripts with `bash -n` and dry runs (fake `sudo`), and state clearly what still needs a real test on the host.
 
 ## Learnings

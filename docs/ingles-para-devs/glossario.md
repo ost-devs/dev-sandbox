@@ -13,6 +13,21 @@ Script que [instala uma skill pronta](../../utils/skills/README.md#instalar) no 
 | **skill** | *skíl* | habilidade | um conjunto de instruções (e scripts) que o Claude usa quando precisa |
 | **install-skill** | *ins-tól skíl* | instalar skill | o nome do script: `utils/skills/install-skill.sh mirrors` |
 
+## Ambiente na nuvem
+
+Os campos que você preenche em claude.ai/code para [usar o dev-sandbox na nuvem](../guias/nuvem.md).
+
+| Inglês | Pronúncia | Significa | Onde aparece |
+|---|---|---|---|
+| **environment** | *en-vái-ron-ment* | ambiente | a configuração que as sessões na nuvem usam: script, rede e variáveis |
+| **setup script** | *sé-tâp scrípt* | script de preparação | o campo onde vai o `curl ... nuvem/setup.sh \| bash`; roda antes da sessão abrir |
+| **network access** | *nét-uórk ék-sés* | acesso à rede | escolha **Limited** |
+| **limited** | *lí-mi-ted* | limitado | só os domínios da lista padrão e os que você liberar |
+| **allowed domains** | *a-láud do-mêins* | domínios permitidos | onde você libera um site que o projeto precisa, um por linha |
+| **package managers** | *pé-quedj mé-na-djers* | gerenciadores de pacotes | npm, pip, cargo...; **Allow package managers** libera os registros deles |
+| **environment variables** | *en-vái-ron-ment vé-ri-a-bous* | variáveis de ambiente | `NOME=valor`, uma por linha, sem espaço antes |
+| **network secrets** | *nét-uórk sí-crets* | segredos de rede | onde guardar uma chave de API sem que a sessão a veja |
+
 ## share-memories
 
 Skill que [compartilha memórias entre projetos](../claude-code/compartilhar-memorias.md).
