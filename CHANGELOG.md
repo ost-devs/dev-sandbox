@@ -10,7 +10,9 @@ fontes externas copiadas para o projeto, guias escritos a partir delas e conferi
 oficial.
 
 - **Imagem em Debian 13 (trixie)**, no lugar do 12 (bookworm), que ficou para trás e prendia a glibc em 2.36
-  ([aprendizado](docs/aprendizados/2026-11-glibc-presa-na-versao-do-debian.md)). Falta o teste no host.
+  ([aprendizado](docs/aprendizados/2026-11-glibc-presa-na-versao-do-debian.md)). Testado no container
+  reconstruído (Rust com llvm-cov, mutants e nightly; Playwright; Puppeteer; build do Tauri v2); faltam no host o
+  tamanho da imagem, o relatório de saída e o mount de `.git/modules` num repositório com submódulos.
 - **Puppeteer volta a abrir o Chromium da imagem:** o `/usr/bin/chromium` recebe `--no-sandbox` por
   `/etc/chromium.d`, porque a sandbox interna do Chromium não monta dentro do container
   ([aprendizado](docs/aprendizados/2026-11-puppeteer-sem-sandbox-do-chromium.md)). Precisa de rebuild.
