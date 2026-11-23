@@ -99,10 +99,13 @@ Sem variáveis, os commits saem com autor `Claude`. Para saírem no seu nome:
 ```text
 GIT_AUTHOR_NAME=Seu Nome
 GIT_AUTHOR_EMAIL=voce@exemplo.com
-GIT_COMMITTER_NAME=Seu Nome
-GIT_COMMITTER_EMAIL=voce@exemplo.com
 ```
 
+- **Só essas duas.** Não defina `GIT_COMMITTER_NAME`/`GIT_COMMITTER_EMAIL`:
+  quem assina o commit é a nuvem, com a chave do Claude, fora da sua VM. Com
+  o *committer* trocado para você, o GitHub não confere a assinatura e o commit
+  aparece sem o selo **Verified**. Assim fica: autor = você, *committer* =
+  Claude, assinatura válida (testado numa sessão da nuvem, 11/2026).
 - Uma por linha, **sem espaço antes do nome**. Colar texto recuado (comum no
   celular) gera `   NOME=...`, e a variável é ignorada sem nenhum aviso.
 - Não precisa de variável do Playwright ou do Puppeteer: a imagem já define as
