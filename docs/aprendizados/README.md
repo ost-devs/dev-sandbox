@@ -55,3 +55,4 @@ Link para o commit/arquivo, ou "nada: só documentação".
 | 2026-11 | [Um bom comportamento do Claude nem sempre vem das memórias](./2026-11-bom-comportamento-nem-sempre-vem-da-memoria.md) |
 | 2026-11 | [Na nuvem do Claude, copiar a configuração de navegador do Docker atrapalha](./2026-11-nuvem-ja-traz-o-navegador.md) |
 | 2026-11 | [Binário pronto não roda na imagem: a glibc é a do Debian](./2026-11-glibc-presa-na-versao-do-debian.md) |
+| 2026-11 | [O Puppeteer não abre o Chromium da imagem: "No usable sandbox"](./2026-11-puppeteer-sem-sandbox-do-chromium.md) |

@@ -11,6 +11,9 @@ oficial.
 
 - **Imagem em Debian 13 (trixie)**, no lugar do 12 (bookworm), que ficou para trás e prendia a glibc em 2.36
   ([aprendizado](docs/aprendizados/2026-11-glibc-presa-na-versao-do-debian.md)). Falta o teste no host.
+- **Puppeteer volta a abrir o Chromium da imagem:** o `/usr/bin/chromium` recebe `--no-sandbox` por
+  `/etc/chromium.d`, porque a sandbox interna do Chromium não monta dentro do container
+  ([aprendizado](docs/aprendizados/2026-11-puppeteer-sem-sandbox-do-chromium.md)). Precisa de rebuild.
 - **Imagem:** Rust com cobertura e testes de mutação (`llvm-tools-preview`, `cargo llvm-cov`,
   `cargo mutants`), também no `nuvem/setup.sh`. Rust nightly opcional com
   `--build-arg WITH_RUST_NIGHTLY=1`. Ferramentas só suas vão em [`local/extra.sh`](local/README.md),

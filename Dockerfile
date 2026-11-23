@@ -53,6 +53,13 @@ RUN apt-get update && apt-get install -y \
     libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf \
     && rm -rf /var/lib/apt/lists/*
 
+# Sandbox interna do Chromium não funciona aqui: o Docker bloqueia user
+# namespace e o no-new-privileges do dev-docker anula o helper setuid
+# (pacote chromium-sandbox). O isolamento é o próprio container, então
+# /usr/bin/chromium (script que lê /etc/chromium.d) sempre recebe --no-sandbox.
+# O Playwright já passa o flag; sem isto o Puppeteer falha com "No usable sandbox".
+RUN echo 'export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --no-sandbox"' > /etc/chromium.d/no-sandbox
+
 # O Playwright não lê variável de ambiente para o navegador: cada projeto
 # passa executablePath (ver docs/aprendizados/2026-10-playwright-ignora-chromium-da-imagem.md).
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
