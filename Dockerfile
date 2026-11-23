@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     build-essential pkg-config cmake clang \
     libssl-dev libsqlite3-dev libpq-dev zlib1g-dev \
     jq unzip zip xz-utils tree ripgrep fd-find rsync file less patch bc \
-    procps lsof iproute2 dnsutils netcat-openbsd \
+    procps lsof iproute2 bind9-dnsutils netcat-openbsd \
     sqlite3 tmux nano \
     python3 python3-pip python3-venv python-is-python3 \
     && ln -sf /usr/bin/fdfind /usr/local/bin/fd \
@@ -36,20 +36,20 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
     && rustup component add clippy rustfmt llvm-tools-preview \
     && chmod -R a+w /usr/local/cargo /usr/local/rustup
 
-# Cobertura (cargo llvm-cov) e testes de mutação (cargo mutants). Ficam na
-# imagem porque um `cargo install` feito no container se perde ao sair.
-# O binário pronto do cargo-mutants pede glibc 2.39 (bookworm tem 2.36):
-# compila aqui. O registry é apagado porque o dev-docker monta outro por cima.
-RUN curl -fsSL "https://github.com/taiki-e/cargo-llvm-cov/releases/latest/download/cargo-llvm-cov-$(uname -m)-unknown-linux-gnu.tar.gz" \
-      | tar -xz -C /usr/local/cargo/bin cargo-llvm-cov \
-    && cargo install --locked cargo-mutants \
-    && rm -rf /usr/local/cargo/registry/* \
-    && chmod -R a+w /usr/local/cargo
+# Cobertura (cargo llvm-cov) e testes de mutação (cargo mutants): binários
+# prontos, porque um `cargo install` feito no container se perde ao sair.
+# O cargo-mutants pede glibc 2.39+ (trixie tem 2.41) e só publica x86_64.
+RUN for repo in taiki-e/cargo-llvm-cov sourcefrog/cargo-mutants; do \
+      bin="${repo#*/}"; \
+      curl -fsSL "https://github.com/$repo/releases/latest/download/$bin-$(uname -m)-unknown-linux-gnu.tar.gz" \
+        | tar -xz -C /usr/local/cargo/bin "$bin" \
+      || echo "AVISO: $bin sem binário para $(uname -m)"; \
+    done
 
 # ── Navegador headless (Chromium) + bibliotecas do Tauri v2 ──────
 RUN apt-get update && apt-get install -y \
-    chromium fonts-liberation libnss3 libatk-bridge2.0-0 libdrm2 \
-    libxkbcommon0 libgbm1 libasound2 \
+    chromium fonts-liberation libnss3 libatk-bridge2.0-0t64 libdrm2 \
+    libxkbcommon0 libgbm1 libasound2t64 \
     libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf \
     && rm -rf /var/lib/apt/lists/*
 

@@ -9,6 +9,8 @@ O dev-sandbox passa a ser também um **kit para trabalhar com o Claude Code em q
 fontes externas copiadas para o projeto, guias escritos a partir delas e conferidos na documentação
 oficial.
 
+- **Imagem em Debian 13 (trixie)**, no lugar do 12 (bookworm), que ficou para trás e prendia a glibc em 2.36
+  ([aprendizado](docs/aprendizados/2026-11-glibc-presa-na-versao-do-debian.md)). Falta o teste no host.
 - **Imagem:** Rust com cobertura e testes de mutação (`llvm-tools-preview`, `cargo llvm-cov`,
   `cargo mutants`), também no `nuvem/setup.sh`. Rust nightly opcional com
   `--build-arg WITH_RUST_NIGHTLY=1`. Ferramentas só suas vão em [`local/extra.sh`](local/README.md),

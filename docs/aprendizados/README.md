@@ -54,3 +54,4 @@ Link para o commit/arquivo, ou "nada: só documentação".
 | 2026-10 | [O teste de acionamento do `skill-creator` dá zero mesmo quando a skill aciona](./2026-10-teste-de-acionamento-do-skill-creator-da-zero.md) |
 | 2026-11 | [Um bom comportamento do Claude nem sempre vem das memórias](./2026-11-bom-comportamento-nem-sempre-vem-da-memoria.md) |
 | 2026-11 | [Na nuvem do Claude, copiar a configuração de navegador do Docker atrapalha](./2026-11-nuvem-ja-traz-o-navegador.md) |
+| 2026-11 | [Binário pronto não roda na imagem: a glibc é a do Debian](./2026-11-glibc-presa-na-versao-do-debian.md) |
