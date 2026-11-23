@@ -12,7 +12,7 @@ custava caro de um jeito que não aparece:
 
 Para um ambiente de **agentes de IA**, alguns GB a mais de imagem custam menos
 do que essa fricção. A v0.2 já vem com: Python + `uv`, Node 22 + pnpm/yarn/TS,
-Rust + clippy/rustfmt, C/C++ (`clang`, `cmake`), Chromium headless, as
+Rust + clippy/rustfmt + cobertura e testes de mutação, C/C++ (`clang`, `cmake`), Chromium headless, as
 bibliotecas do Tauri v2, e os utilitários que agentes usam sem pedir (`rsync`,
 `sqlite3`, `lsof`, `ip`, `dig`, `nc`, `tmux`, `bc`...). Fica na casa de 6 a 8 GB.
 
@@ -24,9 +24,22 @@ Go e Java ficam desligados e ligam no build, sem editar o arquivo:
 sudo docker build --build-arg WITH_GO=1 --build-arg WITH_JAVA=1 -t dev-sandbox .
 ```
 
+O Rust nightly segue o mesmo caminho: `--build-arg WITH_RUST_NIGHTLY=1`.
+
 Para outra linguagem (PHP, Ruby, .NET...), siga o mesmo padrão: um `ARG WITH_X=0`
 e um `RUN if [ "$WITH_X" = "1" ]; then ...; fi`. Se for útil para mais gente,
 mande um PR.
+
+### Ferramentas só suas: `local/extra.sh`, não uma branch
+
+Uma branch pessoal com o seu `Dockerfile` obriga a lembrar de trocar de branch
+e a trazer a `main` para ela a cada atualização. Em vez disso, ponha os
+comandos em `local/extra.sh`: o git ignora o arquivo e o build roda ele no fim
+([como](../../local/README.md)). São as mesmas linhas do setup script da
+nuvem, então um arquivo serve aos dois lugares.
+
+A regra para todo mundo: **só seu vai em `local/extra.sh`; útil para todos vai
+em PR** no `Dockerfile` e no `nuvem/setup.sh`.
 
 ### Quando faz sentido enxugar
 

@@ -33,8 +33,18 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal \
-    && rustup component add clippy rustfmt \
+    && rustup component add clippy rustfmt llvm-tools-preview \
     && chmod -R a+w /usr/local/cargo /usr/local/rustup
+
+# Cobertura (cargo llvm-cov) e testes de mutação (cargo mutants). Ficam na
+# imagem porque um `cargo install` feito no container se perde ao sair.
+# O binário pronto do cargo-mutants pede glibc 2.39 (bookworm tem 2.36):
+# compila aqui. O registry é apagado porque o dev-docker monta outro por cima.
+RUN curl -fsSL "https://github.com/taiki-e/cargo-llvm-cov/releases/latest/download/cargo-llvm-cov-$(uname -m)-unknown-linux-gnu.tar.gz" \
+      | tar -xz -C /usr/local/cargo/bin cargo-llvm-cov \
+    && cargo install --locked cargo-mutants \
+    && rm -rf /usr/local/cargo/registry/* \
+    && chmod -R a+w /usr/local/cargo
 
 # ── Navegador headless (Chromium) + bibliotecas do Tauri v2 ──────
 RUN apt-get update && apt-get install -y \
@@ -50,16 +60,32 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 
 # ── Linguagens extras (desligadas por padrão) ────────────────────
 # Ligue no build: sudo docker build --build-arg WITH_GO=1 --build-arg WITH_JAVA=1 -t dev-sandbox .
+# WITH_RUST_NIGHTLY=1: toolchain nightly (cargo +nightly ...), com llvm-tools.
 ARG WITH_GO=0
 ARG WITH_JAVA=0
+ARG WITH_RUST_NIGHTLY=0
 RUN if [ "$WITH_GO" = "1" ]; then \
       GO_VERSION="$(curl -fsSL 'https://go.dev/VERSION?m=text' | head -1)" \
       && curl -fsSL "https://go.dev/dl/${GO_VERSION}.linux-$(dpkg --print-architecture).tar.gz" | tar -C /usr/local -xz; \
     fi \
     && if [ "$WITH_JAVA" = "1" ]; then \
       apt-get update && apt-get install -y default-jdk-headless maven && rm -rf /var/lib/apt/lists/*; \
+    fi \
+    && if [ "$WITH_RUST_NIGHTLY" = "1" ]; then \
+      rustup toolchain install nightly --profile minimal --component llvm-tools-preview \
+      && chmod -R a+w /usr/local/cargo /usr/local/rustup; \
     fi
 ENV PATH="${PATH}:/usr/local/go/bin"
+
+# ── Extras pessoais (local/extra.sh, fora do git) ───────────────
+# As mesmas linhas que você põe no setup script da nuvem. Roda como root;
+# se o último comando falhar, o build para. Ver local/README.md.
+COPY local/ /tmp/dev-sandbox-local/
+RUN if [ -f /tmp/dev-sandbox-local/extra.sh ]; then \
+      bash /tmp/dev-sandbox-local/extra.sh \
+      && chmod -R a+w /usr/local/cargo /usr/local/rustup; \
+    fi \
+    && rm -rf /tmp/dev-sandbox-local
 
 # ── Agentes de IA ────────────────────────────────────────────────
 # Ficam por último: são o que mais muda. Para atualizar só eles, sem

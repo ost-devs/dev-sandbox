@@ -76,7 +76,7 @@ mais pesa: o agente abre páginas da internet com ele.
 Leva bem mais tempo (dezenas de minutos) e baixa alguns GB.
 
 **Cuidados:**
-- Se você usa Go ou Java, repita os `--build-arg WITH_GO=1` e `WITH_JAVA=1`.
+- Se você usa Go, Java ou Rust nightly, repita os `--build-arg WITH_GO=1`, `WITH_JAVA=1` e `WITH_RUST_NIGHTLY=1`. O `local/extra.sh` entra sozinho.
   Sem eles, a imagem nova vem sem essas linguagens.
 - A versão **maior** do Node é fixa (`setup_22.x` no `Dockerfile`). Para
   trocar de versão maior, edite essa linha.

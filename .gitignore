@@ -13,3 +13,7 @@ __pycache__/
 /mirrors/*
 !/mirrors/mirrors.json
 node_modules/
+
+# Extras pessoais da imagem (local/README.md)
+/local/*
+!/local/README.md

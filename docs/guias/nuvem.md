@@ -52,7 +52,7 @@ guardado (cache), então só a primeira sessão espera, cerca de 1 minuto.
 
 ```bash
 #!/bin/bash
-# dev-sandbox (docs/guias/nuvem.md). Versão: 2026-11-14
+# dev-sandbox (docs/guias/nuvem.md). Versão: 2026-11-23
 curl -fsSL https://raw.githubusercontent.com/ost-devs/dev-sandbox/main/nuvem/setup.sh | bash
 ```
 
@@ -73,6 +73,8 @@ O que o script faz:
 - instala os pacotes do [`Dockerfile`](../../Dockerfile) que faltam na imagem
   da nuvem (`fd`, `tree`, `rsync`, `sqlite3`, `dig`, bibliotecas do Tauri...);
 - instala `typescript` e `tsx` globais;
+- instala as ferramentas de teste do Rust da imagem: `llvm-tools-preview`,
+  `cargo llvm-cov` (cobertura) e `cargo mutants` (testes de mutação);
 - cria `/usr/bin/chromium`, o mesmo caminho do Docker, apontando para o Chrome
   que já vem na nuvem;
 - escreve `~/.claude/CLAUDE.md`, que faz para o Claude o papel do
@@ -131,17 +133,15 @@ linhas **embaixo** do `curl`, no campo do setup script. Termine cada uma em
 `|| true` (se o script falhar, a sessão não abre) e prefira binários prontos a
 compilar: o script precisa terminar em menos de ~5 minutos para entrar no cache.
 
-Exemplo: cobertura de testes e testes de mutação em Rust (`cargo llvm-cov` e
-`cargo mutants`), cerca de 10 segundos:
+Exemplo: Rust nightly, para recursos instáveis como `cargo +nightly llvm-cov
+--doctests` (o `cargo llvm-cov` e o `cargo mutants` já vêm no `nuvem/setup.sh`):
 
 ```bash
-rustup component add llvm-tools-preview || true
-for repo in taiki-e/cargo-llvm-cov sourcefrog/cargo-mutants; do
-  bin="${repo#*/}"
-  curl -fsSL "https://github.com/$repo/releases/latest/download/$bin-x86_64-unknown-linux-gnu.tar.gz" \
-    | tar -xz -C /usr/local/bin "$bin" || echo "AVISO: $bin não foi instalado"
-done
+rustup toolchain install nightly --profile minimal --component llvm-tools-preview || echo "AVISO: nightly não foi instalado"
 ```
+
+As mesmas linhas servem no seu PC: ponha em [`local/extra.sh`](../../local/README.md)
+e o build da imagem roda elas. Um texto só para os dois lugares.
 
 Quando o Claude terminar uma resposta com `Missing in sandbox: <ferramenta>`,
 é o sinal: ele precisou de algo que não estava lá. Se for coisa do seu

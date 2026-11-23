@@ -28,8 +28,9 @@ não protege](docs/guias/seguranca.md) antes de confiar nele para código de ter
 | Categoria | Inclui |
 |---|---|
 | Agentes | Claude Code, Codex CLI, Antigravity CLI (`agy`) |
-| Linguagens | Python 3 + `uv`, Node.js 22 + pnpm/yarn/TypeScript, Rust + clippy/rustfmt, C/C++ (`gcc`, `clang`, `cmake`) |
-| Opcionais no build | Go (`WITH_GO=1`), Java + Maven (`WITH_JAVA=1`) |
+| Linguagens | Python 3 + `uv`, Node.js 22 + pnpm/yarn/TypeScript, Rust + clippy/rustfmt + `cargo llvm-cov`/`cargo mutants`, C/C++ (`gcc`, `clang`, `cmake`) |
+| Opcionais no build | Go (`WITH_GO=1`), Java + Maven (`WITH_JAVA=1`), Rust nightly (`WITH_RUST_NIGHTLY=1`) |
+| Só seus | [`local/extra.sh`](local/README.md), fora do git |
 | Navegador e desktop | Chromium headless (Puppeteer/Playwright), bibliotecas do Tauri v2 |
 | Utilitários | `git`, `rg`, `fd`, `jq`, `rsync`, `sqlite3`, `tmux`, `lsof`, `ip`, `dig`, `nc`... |
 

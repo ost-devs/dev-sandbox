@@ -26,6 +26,14 @@ apt-get install -y -qq --no-install-recommends \
 # ── TypeScript e tsx globais (a imagem só traz o ts-node) ───────
 npm install -g --silent typescript tsx || echo "AVISO: typescript/tsx falhou"
 
+# ── Rust: cobertura e testes de mutação (como no Dockerfile) ────
+rustup component add llvm-tools-preview || echo "AVISO: llvm-tools-preview falhou"
+for repo in taiki-e/cargo-llvm-cov sourcefrog/cargo-mutants; do
+  bin="${repo#*/}"
+  curl -fsSL "https://github.com/$repo/releases/latest/download/$bin-$(uname -m)-unknown-linux-gnu.tar.gz" \
+    | tar -xz -C /usr/local/bin "$bin" || echo "AVISO: $bin não foi instalado"
+done
+
 # ── /usr/bin/chromium: o mesmo caminho da imagem Docker ─────────
 # Aponta para o google-chrome da nuvem, um script que acrescenta
 # --no-sandbox quando roda como root. Um link direto para o binário do

@@ -7,7 +7,12 @@ Mudanças do dev-sandbox por versão. Detalhes e motivos: [`DOCUMENTACAO.md`](DO
 
 O dev-sandbox passa a ser também um **kit para trabalhar com o Claude Code em qualquer projeto**:
 fontes externas copiadas para o projeto, guias escritos a partir delas e conferidos na documentação
-oficial. Nada muda na imagem.
+oficial.
+
+- **Imagem:** Rust com cobertura e testes de mutação (`llvm-tools-preview`, `cargo llvm-cov`,
+  `cargo mutants`), também no `nuvem/setup.sh`. Rust nightly opcional com
+  `--build-arg WITH_RUST_NIGHTLY=1`. Ferramentas só suas vão em [`local/extra.sh`](local/README.md),
+  fora do git, no lugar de uma branch pessoal ([por quê](docs/guias/filosofia-da-imagem.md#ferramentas-só-suas-localextrash-não-uma-branch)).
 
 - **Na nuvem do Claude (claude.ai/code):** [`nuvem/setup.sh`](nuvem/setup.sh) monta um ambiente
   equivalente à imagem numa VM da Anthropic, aberta pelo navegador ou pelo celular, sem Docker.
