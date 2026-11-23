@@ -420,17 +420,19 @@ compilação** (`registry`) persiste, mas o **binário final** instalado via
 **Não monte `$CARGO_HOME` inteiro** para resolver isso: o próprio Rust da
 imagem (`cargo`, `rustc`, `rustup`, `rustfmt`) mora em `/usr/local/cargo/bin`,
 e uma pasta vazia do host montada por cima esconderia tudo. A sessão ficaria
-sem Rust. Se precisar que os binários persistam, mande só o `cargo install`
-para dentro do `$HOME`, que já persiste. No `Dockerfile`, no bloco do Rust:
+sem Rust.
 
-```dockerfile
-ENV CARGO_INSTALL_ROOT=/tmp/dev-home/.cargo-install \
-    PATH=/tmp/dev-home/.cargo-install/bin:/usr/local/cargo/bin:$PATH
-```
+Também **não** mande o `cargo install` para a `$HOME` (`CARGO_INSTALL_ROOT`).
+Ferramenta que você quer sempre vai escrita num arquivo: no `Dockerfile`, se
+for útil para todos, ou no [`local/extra.sh`](local/README.md), se for só sua.
+As mesmas linhas vão no setup script da nuvem. Motivos:
 
-Os binários ficam em `~/.cache/dev-sandbox/home/.cargo-install/bin` no host.
-Depois de uma imagem nova com outro Rust, um binário antigo pode quebrar:
-reinstale com `cargo install --force`.
+- Fica registrado o que a imagem tem, e todo rebuild traz de novo.
+- Na nuvem, nada instalado durante a sessão sobrevive. Um binário guardado na
+  home faria o projeto funcionar no PC e quebrar na nuvem, sem aviso.
+- Depois de uma imagem com outro Rust, um binário antigo na home pode quebrar
+  ou esconder a versão nova (o mesmo problema do
+  [auto-update órfão](docs/aprendizados/2026-10-claude-autoupdate-orfao.md)).
 
 **O temporário do Claude Code acumula.** Num Linux comum ele fica em `/tmp`,
 que costuma ser limpo quando o computador reinicia. Aqui ele fica na home
